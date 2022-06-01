@@ -36,7 +36,7 @@ class DaoUser{
     
     public function Update(ModelUser $user){
         try{
-            $sql = "UPDATE user SET nome = :nome, senha = :senha, email = := email WHERE id =: userid";
+            $sql = "UPDATE user SET nome = :nome, senha = :senha, email = :email WHERE id = :userid";
             
             $p_sql = Connection::getInstance()->prepare($sql);
             $p_sql->bindValue(":nome", $user->getNome());

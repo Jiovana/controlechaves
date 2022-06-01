@@ -1,6 +1,6 @@
 <?php 
 
-class ModelAdress{
+class ModelAddress{
     
     private $id;
     private $numero;

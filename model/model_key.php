@@ -1,28 +1,42 @@
 <?php 
 
+/**
+* @Entity
+* @Table(name = "user")
+*/
 class ModelKey{
     
+    /**
+    * @Id @Column(type="integer")
+    * @GeneratedValue
+    */
     private $id; // gerado do banco
+    /**
+    * @Column(type="date")
+    */
     private $data_in; // data de criacao do objeto
+    /**
+    * @Column(type="string", length=10)
+    */
     private $gancho; // codigo do gancho fisico da chave
+     /**
+    * @Column(type="string", length=20)
+    */
     private $sicadi; // codigo do sicadi do imovel
+    
     private $tipo; // aluguel ou venda
+    
     private $status; // disponivel, emprestada, perdida, pendente, indisponivel (venda ou alugado)
+    
     private $adicional; // info adicional sobre chave ou imovel
-    private $endereco_id; // id da tabela endereco da chave
+    /**
+    * @OneToMany (targetEntity="address", mappedBy="user")
+    */
+    private $endereco_id; // id da tabela endereco da chave vetor
     
     private function __clone(){}
     
-    public function __construct($id, $data_in, $gancho, $sicadi, $tipo, $status, $adicional, $endereco_id){
-        $this->id = $id;
-        $this->data_in = $data_in;
-        $this->gancho = $gancho;
-        $this->sicadi = $sicadi;
-        $this->tipo = $tipo;
-        $this->status = $status;
-        $this->adicional = $adicional;
-        $this->endereco_id = $endereco_id;
-    }
+    public function __construct(){    }
     
     public function setId($id){ $this->id = $id; }
     public function getId(){ return $this->id; }
@@ -45,7 +59,9 @@ class ModelKey{
     public function setAdicional($adicional){ $this->adicional = $adicional; }
     public function getAdicional(){ return $this->adicional; }
     
-    public function setEnderecoId($endereco_id){ $this->endereco_id = $endereco_id; }
+    public function setEnderecoId(ModelAddress $endereco){ 
+        $this->endereco_id = $endereco; 
+    }
     public function getEnderecoId(){ return $this->endereco_id; }
     
 }
