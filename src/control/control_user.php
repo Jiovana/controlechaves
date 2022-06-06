@@ -2,8 +2,6 @@
 
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/dao/dao_user.php";
 
-//include_once "dao/dao_user.php";
-
 function Login( $email, $password ) {
 
     $daouser = new DaoUser;

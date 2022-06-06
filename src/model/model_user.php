@@ -5,12 +5,12 @@ class ModelUser {
     private $id = 0; //id do banco com autoincremento
     private $data_in = ""; // banco salva data atual
     private $nome = ""; // nome completo do usuario
+    private $sobrenome = "";
     private $senha = ""; //senha (codificada no banco)
     private $email = ""; //email de acesso ao sistema
 
     //metodos padrao
-    private function __clone(){}
-    
+    private function __clone(){}   
     public function __construct(){}
     
 //    public function __construct($id,$data,$nome,$senha,$email){
@@ -29,6 +29,9 @@ class ModelUser {
     
     public function setNome ($nome){ $this->nome = $nome; }  
     public function getNome(){ return $this->nome; }
+    
+    public function setSobrenome ($nome){ $this->sobrenome = $nome; }  
+    public function getSobrenome(){ return $this->sobrenome; }
     
     public function setSenha ($senha){ $this->senha = $senha; }
     public function getSenha(){ return $this->senha; }
