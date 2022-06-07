@@ -135,7 +135,7 @@ desired effect
                                 <!-- The user image in the navbar-->
                                 <img src="images/user_logo.png" class="user-image" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs"><?php echo $_SESSION['user_name'];?></span>
+                                <span class="hidden-xs"><?php echo $_SESSION['user_name']." ".$_SESSION['user_surname'];?></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
@@ -170,28 +170,28 @@ desired effect
                         <img src="images/user_logo.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p><?php echo $_SESSION['user_name'];?></p>
-                        <!-- Status -->
+                        <p>Olá, <?php echo $_SESSION['user_name'];?></p>
+                         <!-- Status -->
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <hr>
                 <!-- Sidebar Menu -->
-                <ul class="sidebar-menu" data-widget="tree">
+                <ul class="sidebar-menu nav" data-widget="tree">
         
                     <!-- Optionally, you can add icons to the links -->
-                    <li class="active">
+                    <li class="nav-link">
                         <a href="mainlist.php"><i class="fa fa-th-list"></i> <span>Lista de chaves</span></a>
                     </li>
-                    <li>
+                    <li class="nav-link">
                         <a href="newkey.php"><i class="fa fa-key"></i>
                             <span>Nova Chave</span></a>
                     </li>
-                    <li>
+                    <li class="nav-link">
                         <a href="borrowing.php"><i class="fa fa-tags"></i>
                             <span>Emprestar chave</span></a>
                     </li>
-                    <li>
+                    <li class="nav-link">
                         <a href="report.php"><i class="fa fa-calendar-o"></i>
                             <span>Relatorio Mensal</span></a>
                     </li>
@@ -208,11 +208,11 @@ desired effect
                             <li><a href="graphreport.php"><i class="fa fa-circle-o"></i> Graph Report</a></li>
                         </ul>
                     </li>-->
-                    <li>
-                        <a href="registration.php"><i class="fa fa-users"></i>
+                    <li class="nav-link">
+                        <a href="users.php"><i class="fa fa-users"></i>
                             <span>Usuarios</span></a>
                     </li>
-                    <li>
+                    <li class="nav-link">
                         <a href=""><i class="fa fa-book"></i>
                             <span>Manual</span></a>
                     </li>

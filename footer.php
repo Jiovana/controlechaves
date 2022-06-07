@@ -1,13 +1,12 @@
-
-  <!-- Main Footer -->
-  <footer class="main-footer">
+<!-- Main Footer -->
+<footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      MovChave V-1.0
+        MovChave V-1.0
     </div>
     <!-- Default to the left -->
-    <strong>By: <a href="#">J. Gomes</a></strong> 
-  </footer>
+    <strong>By: <a href="#">J. Gomes</a></strong>
+</footer>
 
 </div>
 <!-- ./wrapper -->
@@ -19,4 +18,5 @@
      Both of these plugins are recommended to enhance the
      user experience. -->
 </body>
+
 </html>

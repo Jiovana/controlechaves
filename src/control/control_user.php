@@ -2,22 +2,24 @@
 
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/dao/dao_user.php";
 
-function Login( $email, $password ) {
+class ControlUser {
 
-    $daouser = new DaoUser;
+    function Login( $email, $password ) {
 
-    if ( $email != null && $password != null ) {
-        $md5pass = md5( $password );
-        $row = $daouser->Login( $email, $md5pass );
-        if ( $row ) {
-            //print_r( $row );
-            if ( $row['email'] == $email && $row['senha'] == $md5pass ) {
+        $daouser = new DaoUser;
 
-                $_SESSION['user_id'] = $row['id'];
-                $_SESSION['user_name'] = $row['nome'];
-                $_SESSION['user_email'] = $row['email'];
+        if ( $email != null && $password != null ) {
+            $md5pass = md5( $password );
+            $row = $daouser->Login( $email, $md5pass );
+            if ( $row ) {
+                if ( $row['email'] == $email && $row['senha'] == $md5pass ) {
 
-                echo '<script type="text/javascript">
+                    $_SESSION['user_id'] = $row['id'];
+                    $_SESSION['user_name'] = $row['nome'];
+                    $_SESSION['user_surname'] = $row['sobrenome'];
+                    $_SESSION['user_email'] = $row['email'];
+
+                    echo '<script type="text/javascript">
                     jQuery(function validation(){
                         swal({
                             title: "Bem vindo(a)'.$_SESSION['user_name'].'!",
@@ -27,11 +29,11 @@ function Login( $email, $password ) {
                         });
                     });
                     </script>';
-                $url = "../controlechaves/mainlist.php";
-                header( 'refresh:2;'.$url );
-            }
-        } else {
-            echo '<script type="text/javascript">
+                    $url = "../controlechaves/mainlist.php";
+                    header( 'refresh:2;'.$url );
+                }
+            } else {
+                echo '<script type="text/javascript">
                     jQuery(function validation(){
                         swal({
                             title: "Falha no login!",
@@ -41,13 +43,238 @@ function Login( $email, $password ) {
                         });
                     });
                     </script>';
+            }
         }
     }
+
+    function NewUser( ModelUser $newuser ) {
+
+        $dao = new DaoUser();
+
+        if ( $dao->SearchbyEmail( $newuser->getEmail() ) != false ) {
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Aviso!",
+                            text: "Email ja cadastrado no sistema.",
+                            icon: "warning",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+
+        } else {
+            if ( $dao->Insert( $newuser ) ) {
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Sucesso!",
+                            text: "Usuario cadastrado",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            } else {
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Erro!",
+                            text: "Problema ao cadastrar usuario",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            }
+        }
+    }
+
+    function DeleteUser( $id ) {
+        $dao = new DaoUser();
+        if ( $dao->Delete( $id ) ) {
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Sucesso!",
+                            text: "Usuario removido do sistema",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+        } else {
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Erro!",
+                            text: "O usuario nao pode ser removido. ",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+        }
+    }
+
+    function ChangePassword( $email, $oldpass, $newpass, $confpass ) {
+
+        $daouser = new DaoUser();
+        $user = new ModelUser();
+
+        $user = $daouser->SearchByEmail( $email );
+
+        //we compare user input and database values
+        if ( md5( $oldpass ) == $user->getSenha() ) {
+            if ( $newpass == $confpass ) {
+                $md5pass = md5( $newpass );
+                $user->setSenha( $md5pass );
+
+                if ( $daouser->UpdatePassword( $user ) ) {
+                    echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Tudo Certo!",
+                            text: "Senha atualizada com sucessso.",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+                } else {
+                    echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Erro no banco de dados!",
+                            text: "Problema ao atualizar a senha.",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+                }
+
+            } else {
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Oops!",
+                            text: "Sua nova senha precisa ser igual a senha de confirmação",
+                            icon: "warning",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            }
+        } else {
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Warning",
+                            text: "Sua senha antiga está errada",
+                            icon: "warning",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+        }
+    }
+
+    function FillTable() {
+        $dao = new DaoUser();
+        $users = $dao->SearchAll();
+
+        foreach ( $users as $user ) {
+            echo '<tr>
+                    <td>'.$user->getId().'</td>
+                    <td>'.$user->getData_in().'</td>
+                    <td>'.$user->getNome().'</td>
+                    <td>'.$user->getSobrenome().'</td>
+                    <td>'.$user->getEmail().'</td>
+                    <td><button type="submit" value="'.$user->getId().'" class="btn btn-success" name="btnedit"><span class="glyphicon glyphicon-edit" title="Editar"></span></button></td>
+                    <td>
+<a href="users.php?id='.$user->getId().'" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-trash"  title="Apagar"></span></a></td>
+                </tr> ';
+        }
+    }
+
+    function UpdateUser( ModelUser $user ) {
+        if ( empty( $user->getNome() ) ||  empty( $user->getSobrenome() ) || empty( $user->getEmail() ) || empty( $user->getSenha() )){
+            $errorupdate = '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Erro!",
+                            text: "Algum campo esta vazio: Por favor complete o formulario.",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            echo $errorupdate;
+        }
+        if ( !isset( $errorupdate ) ) {
+            $dao = new DaoUser();
+            if ( $dao->UpdateAll( $user ) ) {
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Sucesso!",
+                            text: "Usuario atualizado.",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            } else {
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Erro!",
+                            text: "Problema ao atualizar o usuario.",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            }
+        }
+    }
+
+    function FillForm( $id ) {
+        $dao = new DaoUser();
+        if ( $user = $dao->SearchById( $id ) ) {
+            echo '
+          <div class="col-md-4">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" name="txtname" value="'.$user->getNome().'" placeholder="Insira o nome" >
+            </div>
+
+            <div class="form-group">
+                <label>Sobrenome</label>
+                <input type="text" class="form-control" name="txtsurname" 
+                value="'.$user->getSobrenome().'" placeholder="Insira o sobrenome" >
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" name="txtemail" 
+                value="'.$user->getEmail().'" placeholder="Insira o email" >
+            </div>
+            
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" class="form-control" name="txtpassword" 
+                value="'.$user->getSenha().'" placeholder="Insira a senha" >
+            </div>
+
+            <button type="submit" class="btn btn-warning" name="btnupdate">Atualizar</button>
+            
+             <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="float: right;">
+        </div>
+          ';
+        }
+    }
+
 }
-
-function NewUser() {
-
-}
-
-
 ?>

@@ -11,11 +11,11 @@
     include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_user.php';
 
     session_start();
-
+    $control = new ControlUser();
     if(isset($_POST['btn_login'])){
         $email = $_POST['txt_email'];
         $password = $_POST['txt_password'];      
-       Login($email,$password);          
+       $control->Login($email,$password);          
     }
 ?>
 

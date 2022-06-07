@@ -24,7 +24,11 @@ class ModelUser {
     public function getId(){ return $this->id; } 
     public function setId ($id){ $this->id = $id; }
     
-    public function getData_in(){ return $this->data_in; } 
+    public function getData_in(){ 
+        $date = date_create($this->data_in);
+            
+        return date_format($date,'d/m/Y'); 
+    } 
     public function setData_in ($data_in){ $this->data_in = $data_in; }
     
     public function setNome ($nome){ $this->nome = $nome; }  

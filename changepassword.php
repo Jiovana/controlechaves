@@ -1,12 +1,12 @@
 <?php
-    include_once 'dbconnect.php';
+ include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_user.php';
     session_start();
 
     if($_SESSION['user_email']==""){
         header('location:index.php');           
     }
     
-    include_once 'headeruser.php';
+    include_once 'header.php';
     
 
     //when click on update pass button we get out values from user into variables
@@ -14,77 +14,10 @@
         $oldpass = $_POST['txt_oldpass'];
         $newpass = $_POST['txt_newpass'];
         $confpass = $_POST['txt_confpass'];
+        $email=$_SESSION['user_email'];
         
-       // echo $oldpass. " - " .$newpass. " - ".$confpass;
-    
-    //using of select query we get out database record according to useremail
-        $email=$_SESSION['email'];
-        $select = $pdo->prepare("select * from tbl_user where email='$email'");
-        
-        $select->execute();
-        $row=$select->fetch(PDO::FETCH_ASSOC);
-        
-        $email_db = $row['email'];
-        $pass_db = $row['password'];
-        
-        //we compare user input and database values
-        if($oldpass == $pass_db) {
-           if($newpass == $confpass){
-               $update = $pdo->prepare("update tbl_user set password=:pass where email=:email");
-               
-               $update->bindParam(':pass', $confpass);
-               $update->bindParam(':email', $email);
-               
-               if($update->execute()){
-                   echo '<script type="text/javascript">
-                    jQuery(function validation(){
-                        swal({
-                            title: "All Fine",
-                            text: "Your password was updated",
-                            icon: "success",
-                            button: "Ok",
-                        });
-                    });
-                    </script>';
-               }else{
-                   echo '<script type="text/javascript">
-                    jQuery(function validation(){
-                        swal({
-                            title: "Database error",
-                            text: "Problem updating password",
-                            icon: "error",
-                            button: "Ok",
-                        });
-                    });
-                    </script>';
-               }
-               
-           }else{
-               echo '<script type="text/javascript">
-                    jQuery(function validation(){
-                        swal({
-                            title: "Oops!",
-                            text: "Your new password needs to match the confirm password",
-                            icon: "warning",
-                            button: "Ok",
-                        });
-                    });
-                    </script>';
-           }
-        }else{
-            echo '<script type="text/javascript">
-                    jQuery(function validation(){
-                        swal({
-                            title: "Warning",
-                            text: "Your old password is wrong",
-                            icon: "warning",
-                            button: "Ok",
-                        });
-                    });
-                    </script>';
-        }
-
-    //if values match then we run update query
+        $control = new ControlUser();
+        $control->ChangePassword($email,$oldpass,$newpass,$confpass);
 
     }
 
@@ -96,7 +29,7 @@
                     if (confirm.value === password.value) {
                     confirm.setCustomValidity('');
                     } else {
-                    confirm.setCustomValidity('Passwords do not match');
+                    confirm.setCustomValidity('As senhas não conferem.);
                     }
                 }
     </script>
@@ -106,10 +39,9 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>Admin Dashboard</h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
+        <li><a href="mainlist.php"><i class="fa fa-dashboard"></i> Lista de Chaves</a></li>
+        <li class="active">Aqui</li>
       </ol>
     </section>
 
@@ -117,30 +49,30 @@
     <section class="content container-fluid">
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Change Password</h3>
+              <h3 class="box-title">Trocar senha</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
             <form role="form" method="post">
               <div class="box-body">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Old Password</label>
-                  <input type="password" class="form-control" id="exampleInputPass1" placeholder="Old password" name="txt_oldpass"  required >
+                  <label for="exampleInputEmail1">Senha antiga</label>
+                  <input type="password" class="form-control" id="exampleInputPass1" placeholder="Senha antiga" name="txt_oldpass"  required >
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword2">New Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword2" placeholder="New Password" name="txt_newpass" onChange="onChange()" required >
+                  <label for="exampleInputPassword2">Senha nova</label>
+                  <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Senha nova" name="txt_newpass" onChange="onChange()" required >
                 </div>            
                 <div class="form-group">
-                  <label for="exampleInputPassword3">Confirm Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword3" placeholder="Confirm Password" name="txt_confpass" onChange="onChange()" required >
+                  <label for="exampleInputPassword3">Confirmar a senha nova</label>
+                  <input type="password" class="form-control" id="exampleInputPassword3" placeholder="Senha de confirmação" name="txt_confpass" onChange="onChange()" required >
                 </div>
              
               </div>
               <!-- /.box-body -->
 
               <div class="box-footer">
-                <button type="submit" class="btn btn-primary" name="btn_update" >Update Password</button>
+                <button type="submit" class="btn btn-primary" name="btn_update" >Atualizar senha</button>
               </div>
             </form>
           </div>

@@ -21,7 +21,7 @@ class DaoUser{
             $p_sql = Connection::getInstance()->prepare($sql);
             $p_sql->bindValue(":nome", $user->getNome());
             $p_sql->bindValue(":sobrenome", $user->getSobrenome());
-            $p_sql->bindValue(":senha", $user->getSenha());
+            $p_sql->bindValue(":senha", md5($user->getSenha()));
             $p_sql->bindValue(":email", $user->getEmail());
             
             return $p_sql->execute();
@@ -31,7 +31,7 @@ class DaoUser{
         }
     }
     
-    public function Update(ModelUser $user){
+    public function UpdateAll(ModelUser $user){
         try{
             $sql = "UPDATE user SET nome = :nome, sobrenome = :sobrenome,senha = :senha, email = :email WHERE id = :userid";
             
@@ -48,12 +48,26 @@ class DaoUser{
         }
     }
     
-    public function Delete(ModelUser $user){
+    public function UpdatePassword(ModelUser $user){
+        try{
+            $sql = "UPDATE user SET senha = :senha WHERE email = :email";
+            
+            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql->bindValue(":senha", $user->getSenha());
+            $p_sql->bindValue(":email", $user->getEmail());
+            
+            return $p_sql->execute();
+        }catch(Exception $e){
+            echo ("Error while running UpdatePassword method in DaoUser.");
+        }
+    }
+    
+    public function Delete($id){
         try{
             $sql = "DELETE FROM user WHERE id = :userid";
             
             $p_sql = Connection::getInstance()->prepare($sql);
-            $p_sql->bindValue(":userid", $user->getId());
+            $p_sql->bindValue(":userid", $id);
             
             return $p_sql->execute();           
         }catch(Exception $e){
@@ -69,41 +83,38 @@ class DaoUser{
             $p_sql->bindValue(":userid", $id);         
             $p_sql->execute();
             
-            return $this->FillUser($p_sql->fetch(PDO::FETCH_ASSOC));
+            $p_sql->setFetchMode(PDO::FETCH_CLASS, 'ModelUser');
+            return $p_sql->fetch();
         }catch(Exception $e){
              echo ("Error while running SearchById method in DaoUser.");
         }
     }
     
-    public function SearchAll(){
+    public function SearchByEmail($email){
         try{
-            $sql = "SELECT * FROM user ORDER BY id";
-            
-            $p_sql = Connection::getInstance()->prepare($sql);     
-            $p_sql->execute();
-            
-            return $p_sql->fetchAll();
-        }catch(Exception $e){
-            echo ("Error while running SearchAll method in DaoUser.");
-        }
-    }
-    
-    public function SearchEmail($email){
-        try{
-            $sql = "SELECT email FROM user WHERE email = :email";
+            $sql = "SELECT * FROM user WHERE email = :email";
             
             $p_sql = Connection::getInstance()->prepare($sql);     
             $p_sql->bindValue(":email", $email);         
             $p_sql->execute();
+            $p_sql->setFetchMode(PDO::FETCH_CLASS, 'ModelUser');
+            return $p_sql->fetch();
             
-            if ($p_sql->rowCount() == 0)
-                return null;
-            else{
-                $row = $p_sql->fetch(PDO::FETCH_ASSOC);
-                return $row["email"] ;
-            }       
         }catch(Exception $e){
-             echo ("Error while running SearchEmail method in DaoUser.");
+             echo ("Error while running SearchByEmail method in DaoUser.");
+        }
+    }
+    
+    public function SearchAll(){
+        try{
+            $sql = "SELECT * FROM user ORDER BY id desc";
+            
+            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql->execute();
+            
+            return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelUser");
+        }catch(Exception $e){
+            echo ("Error while running SearchAll method in DaoUser.");
         }
     }
     
@@ -131,9 +142,14 @@ class DaoUser{
         $user->setSenha($singleuser['senha']);
         return $user;
     } 
+    
+    
 }
 
-//$dao = new DaoUser();
+$dao = new DaoUser();
+
+if ($dao->SearchbyEmail("doll@mail.com"))
+    echo true;
 //echo $dao->SearchEmail("michael@mail.co")."</br>";
 //print_r(  $dao->Login("michael@mail.co",("pass1")));
 
