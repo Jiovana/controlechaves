@@ -2,8 +2,22 @@
 
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/dao/dao_user.php";
 
+/**
+ * Reune metodos para interacao entre a view(interface) e o model(modelos e daos)
+ * 
+*/
 class ControlUser {
 
+    /**
+     * Realiza login no sistema, chamada de index.php ao pressionar o botao de login
+     *
+     * Envia os dados do usuario via session, 
+     * Emite avisos com sweetalerts
+     * 
+     * @param string $email email digitado 
+     * @param string $password a senha informada
+     * 
+    */
     function Login( $email, $password ) {
 
         $daouser = new DaoUser;
@@ -47,6 +61,14 @@ class ControlUser {
         }
     }
 
+    /**
+     * Insere um novo usuario no banco de dados, chamda de users.php ao clicar no botao salvar
+     *
+     * Envia dados para a dao, emite alertas swal
+     * 
+     * @param ModelUser $user O objeto usuario a ser inserido
+     * 
+    */
     function NewUser( ModelUser $newuser ) {
 
         $dao = new DaoUser();
@@ -90,6 +112,12 @@ class ControlUser {
         }
     }
 
+    /**
+     * Apaga um usuario, chamda de users.php ao clicar no botao delete da tabela
+     * 
+     * @param int $id id do usuario a ser apagado
+     * 
+    */
     function DeleteUser( $id ) {
         $dao = new DaoUser();
         if ( $dao->Delete( $id ) ) {
@@ -117,6 +145,15 @@ class ControlUser {
         }
     }
 
+    /**
+     * Altera a senha de um usuario, testa as senhas new e conf, emite alertas swal, chamada de changepassword.php
+     * 
+     * @param string $email email do usuario vindo da session
+     * @param string $oldpass senha antiga do usuario 
+     * @param string $newpass nova senha 
+     * @param string $confpass senha de confirmacao
+     * 
+    */
     function ChangePassword( $email, $oldpass, $newpass, $confpass ) {
 
         $daouser = new DaoUser();
@@ -180,6 +217,12 @@ class ControlUser {
         }
     }
 
+     /**
+     * Preenche a tabela de usuarios em users.php
+     * 
+     * Pega os usuarios do banco como um array e os percorre, preenchendo a tabela
+     * 
+    */
     function FillTable() {
         $dao = new DaoUser();
         $users = $dao->SearchAll();
@@ -198,6 +241,12 @@ class ControlUser {
         }
     }
 
+     /**
+     * Atualiza um usuario em users.php ao clicar no botao de update
+     * 
+     * @param ModelUser $user o usuario a ser atualizado
+     * 
+    */
     function UpdateUser( ModelUser $user ) {
         if ( empty( $user->getNome() ) ||  empty( $user->getSobrenome() ) || empty( $user->getEmail() ) || empty( $user->getSenha() )){
             $errorupdate = '<script type="text/javascript">
@@ -214,6 +263,7 @@ class ControlUser {
         }
         if ( !isset( $errorupdate ) ) {
             $dao = new DaoUser();
+            $user->setSenha(md5($user->getSenha()));
             if ( $dao->UpdateAll( $user ) ) {
                 echo '<script type="text/javascript">
                     jQuery(function validation(){
@@ -240,13 +290,20 @@ class ControlUser {
         }
     }
 
+     /**
+     * Preenche o formulario em users.php quando o botao editar da lista de usuarios e clicado, preenchendo o form com os dados do usuario selecionado
+     * 
+     * @param int $id o id do usuario a ser preenchido o form
+     *
+     * 
+    */
     function FillForm( $id ) {
         $dao = new DaoUser();
         if ( $user = $dao->SearchById( $id ) ) {
             echo '
-          <div class="col-md-4">
             <div class="form-group">
                 <label>Nome</label>
+                <input type="hidden" class="form-control" name="txtid" value="'.$user->getId().'" >
                 <input type="text" class="form-control" name="txtname" value="'.$user->getNome().'" placeholder="Insira o nome" >
             </div>
 
@@ -269,11 +326,40 @@ class ControlUser {
             </div>
 
             <button type="submit" class="btn btn-warning" name="btnupdate">Atualizar</button>
-            
-             <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="float: right;">
-        </div>
           ';
         }
+    }
+    
+     /**
+     * Apresenta um formulario 'limpo' em users.php, mostrando os campos em branco e opcao para inserir novo user
+     * 
+     *
+     * 
+    */
+    function ClearForm(){
+        echo '
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" class="form-control" name="txtname" placeholder="Insira o nome">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sobrenome</label>
+                            <input type="text" class="form-control" name="txtsurname" placeholder="Insira o sobrenome">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" name="txtemail" placeholder="Insira o email">
+                        </div>
+                        <div class="form-group">
+                            <label>Senha</label>
+                            <input type="password" class="form-control" name="txtpassword" placeholder="Insira a senha">
+                        </div>
+                                                  
+                        <button type="submit" class="btn btn-info" name="btnsave">Salvar</button>
+                        <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="float: right;" >
+                            ';
     }
 
 }

@@ -1,8 +1,13 @@
 <?php
-
+// modelo (representa entidade do banco)
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/model/model_user.php";
+//conexao com banco
 require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/connection.php";
 
+/**
+ * Metodos de comunicacao com o banco para o ModelUser
+ * 
+*/
 class DaoUser{
     public static $instance;
     
@@ -14,11 +19,17 @@ class DaoUser{
         return self::$instance;
     }
     
+    /**
+     * Insere um novo usuario no banco de dados
+     * 
+     * @param ModelUser $user O objeto usuario a ser inserido
+     * @return bool o resultado do metodo execute()
+    */
     public function Insert(ModelUser $user){
         try{
             $sql = "INSERT INTO user (nome, sobrenome, senha, email) VALUES (:nome,:sobrenome,:senha,:email)";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":nome", $user->getNome());
             $p_sql->bindValue(":sobrenome", $user->getSobrenome());
             $p_sql->bindValue(":senha", md5($user->getSenha()));
@@ -31,11 +42,17 @@ class DaoUser{
         }
     }
     
+    /**
+     * Atualiza todos campos de um usuario
+     * 
+     * @param ModelUser $user O objeto usuario a ser atualizado
+     * @return bool o resultado do metodo execute()
+    */
     public function UpdateAll(ModelUser $user){
         try{
             $sql = "UPDATE user SET nome = :nome, sobrenome = :sobrenome,senha = :senha, email = :email WHERE id = :userid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":nome", $user->getNome());
             $p_sql->bindValue(":sobrenome", $user->getSobrenome());
             $p_sql->bindValue(":senha", $user->getSenha());
@@ -48,11 +65,17 @@ class DaoUser{
         }
     }
     
+   /**
+     * Atualiza a senha de um usuario
+     * 
+     * @param ModelUser $user O objeto usuario a ser atualizado
+     * @return bool o resultado do metodo execute()
+    */
     public function UpdatePassword(ModelUser $user){
         try{
             $sql = "UPDATE user SET senha = :senha WHERE email = :email";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":senha", $user->getSenha());
             $p_sql->bindValue(":email", $user->getEmail());
             
@@ -62,11 +85,17 @@ class DaoUser{
         }
     }
     
+    /**
+     * Apaga um usuario do banco de dados
+     * 
+     * @param int $id O id do usuario a ser apagado
+     * @return bool o resultado do metodo execute()
+    */
     public function Delete($id){
         try{
             $sql = "DELETE FROM user WHERE id = :userid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":userid", $id);
             
             return $p_sql->execute();           
@@ -75,11 +104,17 @@ class DaoUser{
         }
     }
     
+    /**
+     * Busca um usuario com base no ID
+     * 
+     * @param int $id o id do usuario a ser buscado
+     * @return ModelUser um objeto usuario
+    */
     public function SearchById($id){
         try{
             $sql = "SELECT * FROM user WHERE id = :userid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->bindValue(":userid", $id);         
             $p_sql->execute();
             
@@ -90,11 +125,17 @@ class DaoUser{
         }
     }
     
+    /**
+     * Busca um usuario com base no ID
+     * 
+     * @param string $email o email do usuario a ser buscado
+     * @return ModelUser um objeto usuario
+    */
     public function SearchByEmail($email){
         try{
             $sql = "SELECT * FROM user WHERE email = :email";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->bindValue(":email", $email);         
             $p_sql->execute();
             $p_sql->setFetchMode(PDO::FETCH_CLASS, 'ModelUser');
@@ -105,11 +146,17 @@ class DaoUser{
         }
     }
     
+    /**
+     * Busca todos usuarios cadastrados
+     * 
+     * 
+     * @return ModelUser[] um array de objetos usuario
+    */
     public function SearchAll(){
         try{
             $sql = "SELECT * FROM user ORDER BY id desc";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->execute();
             
             return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelUser");
@@ -118,10 +165,17 @@ class DaoUser{
         }
     }
     
+    /**
+     * Busca um usuario com base no email e senha
+     * 
+     * @param string $email o email do usuario a ser buscado
+     * @param string $password a senha informada
+     * @return array de fetch assoc
+    */
     public function Login($email, $password){
         try{
             $sql = "SELECT * FROM user WHERE email=:email AND senha=:senha";
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":email",$email);
             $p_sql->bindValue(":senha",$password);  
             $p_sql->execute();
@@ -129,28 +183,8 @@ class DaoUser{
         }catch(Exception $e){
             echo "Error while running Login method in DaoUser.";
         }
-    }
-    
-    
-    private function FillUser($singleuser){
-        $user = new ModelUser();
-        $user->setId($singleuser['id']);
-        $user->setData_in($singleuser['data_in']);
-        $user->setNome($singleuser['nome']) ;
-        $user->setSobrenome($singleuser['sobrenome']) ;
-        $user->setEmail($singleuser['email']);
-        $user->setSenha($singleuser['senha']);
-        return $user;
-    } 
-    
+    }   
     
 }
-
-$dao = new DaoUser();
-
-if ($dao->SearchbyEmail("doll@mail.com"))
-    echo true;
-//echo $dao->SearchEmail("michael@mail.co")."</br>";
-//print_r(  $dao->Login("michael@mail.co",("pass1")));
 
 ?>

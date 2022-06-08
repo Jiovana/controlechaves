@@ -4,6 +4,7 @@ include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 
 session_start();
 
+// controle de sessao para impedir acesso nao autorizado
 if ( $_SESSION['user_email'] == "" ) {
     header( 'location:index.php' );
 
@@ -15,11 +16,13 @@ include_once 'header.php';
 $control = new ControlUser();
 $user = new ModelUser();
 
+//ao pressionar botao delete, id eh enviado via post
 if ( isset( $_GET['id'] ) ) {
     $control->DeleteUser( $_GET['id'] );
 
 }
 
+//ao pressionar botaosave, obtem dados dos inputs  e chama o controle para inserir user no banco
 if ( isset( $_POST['btnsave'] ) ) {
 
     $user->setNome( $_POST['txtname'] );
@@ -33,115 +36,100 @@ if ( isset( $_POST['btnsave'] ) ) {
 
 }
 
+//ao pressionar botao update, obtem dados dos inputs e chama o controle para atualizar o user
 if ( isset( $_POST['btnupdate'] ) ) {
     $user->setNome( $_POST['txtname'] );
     $user->setSobrenome( $_POST['txtsurname'] );
     $user->setEmail( $_POST['txtemail'] );
     $user->setSenha( $_POST['txtpassword'] );
+    $user->setId($_POST['txtid']);
 
     $control->UpdateUser( $user );
 }
 ?>
 
 <!-- Content Wrapper. Contains page content -->
-<div class = "content-wrapper">
-<!-- Content Header ( Page header ) -->
-<section class = "content-header">
-<h1>Usuários</h1>
+<div class="content-wrapper">
+    <!-- Content Header ( Page header ) -->
+    <section class="content-header">
+        <h1>Usuários</h1>
 
-</section>
+    </section>
 
-<!-- Main content -->
-<section class = "content container-fluid">
-
-<div class = "box box-info">
-<div class = "box-header with-border">
-<h3 class = "box-title">Formulário de cadastro</h3>
-</div>
-<!-- /.box-header -->
-<!-- form start -->
-<form id = "userform" role = "form" action = "" method = "post">
-<div class = "box-body">
-<!-- CODE TO CHANGE FORM FROM SAVE TO UPDATE -->
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <form id="userform" role="form" action="" method="post">
+        <div class="col-md-4">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Formulário de cadastro</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->            
+                    <div class="box-body">
 <?php
-if ( isset( $_POST['btnedit'] ) ) {
-    $control->fillForm( $_POST['btnedit'] );
-} else {
+    // controla qual form mostrar de acordo com botao pressionado
+    if ( isset( $_POST['btnedit'] ) ) {
+        if(isset( $_POST['btnupdate'])){
+            $control->ClearForm();
+        }else{
+            $control->FillForm( $_POST['btnedit'] );
+        }
+    } else {
     //need to add required field in the future
     //removed now because needs javascript to make it conditional
-    echo '
-                             <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Nome</label>
-                            <input type="text" class="form-control" name="txtname" placeholder="Insira o nome">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Sobrenome</label>
-                            <input type="text" class="form-control" name="txtsurname" placeholder="Insira o sobrenome">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="txtemail" placeholder="Insira o email">
-                        </div>
-                        <div class="form-group">
-                            <label>Senha</label>
-                            <input type="password" class="form-control" name="txtpassword" placeholder="Insira a senha">
-                        </div>
-                                                  
-                        <button type="submit" class="btn btn-info" name="btnsave">Salvar</button>
-                        <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="float: right;" >
-                        </div>
-                            ';
-}
+        $control->ClearForm();
+    }
 ?>
+                    </div>
+                
+            </div>
+        </div>
 
-<div class = "col-md-8 ">
-<div style = "overflow-x:auto;">
-<table id = "tableuser" class = "table table-striped ">
-<thead>
-<tr>
-<th>#</th>
-<th>Data de cadastro</th>
-<th>Nome</th>
-<th>Sobrenome</th>
-<th>Email</th>
-<th>Editar</th>
-<th>Apagar</th>
-</tr>
-</thead>
-<tbody>
-<?php
+        <div class="col-md-8 ">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Lista de usuários</h3>
+                </div>
+                <div class="box-body">
+                    <div style="overflow-x:auto;">
+                        <table id="tableuser" class="table table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Data de cadastro</th>
+                                    <th>Nome</th>
+                                    <th>Sobrenome</th>
+                                    <th>Email</th>
+                                    <th>Editar</th>
+                                    <th>Apagar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
 $control->FillTable();
 ?>
-</tbody>
+                            </tbody>
 
-</table>
-</div>
-</div>
-</div>
-<!-- /.box-body -->
-
-<div class = "box-footer">
-
-</div>
-</form>
-</div>
-
-</section>
-<!-- /.content -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </section>
 </div>
 <!-- /.content-wrapper -->
-<script>
-$( document ).ready( function() {
-    $( '#tableuser' ).DataTable( {
-        "language": {
-            "url": "bower_components/datatables.net/pt-BR.json"
 
-        }
-    }
-);
+<script>
+    $(document).ready(function() {
+                $('#tableuser').DataTable({
+                    "language": {
+                        "url": "bower_components/datatables.net/pt-BR.json"
+
+                    }
+                });
+
 </script>
 
 <?php
