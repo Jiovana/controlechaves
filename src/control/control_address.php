@@ -27,11 +27,26 @@ class ControlAddress{
             }            
     }
     
+     /**
+     * Busca um endereco do banco, retorna string com endereco completo
+     *
+     * Envia dados mainlist.php
+     * 
+     * @param int $id id do endereco a ser buscado
+     * @return string todos campos de ModelAddress concatenados como string formando o endereco
+    */
+    public function GetAddressString($id){
+        $dao = new DaoAddress();
+        try{
+           $addr = $dao->SearchById($id);           
+           return $addr->toString();
+        }catch(Exception $e) {
+                echo "Error in method GetAddress in ControlAddres: ".$e->getMessage()."</br>";
+            }            
+    }
     
+ 
 }
-
-
-
 
 
 

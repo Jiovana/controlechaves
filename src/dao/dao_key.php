@@ -125,7 +125,7 @@ class DaoKey{
     */
     public function SearchAll(){
         try{
-            $sql = "SELECT * FROM keys ORDER BY id";
+            $sql = "SELECT * FROM `keys` ORDER BY id";
             
             $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->execute();
