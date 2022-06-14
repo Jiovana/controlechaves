@@ -63,7 +63,7 @@ class DaoAddress {
             $p_sql->bindValue( ":cidade", $address->getCidade() );
             $p_sql->bindValue( ":rua", $address->getRua() );
             $p_sql->bindValue( ":complemento", $address->getComplemento() );
-            $p_sql->bindValue( ":addrid", $address->getId );
+            $p_sql->bindValue( ":addrid", $address->getId() );
 
             return $p_sql->execute();
 

@@ -93,7 +93,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
                 </div>
                 <div class="box-body">
                     <div style="overflow-x:auto;">
-                        <table id="tableuser" class="table table-striped ">
+                        <table id="tableuser" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -123,12 +123,12 @@ $control->FillTable();
 
 <script>
     $(document).ready(function() {
-                $('#tableuser').DataTable({
-                    "language": {
-                        "url": "bower_components/datatables.net/pt-BR.json"
-
-                    }
-                });
+        $('#tableuser').DataTable({
+            "language": {
+                "url": "bower_components/datatables.net/pt-BR.json"
+            }
+        })
+    })
 
 </script>
 

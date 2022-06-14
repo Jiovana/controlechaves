@@ -45,6 +45,17 @@ class ControlAddress{
             }            
     }
     
+    public function GetAddressModel($id){
+        $dao = new DaoAddress();
+        return $dao->SearchById($id); 
+    }
+    
+     public function UpdateAddress(ModelAddress $addr){
+        $dao = new DaoAddress();
+        $dao->Update($addr);         
+    
+    }
+    
  
 }
 

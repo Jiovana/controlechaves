@@ -54,7 +54,7 @@ $control = new ControlKey();
                         </div>-->
 
                         <div class="col-md-12" style="overflow-x:auto;">
-                            <table id="tablekeys" class="table table-striped">
+                            <table id="tablekeys" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">Num Gancho</th>
@@ -83,14 +83,15 @@ $control = new ControlKey();
 </div>
 <!-- /.content-wrapper -->
 
+
 <script>
     $(document).ready(function() {
-                $('#tablekeys').DataTable({
-                    "language": {
-                        "url": "bower_components/datatables.net/pt-BR.json"
-
-                    }
-                });
+        $('#tablekeys').DataTable({
+            "language": {
+                "url": "bower_components/datatables.net/pt-BR.json"
+            }
+        })
+    })
 
 </script>
 

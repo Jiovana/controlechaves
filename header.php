@@ -107,7 +107,7 @@ desired effect
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="dashboard.php" class="logo">
+            <a href="mainlist.php" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini">
                     <img src="images/movkey_logo.png" alt="MovChave Logo" width="35" height="35">
@@ -123,7 +123,7 @@ desired effect
             <nav class="navbar navbar-static-top" role="navigation">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                    <span class="sr-only">Ativar navegacao</span>
+                    <span class="sr-only">Ativar navegação</span>
                 </a>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
@@ -146,10 +146,10 @@ desired effect
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="changepassword.php" class="btn btn-default btn-flat">Change Password</a>
+                                        <a href="changepassword.php" class="btn btn-default btn-flat">Trocar senha</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="logout.php" class="btn btn-default btn-flat">Encerrar sessão</a>
                                     </div>
                                 </li>
                             </ul>
@@ -193,7 +193,7 @@ desired effect
                     </li>
                     <li class="nav-link">
                         <a href="report.php"><i class="fa fa-calendar-o"></i>
-                            <span>Relatorio Mensal</span></a>
+                            <span>Relatório Mensal</span></a>
                     </li>
                     
                     <!--<li class="treeview">
@@ -210,7 +210,7 @@ desired effect
                     </li>-->
                     <li class="nav-link">
                         <a href="users.php"><i class="fa fa-users"></i>
-                            <span>Usuarios</span></a>
+                            <span>Usuários</span></a>
                     </li>
                     <li class="nav-link">
                         <a href=""><i class="fa fa-book"></i>

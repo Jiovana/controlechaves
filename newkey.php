@@ -10,6 +10,8 @@ if ( $_SESSION['user_email'] == "" ) {
 
 }
 
+include_once 'header.php';
+
 $controlk = new ControlKey();
 $controla = new ControlAddress();
 $key = new ModelKey();
@@ -35,10 +37,12 @@ if ( isset( $_POST['btnsave'] ) ) {
 
     $controlk->NewKey( $key );
 
-    header( 'location:mainlist.php' );
+    echo '<script type="text/javascript">
+window.location = "/controlechaves/mainlist.php";
+</script>   '; 
 }
 
-include_once 'header.php';
+
 ?>
 
 <!-- Content Wrapper. Contains page content -->

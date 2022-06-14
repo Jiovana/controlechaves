@@ -57,7 +57,7 @@ class DaoKey{
     */
     public function Update(ModelKey $key){
         try{
-            $sql = "UPDATE keys SET gancho = :gancho, sicadi = :sicadi, tipo = :tipo, status = :status, adicional = :adicional, endereco_id = :endereco_id WHERE id = :keyid";
+            $sql = "UPDATE `keys` SET gancho = :gancho, sicadi = :sicadi, tipo = :tipo, status = :status, adicional = :adicional, endereco_id = :endereco_id WHERE id = :keyid";
             
             $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":gancho", $key->getGancho());
@@ -65,8 +65,8 @@ class DaoKey{
             $p_sql->bindValue(":tipo", $key->getTipo());
             $p_sql->bindValue(":status", $key->getStatus());
             $p_sql->bindValue(":adicional", $key->getAdicional());
-            $p_sql->bindValue(":endereço_id", $key->getEnderecoId());
-            $p_sql->bindValue(":keyid", $key->getId);
+            $p_sql->bindValue(":endereco_id", $key->getEnderecoId());
+            $p_sql->bindValue(":keyid", $key->getId());
             
             return $p_sql->execute();
             
@@ -83,7 +83,7 @@ class DaoKey{
     */
     public function Delete($id){
         try{
-            $sql = "DELETE FROM keys WHERE id = :keyid";
+            $sql = "DELETE FROM `keys` WHERE id = :keyid";
             
             $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":keyid", $id);
@@ -102,7 +102,7 @@ class DaoKey{
     */
     public function SearchById($id){
         try{
-            $sql = "SELECT * FROM keys WHERE id = :keyid";
+            $sql = "SELECT * FROM `keys` WHERE id = :keyid";
             
             $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->bindValue(":keyid", $id);         
