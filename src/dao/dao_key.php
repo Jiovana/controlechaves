@@ -135,6 +135,23 @@ class DaoKey{
             echo "Error while running SearchAll method in DaoKey: ".$e;
         }
     }
+    
+    
+    public function SearchIdLimit1() {
+        try {
+            $sql = "SELECT id FROM `keys` ORDER BY id DESC LIMIT 1";
+
+            $p_sql = Connection::getConnection()->prepare( $sql );
+
+            $p_sql->execute();
+
+            $p_sql->setFetchMode( PDO::FETCH_CLASS, 'ModelKey' );
+
+            return $p_sql->fetch();
+        } catch( PDOException  $e ) {
+            echo  "Error while running SearchAllLimit1 method in DaoKey: ".$e->getMessage();
+        }
+    }
 
 
 }

@@ -54,11 +54,12 @@ $control = new ControlKey();
                         </div>-->
 
                         <div class="col-md-12" style="overflow-x:auto;">
-                            <table id="tablekeys" class="table table-striped table-bordered table-hover">
+                            <table id="tablekeys" class="table table-bordered table-hover">
+                               
                                 <thead>
-                                    <tr>
-                                        <th style="width: 5%">Num Gancho</th>
-                                        <th style="width: 55%">Endereco</th>
+                                    <tr style="background-color:#9FF781; ">
+                                        <th style="width: 6% ; ">Gancho</th>
+                                        <th style="width: 54%">Endereço</th>
                                         <th style="width: 10%">Tipo</th>
                                         <th style="width: 10%">Status</th>
                                         <th style="width: 10%">Emprestar</th>

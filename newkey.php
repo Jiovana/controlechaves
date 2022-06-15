@@ -2,6 +2,7 @@
 
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
 
 session_start();
 
@@ -14,20 +15,26 @@ include_once 'header.php';
 
 $controlk = new ControlKey();
 $controla = new ControlAddress();
+$controll = new ControlLog();
+
 $key = new ModelKey();
 $address = new ModelAddress();
+$log = new ModelLog();
 
 //ao pressionar o botao de salvar, preenche objetos address e key, inserindo primeiro o endereco, para obter o id e entao inserir os dados da chave. Apos insercao redireciona para  a lista de chaves
 if ( isset( $_POST['btnsave'] ) ) {
-
+    // inserir primeeiro informacoes do endereco
     $address->setNumero( $_POST['txtnum'] );
     $address->setBairro( $_POST['txtdistrict'] );
     $address->setRua( $_POST['txtstreet'] );
     $address->setCidade( $_POST['txtcity'] );
-    $address->setComplemento( $_POST['txtaddon2'] );
+    if($_POST['txtaddon2'] != ""){
+        $address->setComplemento( $_POST['txtaddon2'] ); 
+    }
 
     $addr_id = $controla->NewAddress( $address );
 
+    //inserir dados da chave
     $key->setSicadi( $_POST['txtsicadi'] );
     $key->setGancho( $_POST['txthook'] );
     $key->setTipo( $_POST['select_category'] );
@@ -35,11 +42,23 @@ if ( isset( $_POST['btnsave'] ) ) {
     $key->setAdicional( $_POST['txtaddon'] );
     $key->setEnderecoId( $addr_id );
 
-    $controlk->NewKey( $key );
+    $keyid = $controlk->NewKey( $key );
+    
+    //inserir o log de criacao da chave   
+    $log->setKeys_id($keyid);
+    $log->setUser_id($_SESSION['user_id']);
+    
+    $string = "Chave Nº: ".$keyid.", Gancho: ".$key->getGancho()." foi adicionada pelo usuário:  ".$_SESSION['user_name']." com STATUS: ".$key->getStatus().".";    
+    $log->setDescription($string);
+    
+    $controll->CreateLog($log);
+    
 
-    echo '<script type="text/javascript">
-window.location = "/controlechaves/mainlist.php";
-</script>   '; 
+    echo '<script> window.setTimeout(function(){
+        window.location.href = "/controlechaves/mainlist.php";
+
+    }, 3000);
+    </script>   '; 
 }
 
 
@@ -131,7 +150,7 @@ window.location = "/controlechaves/mainlist.php";
 
                             <div class="form-group">
                                 <label>Complemento</label>
-                                <textarea class="form-control" rows="3" name="txtaddon2" placeholder="Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)"></textarea>
+                                <textarea id="addon2" class="form-control" rows="3" name="txtaddon2" placeholder="Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)"></textarea>
                             </div>
 
                         </div>
@@ -149,6 +168,8 @@ window.location = "/controlechaves/mainlist.php";
 
     </section>
 </div>
+
+
 
 <!-- /.content-wrapper -->
 

@@ -18,7 +18,7 @@ class ControlUser {
      * @param string $password a senha informada
      * 
     */
-    function Login( $email, $password ) {
+   public function Login( $email, $password ) {
 
         $daouser = new DaoUser;
 
@@ -69,7 +69,7 @@ class ControlUser {
      * @param ModelUser $user O objeto usuario a ser inserido
      * 
     */
-    function NewUser( ModelUser $newuser ) {
+   public function NewUser( ModelUser $newuser ) {
 
         $dao = new DaoUser();
 
@@ -118,7 +118,7 @@ class ControlUser {
      * @param int $id id do usuario a ser apagado
      * 
     */
-    function DeleteUser( $id ) {
+   public function DeleteUser( $id ) {
         $dao = new DaoUser();
         if ( $dao->Delete( $id ) ) {
             echo '<script type="text/javascript">
@@ -154,7 +154,7 @@ class ControlUser {
      * @param string $confpass senha de confirmacao
      * 
     */
-    function ChangePassword( $email, $oldpass, $newpass, $confpass ) {
+   public function ChangePassword( $email, $oldpass, $newpass, $confpass ) {
 
         $daouser = new DaoUser();
         $user = new ModelUser();
@@ -223,7 +223,7 @@ class ControlUser {
      * Pega os usuarios do banco como um array e os percorre, preenchendo a tabela
      * 
     */
-    function FillTable() {
+   public function FillTable() {
         $dao = new DaoUser();
         $users = $dao->SearchAll();
 
@@ -247,7 +247,7 @@ class ControlUser {
      * @param ModelUser $user o usuario a ser atualizado
      * 
     */
-    function UpdateUser( ModelUser $user ) {
+    public function UpdateUser( ModelUser $user ) {
         if ( empty( $user->getNome() ) ||  empty( $user->getSobrenome() ) || empty( $user->getEmail() ) || empty( $user->getSenha() )){
             $errorupdate = '<script type="text/javascript">
                     jQuery(function validation(){
@@ -297,7 +297,7 @@ class ControlUser {
      *
      * 
     */
-    function FillForm( $id ) {
+   public function FillForm( $id ) {
         $dao = new DaoUser();
         if ( $user = $dao->SearchById( $id ) ) {
             echo '
@@ -336,7 +336,7 @@ class ControlUser {
      *
      * 
     */
-    function ClearForm(){
+    public function ClearForm(){
         echo '
                         <div class="form-group">
                             <label>Nome</label>
@@ -360,6 +360,12 @@ class ControlUser {
                         <button type="submit" class="btn btn-info" name="btnsave">Salvar</button>
                         <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="float: right;" >
                             ';
+    }
+    
+    
+    public function SearchUser($id){
+        $dao = new DaoUser();
+        return $dao->SearchById($id);
     }
 
 }

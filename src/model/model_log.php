@@ -1,10 +1,10 @@
 <?php 
 
-class Log{
+class ModelLog{
     
     private $id;
     private $description;
-    private $date;
+    private $data;
     private $keys_id;
     private $user_id;
     
@@ -22,8 +22,8 @@ class Log{
         return $this->description;
     }
     
-    public function setDate($date){
-        $this->$date = $date;
+    public function setData($date){
+        $this->data = $date;
     }
     public function getData(){
         return $this->data;

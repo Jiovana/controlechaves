@@ -2,6 +2,8 @@
 
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_user.php';
 
 session_start();
 
@@ -13,6 +15,7 @@ include_once 'header.php';
 
 $controlk = new ControlKey();
 $controla = new ControlAddress();
+$controll = new ControlLog();
 
 $key_id = $_GET['id'];
 $key = $controlk->GetKeyModel( $key_id );
@@ -20,17 +23,24 @@ $key = $controlk->GetKeyModel( $key_id );
 $addr_id = $key->getEnderecoId();
 $address = $controla->GetAddressModel( $addr_id );
 
+$log = new ModelLog();
+
 //ao pressionar o botao de 
 if ( isset( $_POST['btnupdate'] ) ) {
-
+    //atualizar endereco
     $address->setNumero( $_POST['txtnum'] );
     $address->setBairro( $_POST['txtdistrict'] );
     $address->setRua( $_POST['txtstreet'] );
     $address->setCidade( $_POST['txtcity'] );
-    $address->setComplemento( $_POST['txtaddon2'] );
+    if ($_POST['txtaddon2'] == ""){
+        $address->setComplemento(null);
+    }else{
+         $address->setComplemento( $_POST['txtaddon2'] );
+    }
 
     $controla->UpdateAddress($address);
 
+    //atualizar a chave
     $key->setSicadi( $_POST['txtsicadi'] );
     $key->setGancho( $_POST['txthook'] );
     $key->setTipo( $_POST['select_category'] );
@@ -39,6 +49,16 @@ if ( isset( $_POST['btnupdate'] ) ) {
     $key->setEnderecoId( $addr_id );
 
     $controlk->UpdateKey($key);
+    
+    //inserir o log de atualizacao da chave   
+    $log->setKeys_id($key->getId());
+    $log->setUser_id($_SESSION['user_id']);
+    
+    $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi atualizada pelo usuário:  ".$_SESSION['user_name']." com STATUS: ".$key->getStatus().".";    
+    $log->setDescription($string);
+    
+    $controll->CreateLog($log);
+    
 }
 
 
@@ -122,7 +142,7 @@ for ( $i = 1; $i <= 5; $i++ ) {
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Adicional</label>
-                                <textarea class="form-control" rows="3" name="txtaddon" placeholder="Alguma informação adicional sobre a chave ou imóvel"><?php echo $key->getAdicional();?></textarea>
+                                <textarea class="form-control" rows="3" name="txtaddon" placeholder="Alguma informação adicional sobre a chave ou imóvel" style="text-align:left;"><?php echo $key->getAdicional();?></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -152,8 +172,8 @@ for ( $i = 1; $i <= 5; $i++ ) {
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Complemento</label>
-                                <textarea class="form-control" rows="3" name="txtaddon2" placeholder="Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)" >
-                                <?php echo $address->getComplemento();?>
+                                <textarea class="form-control" rows="3" name="txtaddon2" placeholder="Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)" style="text-align:left;">
+        <?php echo $address->getComplemento(); ?>
                                 </textarea>
                             </div>
                         </div>
@@ -166,7 +186,7 @@ for ( $i = 1; $i <= 5; $i++ ) {
             <div class="col-md-6">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Movimentacoes da chave</h3>
+                        <h3 class="box-title">Movimentações da chave</h3>
                     </div>
                     <div class="box-body">
                         <div class="col-md-12" style="overflow-x:auto;">
@@ -174,15 +194,14 @@ for ( $i = 1; $i <= 5; $i++ ) {
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">#</th>
-                                        <th style="width: 65%">Descricao</th>
-                                        <th style="width: 10%">Usuario</th>
+                                        <th style="width: 75%">Descrição</th>
                                         <th style="width: 10%">Data</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-
+                            $controll->FillMovTable();
 ?>
                                 </tbody>
                             </table>

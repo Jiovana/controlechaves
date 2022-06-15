@@ -1,8 +1,9 @@
 <?php 
 
-require_once "../model/model_log.php";
+require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/model/model_log.php";
 
-require_once "../control/connection.php";
+require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/connection.php";
+
 
 class DaoLog{
     public static $instance;
@@ -13,8 +14,7 @@ class DaoLog{
     
     public static function getInstance(){
         if(!isset(self::$instance))
-            self::$instance = new DaoLog();
-        
+            self::$instance = new DaoLog();       
         return self::$instance;
     }
     
@@ -22,7 +22,7 @@ class DaoLog{
         try{
             $sql = "INSERT INTO log (description, keys_id, user_id) VALUES (:desc,:keys_id,:user_id)";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":desc", $log->getDescription());
             $p_sql->bindValue(":keys_id", $log->getKeys_id());
             $p_sql->bindValue(":user_id", $log->getUser_id());
@@ -38,7 +38,7 @@ class DaoLog{
         try{
             $sql = "UPDATE log SET description = :description, keys_id = :keys_id, user_id = :user_id WHERE id = :logid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":description", $log->getDescription());
             $p_sql->bindValue(":keys_id", $log->getKeys_id());
             $p_sql->bindValue(":user_id", $log->getUser_id());
@@ -55,7 +55,7 @@ class DaoLog{
         try{
             $sql = "DELETE FROM log WHERE id = :logid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":logid", $log->getId());
             
             return $p_sql->execute();           
@@ -68,11 +68,14 @@ class DaoLog{
         try{
             $sql = "SELECT * FROM log WHERE id = :logid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->bindValue(":logid", $id);         
             $p_sql->execute();
             
-            return $this->FillLog($p_sql->fetch(PDO::FETCH_ASSOC));
+            $p_sql->setFetchMode( PDO::FETCH_CLASS, 'ModelLog' );
+
+            return $p_sql->fetch();
+            
         }catch(Exception $e){
              echo ("Error while running SearchById method in DaoLog.");
         }
@@ -82,22 +85,13 @@ class DaoLog{
         try{
             $sql = "SELECT * FROM log ORDER BY id";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->execute();
             
-            return $p_sql->fetchAll();
+            return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelLog");
         }catch(Exception $e){
             echo ("Error while running SearchAll method in DaoLog.");
         }
     }
-    
-    private function FillLog($singlelog){
-        $log = new ModelLog($singlelog['id'], $singlelog['description'], $singlelog['bairro']);
-        
-        return $address;
-    } 
-
-
-
-
+}
 ?>

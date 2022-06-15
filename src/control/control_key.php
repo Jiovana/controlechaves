@@ -22,7 +22,11 @@ class ControlKey {
 
     public function NewKey( ModelKey $key ) {
         $dao = new DaoKey();
-        if ( $dao->Insert( $key ) ) {
+        $dao->Insert( $key );
+        
+        $k = $dao->SearchIdLimit1();
+                
+        if ( $k != null ) {
             echo '<script type="text/javascript">
                     jQuery(function validation(){
                         swal({
@@ -33,6 +37,7 @@ class ControlKey {
                         });
                     });
                     </script>';
+            return $k->getId();
         } else {
             echo '<script type="text/javascript">
                     jQuery(function validation(){
@@ -44,6 +49,7 @@ class ControlKey {
                         });
                     });
                     </script>';
+            return null;
         }
     }
 
@@ -57,19 +63,19 @@ class ControlKey {
         $status_labels =  array( 'disponível' => 'label-success', 'emprestado' => 'label-warning', 'atrasado' => 'label-danger', 'perdido' => 'label-primary', 'indisponível' => 'label-default' );
 
         foreach ( $keys as $key ) {
-            echo '<tr>
-                    <td><b>'.$key->getGancho().'</b></td>
-                    <td>'.$addr->GetAddressString( $key->getEnderecoId() ).'</td>
+            echo '<tr style="text-align: center; vertical-align: middle;">
+                    <td style="background-color:#D8D8D8;"><b>'.$key->getGancho().'</b></td>
+                    <td style="text-align: left; vertical-align: middle;">'.$addr->GetAddressString( $key->getEnderecoId() ).'</td>
                     <td>'.$key->getTipo().'</td>
                     <td><h4><span class="label '.$status_labels[$key->getStatus()].'">'.$key->getStatus().'</span></h4></td>
                     
                     <td>      
-                        <a href="borrow.php?id='.$key->getId().'" class="btn btn-warning" role="button"><i class="glyphicon glyphicon-tags" style="margin-right:10px;"></i>Emprestar </a>
+                        <a href="borrow.php?id='.$key->getId().'" class="btn btn-warning btn-block" role="button" data-toggle="tooltip" title="Emprestar essa chave"><i class="glyphicon glyphicon-tags"></i></a>
                         
                         
                     </td>
                     <td>      
-                        <a href="editkey.php?id='.$key->getId().'" class="btn btn-info" role="button"><i class="glyphicon glyphicon-edit" style="margin-right:10px;"></i>Editar</a>
+                        <a href="editkey.php?id='.$key->getId().'" class="btn btn-info btn-block" role="button" data-toggle="tooltip" title="Visualizar e Editar essa chave"><i class="glyphicon glyphicon-edit"></i></a>
                     </td>                
                 </tr> ';
         }

@@ -37,7 +37,7 @@ class ModelAddress{
     public function getComplemento(){ return $this->complemento; }
     /////////////////////////////////////
     public function toString(){
-        $compl = ($this->getComplemento()!="")?("Complemento: ".$this->getComplemento()):("");
+        $compl = ($this->getComplemento()!="")?($this->getComplemento()):("");
         $string = $this->getRua().", ".$this->getNumero().". ".$this->getBairro().", ".$this->getCidade().". ".($compl);
         return $string;
     }
