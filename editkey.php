@@ -25,22 +25,35 @@ $address = $controla->GetAddressModel( $addr_id );
 
 $log = new ModelLog();
 
-//ao pressionar o botao de 
+//obter valores nao-modificados para comparacao
+$addr_num = $address->getNumero();
+$addr_bai = $address->getBairro();
+$addr_rua = $address->getRua();
+$addr_cid = $address->getCidade();
+$addr_com = $address->getComplemento();
+
+$key_sic = $key->getSicadi();
+$key_gan = $key->getGancho();
+$key_tip = $key->getTipo();
+$key_sta = $key->getStatus();
+$key_adi = $key->getAdicional();
+
+//ao pressionar o botao de atualizar
 if ( isset( $_POST['btnupdate'] ) ) {
-    //atualizar endereco
+    //1. atualizar o endereco
     $address->setNumero( $_POST['txtnum'] );
     $address->setBairro( $_POST['txtdistrict'] );
     $address->setRua( $_POST['txtstreet'] );
     $address->setCidade( $_POST['txtcity'] );
-    if ($_POST['txtaddon2'] == ""){
-        $address->setComplemento(null);
-    }else{
-         $address->setComplemento( $_POST['txtaddon2'] );
+    if ( $_POST['txtaddon2'] == "" ) {
+        $address->setComplemento( null );
+    } else {
+        $address->setComplemento( $_POST['txtaddon2'] );
     }
 
-    $controla->UpdateAddress($address);
+    $controla->UpdateAddress( $address );
 
-    //atualizar a chave
+    //2. atualizar a chave
     $key->setSicadi( $_POST['txtsicadi'] );
     $key->setGancho( $_POST['txthook'] );
     $key->setTipo( $_POST['select_category'] );
@@ -48,19 +61,53 @@ if ( isset( $_POST['btnupdate'] ) ) {
     $key->setAdicional( $_POST['txtaddon'] );
     $key->setEnderecoId( $addr_id );
 
-    $controlk->UpdateKey($key);
-    
-    //inserir o log de atualizacao da chave   
-    $log->setKeys_id($key->getId());
-    $log->setUser_id($_SESSION['user_id']);
-    
-    $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi atualizada pelo usuário:  ".$_SESSION['user_name']." com STATUS: ".$key->getStatus().".";    
-    $log->setDescription($string);
-    
-    $controll->CreateLog($log);
-    
-}
+    $controlk->UpdateKey( $key );
 
+    //3. inserir o log de atualizacao da chave
+    $string = "";
+    //3.1 - verificar se campos de endreco mudaram
+    $mod_addr = false;
+    if ( $addr_num != $_POST['txtnum'] or $addr_bai != $_POST['txtdistrict'] or $addr_rua != $_POST['txtstreet'] or $addr_cid != $_POST['txtcity'] or $addr_com != $_POST['txtaddon2'] ) {
+        $mod_addr = true;
+    }
+
+    //3.2 - verificar se campos da chave mudaram, exceto status
+    $mod_key = false;
+    if ( $key_sic != $_POST['txtsicadi'] or $key_gan != $_POST['txthook'] or $key_tip != $_POST['select_category'] or $key_adi != $_POST['txtaddon'] ) {
+        $mod_key = true;
+    }
+    //3.3 - verificar se status mudou
+    $mod_sta = false;
+    if ( $key_sta != $_POST['select_status'] ) {
+        $mod_sta = true;
+    }
+    //3.4 - comparar as tres flags entre si.
+    if ( $mod_addr and $mod_key and $mod_sta ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço, dados da chave e status: ".$key->getStatus();
+    } else if ( $mod_addr and $mod_key ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço e dados da chave.";
+    } else if ( $mod_addr and $mod_sta ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço e status: ".$key->getStatus();
+    } else if ( $mod_key and $mod_sta ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização dos dados da chave e status: ".$key->getStatus();
+    } else if ( $mod_addr ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço.";
+    } else if ( $mod_key ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização dos dados da chave.";
+    } else if ( $mod_sta ) {
+        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do status: ".$key->getStatus();
+    }
+    //3.5 - preencher obj log e inserir no banco.
+    $log->setKeys_id( $key->getId() );
+    $log->setUser_id( $_SESSION['user_id'] );
+    $log->setDescription( $string );
+    //operation pode ser: 1 - criacao, 2 - alteracao,
+    // 3 - emprestimo, 4 - devolucao
+    $log->setOperation( 2 );
+
+    $controll->CreateLog( $log );
+
+}
 
 ?>
 
@@ -92,7 +139,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
                                 <select class="form-control" name="select_category" required>
                                     <option value="" disabled selected>Selecione a categoria</option>
                                     <?php
-$tipo_array = array( 1 => 'aluguel', 2 => 'venda');
+$tipo_array = array( 1 => 'Aluguel', 2 => 'Venda' );
 for ( $i = 1; $i <= 2; $i++ ) {
     ?>
                                     <option <?php
@@ -121,7 +168,7 @@ for ( $i = 1; $i <= 2; $i++ ) {
                                 <select class="form-control" name="select_status" required>
                                     <option value="" disabled selected>Selecione o status</option>
                                     <?php
-$status_array = array( 1 => 'disponível', 2 => 'emprestado', 3 => 'atrasado', 4 => 'perdido', 5 => 'indisponível' );
+$status_array = array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível' );
 for ( $i = 1; $i <= 5; $i++ ) {
     ?>
                                     <option <?php
@@ -142,7 +189,8 @@ for ( $i = 1; $i <= 5; $i++ ) {
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Adicional</label>
-                                <textarea class="form-control" rows="3" name="txtaddon" placeholder="Alguma informação adicional sobre a chave ou imóvel" style="text-align:left;"><?php echo $key->getAdicional();?></textarea>
+                                <textarea class="form-control" rows="3" name="txtaddon" placeholder="Alguma informação adicional sobre a chave ou imóvel" style="text-align:left;"><?php echo $key->getAdicional();
+?></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -173,8 +221,9 @@ for ( $i = 1; $i <= 5; $i++ ) {
                             <div class="form-group">
                                 <label>Complemento</label>
                                 <textarea class="form-control" rows="3" name="txtaddon2" placeholder="Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)" style="text-align:left;">
-        <?php echo $address->getComplemento(); ?>
-                                </textarea>
+<?php echo $address->getComplemento();
+?>
+</textarea>
                             </div>
                         </div>
                         <div class="text-center">
@@ -193,15 +242,18 @@ for ( $i = 1; $i <= 5; $i++ ) {
                             <table id="tablemov" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th style="width: 5%">#</th>
-                                        <th style="width: 75%">Descrição</th>
-                                        <th style="width: 10%">Data</th>
+
+                                        <!--[date]  [operation] [description]  [nome] -->
+                                        <th style="width: 15%">Data</th>
+                                        <th style="width: 10%">Usuário</th>
+                                        <th style="width: 10%">Operação</th>
+                                        <th style="width: 65%">Descrição</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                            $controll->FillMovTable();
+$controll->FillMovTable( $key_id );
 ?>
                                 </tbody>
                             </table>

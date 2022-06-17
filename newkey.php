@@ -47,8 +47,11 @@ if ( isset( $_POST['btnsave'] ) ) {
     //inserir o log de criacao da chave   
     $log->setKeys_id($keyid);
     $log->setUser_id($_SESSION['user_id']);
+    //operation pode ser: 1 - criacao, 2 - alteracao,
+    // 3 - emprestimo, 4 - devolucao
+    $log->setOperation(1);
     
-    $string = "Chave Nº: ".$keyid.", Gancho: ".$key->getGancho()." foi adicionada pelo usuário:  ".$_SESSION['user_name']." com STATUS: ".$key->getStatus().".";    
+    $string = "Chave nº Gancho: ".$key->getGancho()." foi adicionada no sistema com status: ".$key->getStatus().".";    
     $log->setDescription($string);
     
     $controll->CreateLog($log);
@@ -98,8 +101,8 @@ if ( isset( $_POST['btnsave'] ) ) {
                                 <label>Categoria:</label>
                                 <select class="form-control" name="select_category" required>
                                     <option value="" disabled selected>Selecione a categoria</option>
-                                    <option>aluguel</option>
-                                    <option>venda</option>
+                                    <option>Aluguel</option>
+                                    <option>Venda</option>
                                 </select>
 
                             </div>
@@ -108,11 +111,11 @@ if ( isset( $_POST['btnsave'] ) ) {
                                 <label>Status:</label>
                                 <select class="form-control" name="select_status" required>
                                     <option value="" disabled selected>Selecione o status</option>
-                                    <option>disponível</option>
-                                    <option>emprestado</option>
-                                    <option>atrasado</option>
-                                    <option>perdido</option>
-                                    <option>indisponível</option>
+                                    <option>Disponível</option>
+                                    <option>Emprestado</option>
+                                    <option>Atrasado</option>
+                                    <option>Perdido</option>
+                                    <option>Indisponível</option>
                                 </select>
                             </div>
 

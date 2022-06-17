@@ -136,7 +136,12 @@ class DaoKey{
         }
     }
     
-    
+    /**
+     * Busca o ultimo id inserido no banco
+     * 
+     * 
+     * @return ModelKey.id id da ultima chave inserida
+    */
     public function SearchIdLimit1() {
         try {
             $sql = "SELECT id FROM `keys` ORDER BY id DESC LIMIT 1";
@@ -155,14 +160,5 @@ class DaoKey{
 
 
 }
-$dao = new DaoKey();
-$key = new ModelKey();
-$key->setSicadi("123123");
-    $key->setGancho("123");
-    $key->setTipo("venda");
-    $key->setStatus("atrasado");
-$key->setAdicional("a");
-    $key->setEnderecoId(2);
 
-//$dao->Insert($key);
 ?>

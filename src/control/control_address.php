@@ -45,11 +45,28 @@ class ControlAddress{
             }            
     }
     
+    /**
+     * Busca um objeto address do banco, implementa SearchById da dao.
+     *
+     * Usado em editkey.php para mostrar address no form.
+     * 
+     * @param int $id id do endereco a ser buscado
+     * @return ModelAddress objeto address
+    */
     public function GetAddressModel($id){
         $dao = new DaoAddress();
         return $dao->SearchById($id); 
     }
     
+    
+    /**
+     * Apenas implementa metodo Update da dao.
+     *
+     * Usado em editkey.php para atualizar o address 
+     * 
+     * @param ModelAddress $addr obj address a ser atualizado
+     * 
+    */
      public function UpdateAddress(ModelAddress $addr){
         $dao = new DaoAddress();
         $dao->Update($addr);         

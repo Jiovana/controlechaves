@@ -362,7 +362,12 @@ class ControlUser {
                             ';
     }
     
-    
+    /**
+    * Apenas chama o metodo searchbyid de Dao User
+    *
+    * @param int $id O id do usuario a ser buscado
+    * @return ModelUser objeto user
+    */
     public function SearchUser($id){
         $dao = new DaoUser();
         return $dao->SearchById($id);

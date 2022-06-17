@@ -33,14 +33,16 @@ class ModelBorrowing{
         $this->data_checkin = $data_checkin;
     }
     public function getData_checkin(){
-        return $this->data_checkin;
+        $date = date_create($this->data_checkin); 
+        return date_format($date,'d/m/Y'); 
     }
     
     public function setData_checkout($data_checkout){
         $this->data_checkout = $data_checkout;
     }
     public function getData_checkout(){
-        return $this->data_checkout;
+        $date = date_create($this->data_checkout); 
+        return date_format($date,'d/m/Y'); 
     }
     
     public function setRequester_id($requester_id){

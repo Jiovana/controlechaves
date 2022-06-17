@@ -53,6 +53,13 @@ class ControlKey {
         }
     }
 
+    /**
+    * Preenche a tabela em mainlist.php
+    *
+    * Busca dados da dao.
+    *
+    */
+
     public function FillTable() {
         $dao = new DaoKey();
         $addr = new ControlAddress();
@@ -60,7 +67,7 @@ class ControlKey {
 
         // array( 'disponível' => '#9FF781', 'emprestado' => '#F7BE81', 'atrasado' => '#F78181', 'perdido' => '#819FF7', 'indisponível' => '#A4A4A4' );
 
-        $status_labels =  array( 'disponível' => 'label-success', 'emprestado' => 'label-warning', 'atrasado' => 'label-danger', 'perdido' => 'label-primary', 'indisponível' => 'label-default' );
+        $status_labels =  array( 'Disponível' => 'label-success', 'Emprestado' => 'label-warning', 'Atrasado' => 'label-danger', 'Perdido' => 'label-primary', 'Indisponível' => 'label-default' );
 
         foreach ( $keys as $key ) {
             echo '<tr style="text-align: center; vertical-align: middle;">
@@ -81,11 +88,30 @@ class ControlKey {
         }
     }
 
+    
+     /**
+    * Obtem um objeto key do banco com base no id informado
+    *
+    * Usado em editkey.php para mostrar dados no form
+    *
+    * @param int $id id da chave a ser buscada
+    * @return ModelKey obj key
+    */
+
     public function GetKeyModel( $id ) {
         $dao = new DaoKey();
         return $dao->SearchById( $id );
 
     }
+
+    /**
+    * Atualiza uma chave no banco de dados
+    *
+    * Envia dados para a dao, mostra alertas swal
+    *
+    * @param ModelKey $key O objeto key a ser atualizado
+    *
+    */
 
     public function UpdateKey( ModelKey $key ) {
         $dao = new DaoKey();
