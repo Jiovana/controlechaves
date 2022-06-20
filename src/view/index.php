@@ -1,11 +1,11 @@
 <!-- jQuery 3 -->
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- iCheck -->
-<script src="plugins/iCheck/icheck.min.js"></script>
+<script src="../../plugins/iCheck/icheck.min.js"></script>
 <!-- Sweet Alerts -->
-<script src="bower_components/sweet-alert/sweetalert.js"></script>
+<script src="../../bower_components/sweet-alert/sweetalert.js"></script>
 
 <?php 
     include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_user.php';
@@ -27,19 +27,19 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>MovChave | Log In</title>
-    <link rel="icon" href="images/movkey_logo.png" type="image/x-icon">
+    <link rel="icon" href="../../images/movkey_logo.png" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
     <!-- iCheck -->
-    <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
+    <link rel="stylesheet" href="../../plugins/iCheck/square/blue.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,8 +55,8 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <img src="images/movkey_logo.png" class="img-square" alt="MovChave Logo" width="50" height="50">
-            <a href="../../index.php">Mov<b>Chave</b></a>
+            <img src="../../images/movkey_logo.png" class="img-square" alt="MovChave Logo" width="50" height="50">
+            <a href="index.php">Mov<b>Chave</b></a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">

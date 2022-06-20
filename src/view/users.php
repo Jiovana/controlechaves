@@ -125,7 +125,7 @@ $control->FillTable();
     $(document).ready(function() {
         $('#tableuser').DataTable({
             "language": {
-                "url": "bower_components/datatables.net/pt-BR.json"
+                "url": "../../bower_components/datatables.net/pt-BR.json"
             }
         })
     })

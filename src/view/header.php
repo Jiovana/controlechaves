@@ -3,58 +3,60 @@
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
+
+
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>MovChave</title>
-    <link rel="icon" href="images/movkey_logo.png" type="image/x-icon">
+    <link rel="icon" href="../../images/movkey_logo.png" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 
     <!-- jQuery 3 -->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.min.js"></script>
+    <script src="../../dist/js/adminlte.min.js"></script>
     <!-- Sweet Alerts -->
-    <script src="bower_components/sweet-alert/sweetalert.js"></script>
+    <script src="../../bower_components/sweet-alert/sweetalert.js"></script>
     <!-- DataTables -->
-    <script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="../../bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-    <script src="Chart.js-2.8.0/dist/Chart.min.js"></script>
+    <script src="../../Chart.js-2.8.0/dist/Chart.min.js"></script>
 
 
     <!-- bootstrap datepicker -->
-    <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <!-- iCheck 1.0.1 -->
-    <script src="plugins/iCheck/icheck.min.js"></script>
+    <script src="../../plugins/iCheck/icheck.min.js"></script>
 
 
     <!-- BOOTSTRAP -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
 
     <!-- Select2 -->
-    <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
 
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
-    <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="../../dist/css/skins/skin-blue.min.css">
     <!-- DataTables -->
-    <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -68,15 +70,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     <!-- daterange picker -->
-    <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="../../bower_components/bootstrap-daterangepicker/daterangepicker.css">
     <!-- bootstrap datepicker -->
-    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="plugins/iCheck/all.css">
+    <link rel="stylesheet" href="../../plugins/iCheck/all.css">
 
 
     <!-- Select2 -->
-    <script src="bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
 
 </head>
 <!--
@@ -110,11 +112,11 @@ desired effect
             <a href="mainlist.php" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini">
-                    <img src="images/movkey_logo.png" alt="MovChave Logo" width="35" height="35">
+                    <img src="../../images/movkey_logo.png" alt="MovChave Logo" width="35" height="35">
                 </span>
                 <!-- logo for regular state and mobile devices -->
                 <span class="logo-lg">
-                    <img src="images/movkey_logo.png" alt="MovChave Logo" width="35" height="35">
+                    <img src="../../images/movkey_logo.png" alt="MovChave Logo" width="35" height="35">
                     Mov<b>Chave</b>
                 </span>
             </a>
@@ -133,14 +135,14 @@ desired effect
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
-                                <img src="images/user_logo.png" class="user-image" alt="User Image">
+                                <img src="../../images/user_logo.png" class="user-image" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs"><?php echo $_SESSION['user_name']." ".$_SESSION['user_surname'];?></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
-                                    <img src="images/user_logo.png" class="img-circle" alt="User Image">
+                                    <img src="../../images/user_logo.png" class="img-circle" alt="User Image">
                                     <p><?php echo $_SESSION['user_email'];?></p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -167,7 +169,7 @@ desired effect
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="images/user_logo.png" class="img-circle" alt="User Image">
+                        <img src="../../images/user_logo.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p>Olá, <?php echo $_SESSION['user_name'];?></p>

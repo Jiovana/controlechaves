@@ -43,7 +43,7 @@ class ControlUser {
                         });
                     });
                     </script>';
-                    $url = "../controlechaves/mainlist.php";
+                    $url = "../view/mainlist.php";
                     header( 'refresh:2;'.$url );
                 }
             } else {
@@ -372,6 +372,6 @@ class ControlUser {
         $dao = new DaoUser();
         return $dao->SearchById($id);
     }
-
+    
 }
 ?>

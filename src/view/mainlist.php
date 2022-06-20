@@ -89,7 +89,7 @@ $control = new ControlKey();
     $(document).ready(function() {
         $('#tablekeys').DataTable({
             "language": {
-                "url": "bower_components/datatables.net/pt-BR.json"
+                "url": "../../bower_components/datatables.net/pt-BR.json"
             }
         })
     })

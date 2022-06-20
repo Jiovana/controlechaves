@@ -58,7 +58,7 @@ if ( isset( $_POST['btnsave'] ) ) {
     
 
     echo '<script> window.setTimeout(function(){
-        window.location.href = "/controlechaves/mainlist.php";
+        window.location.href = "/controlechaves/src/view/mainlist.php";
 
     }, 3000);
     </script>   '; 
