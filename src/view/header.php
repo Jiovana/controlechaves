@@ -31,19 +31,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <script src="../../Chart.js-2.8.0/dist/Chart.min.js"></script>
 
-
+    
     <!-- bootstrap datepicker -->
     <script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <!-- iCheck 1.0.1 -->
     <script src="../../plugins/iCheck/icheck.min.js"></script>
 
+    
+    
+    
+    
 
     <!-- BOOTSTRAP -->
     <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
 
     <!-- Select2 -->
     <link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
-
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -71,6 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- daterange picker -->
     <link rel="stylesheet" href="../../bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    
     <!-- bootstrap datepicker -->
     <link rel="stylesheet" href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <!-- iCheck for checkboxes and radio inputs -->
@@ -79,6 +83,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Select2 -->
     <script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
+    <!-- date-range-picker -->
+<script src="../../bower_components/moment/min/moment.min.js"></script>
 
 </head>
 <!--
@@ -173,14 +179,14 @@ desired effect
                     </div>
                     <div class="pull-left info">
                         <p>Olá, <?php echo $_SESSION['user_name'];?></p>
-                         <!-- Status -->
+                        <!-- Status -->
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <hr>
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu nav" data-widget="tree">
-        
+
                     <!-- Optionally, you can add icons to the links -->
                     <li class="nav-link">
                         <a href="mainlist.php"><i class="fa fa-th-list"></i> <span>Lista de chaves</span></a>
@@ -190,14 +196,14 @@ desired effect
                             <span>Nova Chave</span></a>
                     </li>
                     <li class="nav-link">
-                        <a href="borrowing.php"><i class="fa fa-tags"></i>
+                        <a href="borrowkey.php"><i class="fa fa-tags"></i>
                             <span>Emprestar chave</span></a>
                     </li>
                     <li class="nav-link">
                         <a href="report.php"><i class="fa fa-calendar-o"></i>
                             <span>Relatório Mensal</span></a>
                     </li>
-                    
+
                     <!--<li class="treeview">
                         <a href="#">
                             <i class="fa fa-table"></i> <span>Sales Reports</span>
