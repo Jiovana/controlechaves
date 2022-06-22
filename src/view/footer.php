@@ -26,5 +26,7 @@
 <link rel="stylesheet" type="text/css" href="../../plugins/datetimepicker/jquery.datetimepicker.css"/ >
 <script src="../../plugins/datetimepicker/jquery.js"></script>
 <script src="../../plugins/datetimepicker/build/jquery.datetimepicker.full.min.js"></script>
+<!-- Select2 -->
+<script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
 
 </html>

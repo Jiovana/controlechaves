@@ -157,6 +157,50 @@ class DaoKey{
             echo  "Error while running SearchAllLimit1 method in DaoKey: ".$e->getMessage();
         }
     }
+    
+    public function SearchByGancho($gancho){
+        try{
+            $sql = "SELECT * FROM `keys` WHERE gancho = :gancho ";
+            
+            $p_sql = Connection::getConnection()->prepare($sql);     
+            $p_sql->bindValue(":gancho", $gancho);         
+            $p_sql->execute();
+            $p_sql->setFetchMode( PDO::FETCH_CLASS, 'ModelKey' );
+
+            return $p_sql->fetch();
+        }catch( PDOException  $e ) {
+            echo  "Error while running SearchByGancho method in DaoKey: ".$e->getMessage();
+        }
+    }
+    
+    public function SearchAllByGancho(){
+        try{         
+            $sql = "SELECT * FROM `keys` ORDER BY gancho ASC";
+            $p_sql = Connection::getConnection()->prepare($sql);     
+            $p_sql->execute();
+            return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelKey");
+        }catch( PDOException  $e ) {
+            echo  "Error while running SearchAllByGancho method in DaoKey: ".$e->getMessage();
+        }
+    }
+    
+    public function SearchByIdAssoc($id){
+        try{
+            $sql = "SELECT * FROM `keys` WHERE id = :keyid";
+            
+            $p_sql = Connection::getConnection()->prepare($sql);     
+            $p_sql->bindValue(":keyid", $id);         
+            $p_sql->execute();
+            
+
+            return $p_sql->fetch(PDO::FETCH_ASSOC);
+            
+        }catch(PDOException $e){        
+            echo "Error while running SearchByIdAssoc method in DaoKey: ".$e;
+        }
+    }
+    
+    
 
 
 }

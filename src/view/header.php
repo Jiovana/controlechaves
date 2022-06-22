@@ -81,8 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="../../plugins/iCheck/all.css">
 
 
-    <!-- Select2 -->
-    <script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
+   
     <!-- date-range-picker -->
 <script src="../../bower_components/moment/min/moment.min.js"></script>
 

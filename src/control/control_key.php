@@ -23,9 +23,9 @@ class ControlKey {
     public function NewKey( ModelKey $key ) {
         $dao = new DaoKey();
         $dao->Insert( $key );
-        
+
         $k = $dao->SearchIdLimit1();
-                
+
         if ( $k != null ) {
             echo '<script type="text/javascript">
                     jQuery(function validation(){
@@ -88,8 +88,7 @@ class ControlKey {
         }
     }
 
-    
-     /**
+    /**
     * Obtem um objeto key do banco com base no id informado
     *
     * Usado em editkey.php para mostrar dados no form
@@ -141,6 +140,34 @@ class ControlKey {
 
     }
 
+    public function BorrowSearchByGancho( $hook ) {
+        $dao = new DaoKey();
+        return $dao->SearchByGancho( $hook );
+    }
+
+    public function Fill_Gancho() {
+
+        $output = '';
+
+        $dao = new DaoKey();
+        $result = $dao->SearchAllByGancho();
+
+        foreach ( $result as $key ) {
+            $output .= '<option value="'.$key->getId().'" >'.$key->getGancho().'</option>';
+        }
+
+        return $output;
+
+    }
+    
+    public function GetKeyAssoc( $id ) {
+        $dao = new DaoKey();
+        return $dao->SearchByIdAssoc( $id );
+
+    }
+
+
 }
+
 
 ?>
