@@ -224,6 +224,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
 <script type="text/javascript">
     $(document).on('click', '.btnadd', function() {
+        var op = '';
         var html = '';
         html += '<tr>';
 
@@ -242,38 +243,88 @@ if ( isset( $_POST['btnsave'] ) ) {
         //Initialize Select2 Elements
         $('.keygancho').select2()
         $('.keysicadi').select2()
-        
-        $('.keygancho').on('change', function(e) {
-            var keyid = this.value;
-            var tr = $(this).parent().parent();
-            $.ajax( {
-                url: 'ajaxgetkeyinfo.php',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    id: keyid
-                },
-                success: function(data) {
-                    console.log(data);
-                   //tr.find(".keygancho option[value="+data["id"]+"]").attr('selected','selected').change();
-                    tr.find(".keysicadi option[value="+data["id"]+"]").attr('selected','selected').change();
-                    tr.find(".keyaddress").val(data["endereco_string"]);
-                    tr.find(".keycategory").val(data["tipo"]);
-                },
-                error: function (data){
-                    console.log('Error: ', data)
-                }
-            });
-        });
-        
-        
 
-    });
-    
-    // to remove lines from the table dynamically
-        $(document).on('click', '.btnremove', function() {
-            $(this).closest('tr').remove();
+
+        if ($('.keygancho').focus()) {
+            op = "gancho";
+        }
+        if ($('.keysicadi').focus()) {
+            op = "sicadi";
+        }
+        var change1 = false;
+        var change2 = false;
+        $('.keygancho').on('change', function(e) {
+            if(!change1){
+                var keyid = this.value;
+                var tr = $(this).parent().parent();
+                $.ajax({
+                    url: 'ajaxgetkeyinfo.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id: keyid
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        changeSelect2();
+                        tr.find(".keysicadi option[value=" + data["id"] + "]").attr('selected', 'selected').change();
+                        
+                        tr.find(".keyaddress").val(data["endereco_string"]);
+                        tr.find(".keycategory").val(data["tipo"]);
+                         
+                    },
+                    error: function(data) {
+                        console.log('Error: ', data)
+                    }
+                });
+            }
+            change1 = false;
+                
+           
+
         });
+        
+        $('.keysicadi').on('change', function(e) {
+            if(!change2){
+                var keyid = this.value;
+                var tr = $(this).parent().parent();
+                $.ajax({
+                    url: 'ajaxgetkeyinfo.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id: keyid
+                    },
+                    success: function(data) {
+                        console.log(data);
+                       changeSelect1();
+                        tr.find(".keygancho option[value=" + data["id"] + "]").attr('selected', 'selected').change();
+                        tr.find(".keyaddress").val(data["endereco_string"]);
+                        tr.find(".keycategory").val(data["tipo"]);
+                        
+                    },
+                    error: function(data) {
+                        console.log('Error: ', data)
+                    }
+                });
+            }
+            change2 = false;
+        });
+        
+        function changeSelect1(){
+            change1 = true;
+            $('keygancho').change();
+        }
+        function changeSelect2(){
+            change2 = true;
+            $('keysicadi').change();
+        }
+    });
+
+    // to remove lines from the table dynamically
+    $(document).on('click', '.btnremove', function() {
+        $(this).closest('tr').remove();
+    });
 
 </script>
 
