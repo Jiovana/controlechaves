@@ -25,30 +25,6 @@ $address = new ModelAddress();
 $log = new ModelLog();
 
 
-echo '<script>console.log("teste1");</script>';
-
-if (isset($_POST['id'])){
-    $keyid = $_POST['id'];
-    $operation = $_POST['op'];
-    echo $keyid;
-    echo $operation;
-    echo '<script>console.log("teste2");</script>';
-    
-    if ( $operation == "gancho" ) {
-
-        $response = $control->GetKeyAssoc( $keyid );
-
-        echo json_encode( $response );
-    }
-}
-
-
-
-
-
-
-
-
 
 //ao pressionar o botao de salvar, preenche objetos address e key, inserindo primeiro o endereco, para obter o id e entao inserir os dados da chave. Apos insercao redireciona para  a lista de chaves
 if ( isset( $_POST['btnsave'] ) ) {
@@ -104,7 +80,7 @@ if ( isset( $_POST['btnsave'] ) ) {
             <div class="col-md-12">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Emprestar Chave</h3>
+                        <h3 class="box-title">Emprestar Chaves</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
@@ -253,7 +229,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
         html += '<td style="padding:0px;"><select class="form-control keygancho" name="keygancho[]" ><option value="">Selecione</option><?php echo $controlk->Fill_Gancho();?></select></td>';
 
-        html += '<td style="padding:0px;"><select class="form-control keysicadi" name="keysicadi[]" ><option value="">Selecione</option><?php ?></select></td>';
+        html += '<td style="padding:0px;"><select class="form-control keysicadi" name="keysicadi[]" ><option value="">Selecione</option><?php echo $controlk->Fill_Sicadi();?></select></td>';
 
         html += '<td style="padding:0px;"><input type="text" class="form-control keyaddress" name="keyaddress[]" readonly></td>';
 
@@ -266,29 +242,31 @@ if ( isset( $_POST['btnsave'] ) ) {
         //Initialize Select2 Elements
         $('.keygancho').select2()
         $('.keysicadi').select2()
-
+        
         $('.keygancho').on('change', function(e) {
             var keyid = this.value;
-            console.log(keyid);
             var tr = $(this).parent().parent();
             $.ajax( {
-                url: "getkeybygancho.php",
-                method: "get",
-                dataType: "json",
+                url: 'ajaxgetkeyinfo.php',
+                type: 'POST',
+                dataType: 'json',
                 data: {
-                    id: keyid,
-                    op: "gancho"
+                    id: keyid
                 },
                 success: function(data) {
-                    console.log("ihatethis");
                     console.log(data);
-                    tr.find(".keygancho").val(data["gancho"]);
-                    tr.find(".keysicadi").val(data["sicadi"]);
-                    tr.find(".keyaddress").val(data["endereco_id"]);
+                   //tr.find(".keygancho option[value="+data["id"]+"]").attr('selected','selected').change();
+                    tr.find(".keysicadi option[value="+data["id"]+"]").attr('selected','selected').change();
+                    tr.find(".keyaddress").val(data["endereco_string"]);
                     tr.find(".keycategory").val(data["tipo"]);
+                },
+                error: function (data){
+                    console.log('Error: ', data)
                 }
             });
         });
+        
+        
 
     });
     

@@ -200,6 +200,16 @@ class DaoKey{
         }
     }
     
+     public function SearchAllBySicadi(){
+        try{         
+            $sql = "SELECT * FROM `keys` ORDER BY sicadi ASC";
+            $p_sql = Connection::getConnection()->prepare($sql);     
+            $p_sql->execute();
+            return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelKey");
+        }catch( PDOException  $e ) {
+            echo  "Error while running SearchAllBySicadi method in DaoKey: ".$e->getMessage();
+        }
+    }
     
 
 

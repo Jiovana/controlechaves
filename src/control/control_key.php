@@ -153,7 +153,7 @@ class ControlKey {
         $result = $dao->SearchAllByGancho();
 
         foreach ( $result as $key ) {
-            $output .= '<option value="'.$key->getId().'" >'.$key->getGancho().'</option>';
+            $output .= '<option style="padding:0px;" value="'.$key->getId().'" >'.$key->getGancho().'</option>';
         }
 
         return $output;
@@ -163,6 +163,20 @@ class ControlKey {
     public function GetKeyAssoc( $id ) {
         $dao = new DaoKey();
         return $dao->SearchByIdAssoc( $id );
+
+    }
+    
+    public function Fill_Sicadi() {
+        $output = '';
+
+        $dao = new DaoKey();
+        $result = $dao->SearchAllBySicadi();
+
+        foreach ( $result as $key ) {
+            $output .= '<option style="padding:0px;" value="'.$key->getId().'" >'.$key->getSicadi().'</option>';
+        }
+
+        return $output;
 
     }
 
