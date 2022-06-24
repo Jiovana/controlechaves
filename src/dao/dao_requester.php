@@ -1,8 +1,8 @@
 <?php
 
-require_once "../model/model_requester.php";
+require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/model/model_requester.php";
 
-require_once "../control/connection.php";
+require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/connection.php";
 
 class DaoRequester{
     public static $instance;
@@ -22,7 +22,7 @@ class DaoRequester{
         try{
             $sql = "INSERT INTO requester (nome, telefone, ddd, email, documento, tipo) VALUES (:nome,:telefone, :ddd, :email, :documento, :tipo)";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":nome", $requester->getNome());
             $p_sql->bindValue(":telefone", $requester->getTelefone());
             $p_sql->bindValue(":ddd", $requester->getDdd());
@@ -41,7 +41,7 @@ class DaoRequester{
         try{
             $sql = "UPDATE requester SET nome = :nome, telefone = :telefone, ddd = :ddd, email = :email, documento = :documento, tipo = :tipo WHERE id =: reqid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql = Connection::getConnection()->prepare($sql);
             $p_sql->bindValue(":nome", $user->getNome());
             $p_sql->bindValue(":telefone", $requester->getTelefone());
             $p_sql->bindValue(":ddd", $requester->getDdd());
@@ -56,12 +56,12 @@ class DaoRequester{
         }
     }
     
-    public function Delete(ModelRequester $requester){
+    public function Delete($id){
         try{
             $sql = "DELETE FROM requester WHERE id = :reqid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);
-            $p_sql->bindValue(":reqid", $requester->getId());
+            $p_sql = Connection::getConnection()->prepare($sql);
+            $p_sql->bindValue(":reqid", $id);
             
             return $p_sql->execute();           
         }catch(Exception $e){
@@ -73,11 +73,12 @@ class DaoRequester{
         try{
             $sql = "SELECT * FROM requester WHERE id = :reqid";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->bindValue(":reqid", $id);         
             $p_sql->execute();
             
-            return $this->FillRequester($p_sql->fetch(PDO::FETCH_ASSOC));
+            $p_sql->setFetchMode( PDO::FETCH_CLASS, 'ModelRequester' );
+            return $p_sql->fetch();
         }catch(Exception $e){
              echo ("Error while running SearchById method in DaoRequester.");
         }
@@ -87,20 +88,38 @@ class DaoRequester{
         try{
             $sql = "SELECT * FROM requester ORDER BY id";
             
-            $p_sql = Connection::getInstance()->prepare($sql);     
+            $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->execute();
             
-            return $p_sql->fetchAll();
+            return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelRequester");
         }catch(Exception $e){
             echo ("Error while running SearchAll method in DaoRequester.");
         }
     }
     
-    private function FillRequester($singlereq){
-        $requester = new ModelRequester($singlereq['id'], $singlereq['nome'], $singlereq['email'], $singlereq['telefone'], $singlereq['ddd'], $singlereq['documento'], $singlereq['tipo']);
-        
-        return $requester;
-    } 
+    /**
+     * Busca o ultimo id inserido no banco
+     * 
+     * 
+     * @return ModelKey.id id da ultima chave inserida
+    */
+    public function SearchIdLimit1() {
+        try {
+            $sql = "SELECT id FROM `requester` ORDER BY id DESC LIMIT 1";
+
+            $p_sql = Connection::getConnection()->prepare( $sql );
+
+            $p_sql->execute();
+
+            $p_sql->setFetchMode( PDO::FETCH_CLASS, 'ModelRequester' );
+
+            return $p_sql->fetch();
+        } catch( PDOException  $e ) {
+            echo  "Error while running SearchAllLimit1 method in DaoRequester: ".$e->getMessage();
+        }
+    }
+    
+    
 }
 
 ?>

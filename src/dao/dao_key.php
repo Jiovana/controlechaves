@@ -160,7 +160,7 @@ class DaoKey{
     
     public function SearchByGancho($gancho){
         try{
-            $sql = "SELECT * FROM `keys` WHERE gancho = :gancho ";
+            $sql = "SELECT * FROM `keys` WHERE gancho = :gancho  ";
             
             $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->bindValue(":gancho", $gancho);         
@@ -175,7 +175,7 @@ class DaoKey{
     
     public function SearchAllByGancho(){
         try{         
-            $sql = "SELECT * FROM `keys` ORDER BY gancho ASC";
+            $sql = "SELECT * FROM `keys` WHERE status = 'Disponível'  ORDER BY gancho ASC";
             $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->execute();
             return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelKey");
@@ -202,7 +202,7 @@ class DaoKey{
     
      public function SearchAllBySicadi(){
         try{         
-            $sql = "SELECT * FROM `keys` ORDER BY sicadi ASC";
+            $sql = "SELECT * FROM `keys` WHERE status = 'Disponível' ORDER BY sicadi ASC";
             $p_sql = Connection::getConnection()->prepare($sql);     
             $p_sql->execute();
             return $p_sql->fetchAll(PDO::FETCH_CLASS, "ModelKey");

@@ -12,14 +12,7 @@ class ModelRequester{
     
     private function __clone(){}
     
-    public function __construct($id, $nome, $email, $telefone, $ddd, $documento, $tipo){
-        $this->id = $id;
-        $this->nome = $nome;
-        $this->email = $email;
-        $this->telefone = $telefone;
-        $this->ddd = $ddd;
-        $this->documento = $documento;
-        $this->tipo = $tipo;
+    public function __construct(){
     }
     
     public function setId($id){ $this->id = $id; }

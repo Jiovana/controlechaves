@@ -3,6 +3,8 @@
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_requester.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_borrowing.php';
 
 session_start();
 
@@ -13,60 +15,105 @@ if ( $_SESSION['user_email'] == "" ) {
 
 include_once 'header.php';
 
+function debug_to_console($data) {
+    $output = $data;
+    if (is_array($output))
+        $output = implode(',', $output);
+
+    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
+}
+
 
 date_default_timezone_set('America/Sao_Paulo');
 
 $controlk = new ControlKey();
 $controla = new ControlAddress();
 $controll = new ControlLog();
+$controlr = new ControlRequester();
+$controlb = new ControlBorrowing();
 
 $key = new ModelKey();
 $address = new ModelAddress();
 $log = new ModelLog();
+$requester = new ModelRequester();
+$borrowing = new ModelBorrowing();
 
 
-
-//ao pressionar o botao de salvar, preenche objetos address e key, inserindo primeiro o endereco, para obter o id e entao inserir os dados da chave. Apos insercao redireciona para  a lista de chaves
 if ( isset( $_POST['btnsave'] ) ) {
-    // inserir primeeiro informacoes do endereco
-    $address->setNumero( $_POST['txtnum'] );
-    $address->setBairro( $_POST['txtdistrict'] );
-    $address->setRua( $_POST['txtstreet'] );
-    $address->setCidade( $_POST['txtcity'] );
-    if($_POST['txtaddon2'] != ""){
-        $address->setComplemento( $_POST['txtaddon2'] ); 
+    // inserir primeiro informacoes do requerente
+    $requester->setNome($_POST['txtnome']);
+    $requester->setEmail($_POST['txtemail']);
+    $requester->setDocumento($_POST['txtdocument']);
+    $requester->setDdd($_POST['txtddd']);
+    $requester->setTelefone($_POST['txtphone']);
+    $requester->setTipo($_POST['select_category']);
+    
+    $req_id = $controlr->NewRequester( $requester );
+    ///////////////////////////////////////////////
+    // obter info de borrowing
+    // borrowing has : data_checkin, data_checkout, requester_id, user_id
+    $borrowing->setRequester_id($req_id);
+    $borrowing->setUser_id($_SESSION['user_id']);
+    
+      
+    $checkout = date('Y-m-d H:i:s', strtotime (str_replace ('/', '-', $_POST['checkoutdate'])));
+    echo "<script>console.log('test: ". $checkout."');</script>";
+    
+    $checkin = date('Y-m-d H:i:s', strtotime (str_replace ('/', '-', $_POST['checkindate'])));
+    
+    echo "<script>console.log('test: ". $checkin."');</script>";
+    
+    $borrowing->setData_checkout($checkout);
+    $borrowing->setData_checkin($checkin);
+    
+    $borrow_id = $controlb->NewBorrowing($borrowing);
+    
+    ////////////////////////////////////////////////
+    // registrar relacionamento keys_borrowing
+     //keys_borrowing has: borrowing_id, keys_id
+    
+    //obter array com conteudo das chaves. 
+    $arr_keygancho = $_POST['keygancho'];
+    $arr_keyid = $_POST['keyid'];
+    //$arr_keysicadi = $_POST['keysicadi'];
+    //$arr_keyaddress = $_POST['keyaddress'];
+    //$arr_keycategory = $_POST['keycategory'];
+    
+    if($req_id != null){
+       for($i=0; $i<count($arr_keyid); $i++){
+            $controlb->NewKeysBorrowing($arr_keyid[$i], $borrow_id);
+            
+            //inserir o log de emprestar chave   
+            $log->setKeys_id($arr_keyid[$i]);
+            $log->setUser_id($_SESSION['user_id']);
+            //operation pode ser: 1 - criacao, 2 - alteracao,
+            // 3 - emprestimo, 4 - devolucao
+            $log->setOperation(3);
+    
+            $string = "Chave nº Gancho: ".$arr_keygancho[$i]." foi EMPRESTADA para ".$_POST['txtnome']." até ".$_POST['checkindate'].".";    
+            $log->setDescription($string);
+    
+            $controll->CreateLog($log);
+       }
+        
     }
-
-    $addr_id = $controla->NewAddress( $address );
-
-    //inserir dados da chave
-    $key->setSicadi( $_POST['txtsicadi'] );
-    $key->setGancho( $_POST['txthook'] );
-    $key->setTipo( $_POST['select_category'] );
-    $key->setStatus( $_POST['select_status'] );
-    $key->setAdicional( $_POST['txtaddon'] );
-    $key->setEnderecoId( $addr_id );
-
-    $keyid = $controlk->NewKey( $key );
+      
+    echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Sucesso!",
+                            text: "Operacao registrada",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
     
-    //inserir o log de criacao da chave   
-    $log->setKeys_id($keyid);
-    $log->setUser_id($_SESSION['user_id']);
-    //operation pode ser: 1 - criacao, 2 - alteracao,
-    // 3 - emprestimo, 4 - devolucao
-    $log->setOperation(1);
-    
-    $string = "Chave nº Gancho: ".$key->getGancho()." foi adicionada no sistema com status: ".$key->getStatus().".";    
-    $log->setDescription($string);
-    
-    $controll->CreateLog($log);
-    
+    //echo '<script> window.setTimeout(function(){
+      //  window.location.href = "/controlechaves/src/view/mainlist.php";
 
-    echo '<script> window.setTimeout(function(){
-        window.location.href = "/controlechaves/src/view/mainlist.php";
-
-    }, 3000);
-    </script>   '; 
+  //  }, 3000);
+  //  </script>   '; 
 }
 
 
@@ -146,7 +193,8 @@ if ( isset( $_POST['btnsave'] ) ) {
                                 <div style="overflow-x:auto;">
                                     <table id="tablekeys" class="table table-bordered table-hover ">
                                         <thead>
-                                            <tr>
+                                            <tr>   
+                                                <th style="display:none;"></th>
                                                 <th style="width: 10% ; ">Informe Gancho</th>
                                                 <th style="width: 10% ; ">Informe Sicadi</th>
                                                 <th style="width: 50% ; ">Endereço</th>
@@ -175,7 +223,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="datepicker1" name="checkoutdate" value="<?php echo date("d/m/Y H:i");?>" data-date-format="dd/mm/yyyy H:i">
+                                        <input type="text" class="form-control pull-right" id="datepicker1" name="checkoutdate" value="<?php echo date("d/m/Y H:i");?>" data-date-format="yyyy-mm-dd hh:mm:ss">
                                     </div>
                                     <!-- /.input group -->
                                 </div>
@@ -188,7 +236,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="datepicker2" name="checkindate" value="<?php echo date("d/m/Y H:i");?>" data-date-format="dd/mm/yyyy H:i">
+                                        <input type="text" class="form-control pull-right" id="datepicker2" name="checkindate" value="<?php echo date("d/m/Y H:i");?>" data-date-format="yyyy-mm-dd hh:mm:ss">
                                     </div>
                                     <!-- /.input group -->
                                 </div>
@@ -227,6 +275,8 @@ if ( isset( $_POST['btnsave'] ) ) {
         var op = '';
         var html = '';
         html += '<tr>';
+        
+        html += '<td style="display:none;"><input type="hidden" class="form-control keyid" name="keyid[]" readonly></td>';
 
         html += '<td style="padding:0px;"><select class="form-control keygancho" name="keygancho[]" ><option value="">Selecione</option><?php echo $controlk->Fill_Gancho();?></select></td>';
 
@@ -269,6 +319,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                         changeSelect2();
                         tr.find(".keysicadi option[value=" + data["id"] + "]").attr('selected', 'selected').change();
                         
+                        tr.find(".keyid").val(data["id"]);
                         tr.find(".keyaddress").val(data["endereco_string"]);
                         tr.find(".keycategory").val(data["tipo"]);
                          
@@ -299,6 +350,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                         console.log(data);
                        changeSelect1();
                         tr.find(".keygancho option[value=" + data["id"] + "]").attr('selected', 'selected').change();
+                        tr.find(".keyid").val(data["id"]);
                         tr.find(".keyaddress").val(data["endereco_string"]);
                         tr.find(".keycategory").val(data["tipo"]);
                         
