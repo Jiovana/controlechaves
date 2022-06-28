@@ -1,7 +1,6 @@
 <?php
 
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
-include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_requester.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_borrowing.php';
@@ -27,13 +26,11 @@ function debug_to_console($data) {
 date_default_timezone_set('America/Sao_Paulo');
 
 $controlk = new ControlKey();
-$controla = new ControlAddress();
 $controll = new ControlLog();
 $controlr = new ControlRequester();
 $controlb = new ControlBorrowing();
 
 $key = new ModelKey();
-$address = new ModelAddress();
 $log = new ModelLog();
 $requester = new ModelRequester();
 $borrowing = new ModelBorrowing();
@@ -135,54 +132,55 @@ if ( isset( $_POST['btnsave'] ) ) {
                         <div class="col-md-12">
                             <h4>Dados do requerente</h4>
                         </div>
+
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Nome:</label>
-                                <input type="text" class="form-control" name="txtnome" placeholder="Insira o nome completo do requerente" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Categoria:</label>
-                                <select class="form-control" name="select_category" required>
-                                    <option value="" disabled selected>Selecione a categoria</option>
-                                    <option>Cliente</option>
-                                    <option>Diretoria</option>
-                                    <option>Manutenção</option>
-                                    <option>Marketing</option>
-                                    <option>Prestador de serviço</option>
-                                    <option>Vistoria</option>
+                <div class="form-group">
+                    <label>Nome:</label>
+                        <input type="text" class="form-control" name="txtnome" id="reqnome" placeholder="Insira o nome completo do requerente">
+                </div>
+                
+                <div class="form-group">
+                    <label>Categoria:</label>
+                    <select class="form-control" name="select_category" id="reqcat" >
+                        <option value="" disabled selected>Selecione a categoria</option>
+                        <option>Cliente</option>
+                        <option>Diretoria</option>
+                        <option>Manutenção</option>
+                        <option>Marketing</option>
+                        <option>Prestador de serviço</option>
+                        <option>Vistoria</option>
+                    </select>
+                </div>
+            </div>
 
-                                </select>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" class="form-control" name="txtemail" id="reqmail" placeholder="Insira o email do rquerente" >
+                    </div>
 
-                            </div>
+                    <div class="form-group">
+                        <label>DDD:</label>
+                        <input type="text" class="form-control" name="txtddd" id="reqdd" placeholder="Insira o DDD do telefone" >
+                    </div>
+                </div>
 
-                        </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>ID:</label>
+                        <input type="number" class="form-control" name="txtdocument" id="reqdoc" placeholder="Insira o numero do documento" >
+                    </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Email:</label>
-                                <input type="email" class="form-control" name="txtemail" placeholder="Insira o email do rquerente" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>DDD:</label>
-                                <input type="text" class="form-control" name="txtddd" placeholder="Insira o DDD do telefone" required>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>ID:</label>
-                                <input type="number" class="form-control" name="txtdocument" placeholder="Insira o numero do documento" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Telefone:</label>
-                                <input type="number" class="form-control" name="txtphone" placeholder="Insira o numero do telefone" required>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label>Telefone:</label>
+                        <input type="number" class="form-control" name="txtphone" id="reqtel" placeholder="Insira o numero do telefone" >
+                    </div>
+                </div> 
 
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary" name="btnsearch" style="margin-top: 25px !important;">Pesquisar</button>
+                            <button type="button" class="btn btn-primary btnsearch" name="btnsearch" style="margin-top: 25px !important;">Pesquisar</button>
+                            
+                            <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="margin-top: 40px " >
                         </div>
                         <div class="col-lg-12">
                             <hr>
@@ -347,7 +345,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                         id: keyid
                     },
                     success: function(data) {
-                        console.log(data);
+                       console.log(data);
                        changeSelect1();
                         tr.find(".keygancho option[value=" + data["id"] + "]").attr('selected', 'selected').change();
                         tr.find(".keyid").val(data["id"]);
@@ -377,6 +375,37 @@ if ( isset( $_POST['btnsave'] ) ) {
     $(document).on('click', '.btnremove', function() {
         $(this).closest('tr').remove();
     });
+    
+    $(document).on('click', '.btnsearch', function() {
+        $.ajax({
+            url: '../control/control_requester.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    reqnome: $("#reqnome").val(),
+                    reqemail: $("#reqmail").val(),
+                    op: 'request'
+                },
+                    success: function(data) {
+                        console.log(data);
+                        $("#reqnome").val(data["nome"]);
+                        $("#reqmail").val(data["email"]);
+                        $("#reqdd").val(data["ddd"]);
+                        $("#reqdoc").val(data["documento"]);
+                        $("#reqtel").val(data["telefone"]);
+                        
+                        $("select#reqcat option").filter(function(){
+                            return $(this).text() == data["tipo"];
+                        }).prop('selected',true);
+                            
+                    },
+                    error: function(data) {
+                        console.log('Error: ', data)
+                    }
+        });
+        
+    });
+
 
 </script>
 

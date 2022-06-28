@@ -119,7 +119,44 @@ class DaoRequester{
         }
     }
     
+     public function SearchByEmailOrName($email, $name) {
+        try {
+            $sql = '';
+            $p_sql = '';
+            if ($name != null && $email != null){
+                $em = '%'.$email.'%';
+                $na = '%'.$name.'%';
+                $sql = "SELECT * FROM `requester` WHERE LOWER(email) LIKE LOWER(:email) OR LOWER(nome) LIKE LOWER(:name) LIMIT 1";
+                $p_sql = Connection::getConnection()->prepare( $sql );
+                $p_sql->bindValue(":email", $em); 
+                $p_sql->bindValue(":name", $na);
+            } 
+            else if ($name != null && $email == null){
+                $na = '%'.$name.'%';
+                $sql = "SELECT * FROM `requester` WHERE LOWER(nome) LIKE LOWER(:name) LIMIT 1";
+                $p_sql = Connection::getConnection()->prepare( $sql );
+                $p_sql->bindValue(":name", $na); 
+            } 
+            else if ($name == null && $email != null){
+                 $em = '%'.$email.'%';
+                $sql = "SELECT * FROM `requester` WHERE LOWER(email) LIKE LOWER(:email) LIMIT 1";
+                $p_sql = Connection::getConnection()->prepare( $sql );
+                $p_sql->bindValue(":email", $em); 
+            }          
+
+            $p_sql->execute();
+
+            $p_sql->setFetchMode( PDO::FETCH_ASSOC);
+
+            return $p_sql->fetch();
+        } catch( PDOException  $e ) {
+            echo  "Error while running SearchByEmailOrName method in DaoRequester: ".$e->getMessage();
+        }
+    }
+    
     
 }
+
+
 
 ?>

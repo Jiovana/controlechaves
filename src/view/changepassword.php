@@ -38,12 +38,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <ol class="breadcrumb">
-        <li><a href="mainlist.php"><i class="fa fa-dashboard"></i> Lista de Chaves</a></li>
-        <li class="active">Aqui</li>
-      </ol>
-    </section>
+    
 
     <!-- Main content -->
     <section class="content container-fluid">
