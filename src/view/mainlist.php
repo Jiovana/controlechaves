@@ -13,6 +13,13 @@ $control = new ControlKey();
 
 
     include_once 'header.php';
+
+if ( isset( $_GET['id'] ) ) {
+   
+
+}
+
+
 ?>
 
 
@@ -62,7 +69,7 @@ $control = new ControlKey();
                                         <th style="width: 54%">Endereço</th>
                                         <th style="width: 10%">Tipo</th>
                                         <th style="width: 10%">Status</th>
-                                        <th style="width: 10%">Emprestar</th>
+                                        <th style="width: 10%">Emprestar ou Devolver</th>
                                         <th style="width: 10%">Ver e Editar</th>
                                     </tr>
                                 </thead>
@@ -103,6 +110,49 @@ $control = new ControlKey();
     });
 
 </script>
+
+
+<!-- ajax code for product delete button -->
+<script>
+    $(document).ready(function() {
+        $('.btndelete').click(function() {
+            var tdh = $(this);
+            var id = $(this).attr("id");
+
+            swal({
+                    title: "Voce deseja devolver a chave?",
+                    //text: "Once deleted, you can't recover this product!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '../control/ajaxretrievekey.php',
+                            type: 'post',
+                            data: { 
+                                keyid: id,
+                                op: 'ret'
+                                  },
+                            success: function(data) {
+                                
+                                // mudar botao para empr
+                            }
+                        });
+
+                        swal("Chave devolvida com sucesso.", {
+                            icon: "success",
+                        });
+                    } else {
+                        swal("A chave nao foi devolvida.");
+                    }
+                });
+        });
+    });
+
+</script>
+
 
 <?php
     include_once 'footer.php';

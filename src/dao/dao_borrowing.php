@@ -76,6 +76,39 @@ class DaoBorrowing {
             echo  "Error while running SearchAllLimit1 method in DaoBorrowing: ".$e->getMessage();
         }
     }
+    
+    
+    public function UpdateCheckin($id, $date){
+        try{
+            $sql = "UPDATE borrowing SET data_checkin = :data WHERE id = :id";
+            
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":id", $id );
+            $p_sql->bindValue( ":data", $date );
+
+            return $p_sql->execute();           
+
+        } catch( PDOException  $e ) {
+            echo  "Error while running UpdateCheckin method in DaoBorrowing: ".$e->getMessage();
+        }
+    }
+    
+    public function SearchBorrowByKey($key){
+        try{
+            $sql = "SELECT MAX(borrowing_id) FROM `keys_borrowing` WHERE keys_id = :keyid";
+            
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":keyid", $key );
+            
+            $p_sql->setFetchMode( PDO::FETCH_ASSOC);
+            $res = $p_sql->fetch();
+            return $res['borrowing_id'];
+            
+        } catch( PDOException  $e ) {
+            echo  "Error while running SearchBorrowByKey method in DaoBorrowing: ".$e->getMessage();
+        }      
+        
+    }
 
 }
 ?>

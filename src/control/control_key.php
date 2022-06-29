@@ -75,12 +75,34 @@ class ControlKey {
                     <td style="text-align: left; vertical-align: middle;">'.$addr->GetAddressString( $key->getEnderecoId() ).'</td>
                     <td>'.$key->getTipo().'</td>
                     <td><h4><span class="label '.$status_labels[$key->getStatus()].'">'.$key->getStatus().'</span></h4></td>
-                    
+                    ';
+            if ($key->getStatus() == 'Emprestado') {
+                echo '
+                    <td>      
+                        <a href="mainlist.php" class="btn btn-success btn-block btnretrieve" role="button" id="'.$key->getId().'" data-toggle="tooltip" title="Devolver essa chave"><i class="fa fa-rotate-left"></i></a>
+                        
+                        
+                    </td>
+                   '; 
+            } else if ($key->getStatus() == 'Disponível'){
+                 echo '
                     <td>      
                         <a href="borrow.php?id='.$key->getId().'" class="btn btn-warning btn-block" role="button" data-toggle="tooltip" title="Emprestar essa chave"><i class="glyphicon glyphicon-tags"></i></a>
                         
                         
                     </td>
+                   '; 
+            } else {
+                echo '
+                    <td>      
+                        <a href="borrow.php?id='.$key->getId().'" class="btn btn-warning btn-block" role="button" data-toggle="tooltip" title="Nao e possivel emprestar essa chave" disabled><i class="glyphicon glyphicon-tags"></i></a>
+                        
+                        
+                    </td>
+                   '; 
+            }
+           
+            echo '
                     <td>      
                         <a href="editkey.php?id='.$key->getId().'" class="btn btn-info btn-block" role="button" data-toggle="tooltip" title="Visualizar e Editar essa chave"><i class="glyphicon glyphicon-edit"></i></a>
                     </td>                
@@ -190,6 +212,7 @@ class ControlKey {
 
 
 }
+
 
 
 ?>

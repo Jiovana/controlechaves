@@ -355,7 +355,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                 var keyid = this.value;
                 var tr = $(this).parent().parent();
                 $.ajax({
-                    url: 'ajaxgetkeyinfo.php',
+                    url: '../control/ajaxgetkeyinfo.php',
                     type: 'POST',
                     dataType: 'json',
                     data: {
