@@ -16,53 +16,6 @@ class ControlRequester {
         }
     }
 
-    public function ClearForm() {
-        echo '
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Nome:</label>
-                        <input type="text" class="form-control" name="txtnome" placeholder="Insira o nome completo do requerente">
-                </div>
-                
-                <div class="form-group">
-                    <label>Categoria:</label>
-                    <select class="form-control" name="select_category" >
-                        <option value="" disabled selected>Selecione a categoria</option>
-                        <option>Cliente</option>
-                        <option>Diretoria</option>
-                        <option>Manutenção</option>
-                        <option>Marketing</option>
-                        <option>Prestador de serviço</option>
-                        <option>Vistoria</option>
-                    </select>
-                </div>
-            </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" class="form-control" name="txtemail" placeholder="Insira o email do rquerente" >
-                    </div>
-
-                    <div class="form-group">
-                        <label>DDD:</label>
-                        <input type="text" class="form-control" name="txtddd" placeholder="Insira o DDD do telefone" >
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>ID:</label>
-                        <input type="number" class="form-control" name="txtdocument" placeholder="Insira o numero do documento" >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Telefone:</label>
-                        <input type="number" class="form-control" name="txtphone" placeholder="Insira o numero do telefone" >
-                    </div>
-                </div>
-            ';
-    }
 
     public function FillForm( $email, $nome ) {
         $dao = new DaoRequester();

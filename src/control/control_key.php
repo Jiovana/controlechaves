@@ -179,6 +179,14 @@ class ControlKey {
         return $output;
 
     }
+    
+    public function UpdateStatus( $keyid, $status){      
+        $status_labels =  array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível');
+        $dao = new DaoKey();      
+        $dao->UpdateStatus($keyid, $status_labels[$status]);
+        
+    } 
+    
 
 
 }

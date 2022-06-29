@@ -211,6 +211,22 @@ class DaoKey{
         }
     }
     
+    
+    public function UpdateStatus($id, $status){
+        try{
+            $sql = "UPDATE `keys` SET status = :status WHERE id = :keyid";
+            
+            $p_sql = Connection::getConnection()->prepare($sql);
+            $p_sql->bindValue(":status", $status);
+            $p_sql->bindValue(":keyid", $id);
+            
+            return $p_sql->execute();
+            
+        }catch(PDOException $e){         
+            echo "Error while running UpdateStatus method in DaoKey: ".$e;
+        }
+    }
+    
 
 
 }
