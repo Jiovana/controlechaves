@@ -3,22 +3,24 @@
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/dao/dao_user.php";
 
 /**
- * Reune metodos para interacao entre a view(interface) e o model(modelos e daos)
- * 
+* Reune metodos para interacao entre a view( interface ) e o model( modelos e daos )
+*
 */
+
 class ControlUser {
 
     /**
-     * Realiza login no sistema, chamada de index.php ao pressionar o botao de login
-     *
-     * Envia os dados do usuario via session, 
-     * Emite avisos com sweetalerts
-     * 
-     * @param string $email email digitado 
-     * @param string $password a senha informada
-     * 
+    * Realiza login no sistema, chamada de index.php ao pressionar o botao de login
+    *
+    * Envia os dados do usuario via session,
+    * Emite avisos com sweetalerts
+    *
+    * @param string $email email digitado
+    * @param string $password a senha informada
+    *
     */
-   public function Login( $email, $password ) {
+
+    public function Login( $email, $password ) {
 
         $daouser = new DaoUser;
 
@@ -62,14 +64,15 @@ class ControlUser {
     }
 
     /**
-     * Insere um novo usuario no banco de dados, chamda de users.php ao clicar no botao salvar
-     *
-     * Envia dados para a dao, emite alertas swal
-     * 
-     * @param ModelUser $user O objeto usuario a ser inserido
-     * 
+    * Insere um novo usuario no banco de dados, chamda de users.php ao clicar no botao salvar
+    *
+    * Envia dados para a dao, emite alertas swal
+    *
+    * @param ModelUser $user O objeto usuario a ser inserido
+    *
     */
-   public function NewUser( ModelUser $newuser ) {
+
+    public function NewUser( ModelUser $newuser ) {
 
         $dao = new DaoUser();
 
@@ -113,12 +116,13 @@ class ControlUser {
     }
 
     /**
-     * Apaga um usuario, chamda de users.php ao clicar no botao delete da tabela
-     * 
-     * @param int $id id do usuario a ser apagado
-     * 
+    * Apaga um usuario, chamda de users.php ao clicar no botao delete da tabela
+    *
+    * @param int $id id do usuario a ser apagado
+    *
     */
-   public function DeleteUser( $id ) {
+
+    public function DeleteUser( $id ) {
         $dao = new DaoUser();
         if ( $dao->Delete( $id ) ) {
             echo '<script type="text/javascript">
@@ -146,15 +150,16 @@ class ControlUser {
     }
 
     /**
-     * Altera a senha de um usuario, testa as senhas new e conf, emite alertas swal, chamada de changepassword.php
-     * 
-     * @param string $email email do usuario vindo da session
-     * @param string $oldpass senha antiga do usuario 
-     * @param string $newpass nova senha 
-     * @param string $confpass senha de confirmacao
-     * 
+    * Altera a senha de um usuario, testa as senhas new e conf, emite alertas swal, chamada de changepassword.php
+    *
+    * @param string $email email do usuario vindo da session
+    * @param string $oldpass senha antiga do usuario
+    * @param string $newpass nova senha
+    * @param string $confpass senha de confirmacao
+    *
     */
-   public function ChangePassword( $email, $oldpass, $newpass, $confpass ) {
+
+    public function ChangePassword( $email, $oldpass, $newpass, $confpass ) {
 
         $daouser = new DaoUser();
         $user = new ModelUser();
@@ -217,13 +222,14 @@ class ControlUser {
         }
     }
 
-     /**
-     * Preenche a tabela de usuarios em users.php
-     * 
-     * Pega os usuarios do banco como um array e os percorre, preenchendo a tabela
-     * 
+    /**
+    * Preenche a tabela de usuarios em users.php
+    *
+    * Pega os usuarios do banco como um array e os percorre, preenchendo a tabela
+    *
     */
-   public function FillTable() {
+
+    public function FillTable() {
         $dao = new DaoUser();
         $users = $dao->SearchAll();
 
@@ -241,14 +247,15 @@ class ControlUser {
         }
     }
 
-     /**
-     * Atualiza um usuario em users.php ao clicar no botao de update
-     * 
-     * @param ModelUser $user o usuario a ser atualizado
-     * 
+    /**
+    * Atualiza um usuario em users.php ao clicar no botao de update
+    *
+    * @param ModelUser $user o usuario a ser atualizado
+    *
     */
+
     public function UpdateUser( ModelUser $user ) {
-        if ( empty( $user->getNome() ) ||  empty( $user->getSobrenome() ) || empty( $user->getEmail() ) || empty( $user->getSenha() )){
+        if ( empty( $user->getNome() ) ||  empty( $user->getSobrenome() ) || empty( $user->getEmail() ) || empty( $user->getSenha() ) ) {
             $errorupdate = '<script type="text/javascript">
                     jQuery(function validation(){
                         swal({
@@ -263,7 +270,7 @@ class ControlUser {
         }
         if ( !isset( $errorupdate ) ) {
             $dao = new DaoUser();
-            $user->setSenha(md5($user->getSenha()));
+            $user->setSenha( md5( $user->getSenha() ) );
             if ( $dao->UpdateAll( $user ) ) {
                 echo '<script type="text/javascript">
                     jQuery(function validation(){
@@ -290,14 +297,15 @@ class ControlUser {
         }
     }
 
-     /**
-     * Preenche o formulario em users.php quando o botao editar da lista de usuarios e clicado, preenchendo o form com os dados do usuario selecionado
-     * 
-     * @param int $id o id do usuario a ser preenchido o form
-     *
-     * 
+    /**
+    * Preenche o formulario em users.php quando o botao editar da lista de usuarios e clicado, preenchendo o form com os dados do usuario selecionado
+    *
+    * @param int $id o id do usuario a ser preenchido o form
+    *
+    *
     */
-   public function FillForm( $id ) {
+
+    public function FillForm( $id ) {
         $dao = new DaoUser();
         if ( $user = $dao->SearchById( $id ) ) {
             echo '
@@ -329,14 +337,15 @@ class ControlUser {
           ';
         }
     }
-    
-     /**
-     * Apresenta um formulario 'limpo' em users.php, mostrando os campos em branco e opcao para inserir novo user
-     * 
-     *
-     * 
+
+    /**
+    * Apresenta um formulario 'limpo' em users.php, mostrando os campos em branco e opcao para inserir novo user
+    *
+    *
+    *
     */
-    public function ClearForm(){
+
+    public function ClearForm() {
         echo '
                         <div class="form-group">
                             <label>Nome</label>
@@ -361,17 +370,18 @@ class ControlUser {
                         <input type="reset" value ="Limpar dados" class="btn btn-secondary" style="float: right;" >
                             ';
     }
-    
+
     /**
     * Apenas chama o metodo searchbyid de Dao User
     *
     * @param int $id O id do usuario a ser buscado
     * @return ModelUser objeto user
     */
-    public function SearchUser($id){
+
+    public function SearchUser( $id ) {
         $dao = new DaoUser();
-        return $dao->SearchById($id);
+        return $dao->SearchById( $id );
     }
-    
+
 }
 ?>

@@ -2,8 +2,20 @@
 
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/dao/dao_borrowing.php";
 
+/**
+* Reune metodos para interacao entre a view ( interface ) relacionado a chave e o model( modelos e daos ) - ModelBorrowing e DaoBorrowing
+*
+*/
 class ControlBorrowing {
 
+    /**
+     * Insere novo borrowing no banco
+     *
+     * 
+     * @param ModelBorrowing objeto borrowing a ser inserido
+     * @return int o id do emprestimo inserido.
+     * 
+    */
     public function NewBorrowing( ModelBorrowing $borrow ) {
         $dao = new DaoBorrowing();
         try {
@@ -17,6 +29,14 @@ class ControlBorrowing {
 
     }
 
+     /**
+     * Insere novo relacionamento keys_borrowing no banco
+     *
+     * 
+     * @param int $keys_id id da chave
+     * @param int $borrow_id id de borrowing
+     * 
+    */
     public function NewKeysBorrowing( $key_id, $borrow_id ) {
         $dao = new DaoBorrowing();
         try {
@@ -26,6 +46,14 @@ class ControlBorrowing {
         }
     }
     
+    /**
+     * Busca o id de um borrow com base no id da chave associada.
+     *
+     * 
+     * @param int $keyid id da chave
+     * @return int id de borrowing
+     * 
+    */
     public function FetchBorrowIdByKey($keyid){
         $dao = new DaoBorrowing();
         try {
@@ -35,6 +63,13 @@ class ControlBorrowing {
         }
     }
     
+     /**
+     * Atualiza data de checkin de um borrowing
+     *
+     * 
+     * @param int $borrow_id id do borrowing a ser atualizado
+     * 
+    */
     public function UpdateCheckin($borrow_id){
         $dao = new DaoBorrowing();
         try {

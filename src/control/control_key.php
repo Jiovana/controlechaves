@@ -162,11 +162,14 @@ class ControlKey {
 
     }
 
-    public function BorrowSearchByGancho( $hook ) {
-        $dao = new DaoKey();
-        return $dao->SearchByGancho( $hook );
-    }
-
+    
+    /**
+    * Chama a dao que procura chaves com base no gancho
+    *
+    * Usado em borrowkey.php
+    *
+    * @return string codigo html para preenchimento do select na tabela
+    */
     public function Fill_Gancho() {
 
         $output = '';
@@ -177,17 +180,17 @@ class ControlKey {
         foreach ( $result as $key ) {
             $output .= '<option style="padding:0px;" value="'.$key->getId().'" >'.$key->getGancho().'</option>';
         }
-
         return $output;
 
     }
     
-    public function GetKeyAssoc( $id ) {
-        $dao = new DaoKey();
-        return $dao->SearchByIdAssoc( $id );
-
-    }
-    
+    /**
+    * Chama a dao que procura chaves com base no sicadi
+    *
+    * Usado em borrowkey.php
+    *
+    * @return string codigo html para preenchimento do select na tabela
+    */
     public function Fill_Sicadi() {
         $output = '';
 
@@ -197,11 +200,29 @@ class ControlKey {
         foreach ( $result as $key ) {
             $output .= '<option style="padding:0px;" value="'.$key->getId().'" >'.$key->getSicadi().'</option>';
         }
-
         return $output;
 
     }
     
+    /**
+    * Obtem os atributos de uma chave pelo id
+    *
+    * Usado em borrowkey.php
+    *
+    * @param int $id o id da chave
+    * @return array array de atributos da key
+    */
+     public function GetKeyAssoc( $id ) {
+        $dao = new DaoKey();
+        return $dao->SearchByIdAssoc( $id );
+    }
+    
+    /**
+    * Atualiza status de uma chave com base no id 
+    *
+    * @param int $keyid o id da chave
+    * @param string $status o novo status.
+    */
     public function UpdateStatus( $keyid, $status){      
         $status_labels =  array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível');
         $dao = new DaoKey();      

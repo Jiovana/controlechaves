@@ -407,20 +407,41 @@ if ( isset( $_POST['btnsave'] ) ) {
                 },
                 success: function(data) {
                     console.log(data);
-                    $("#reqnome").val(data["nome"]);
-                    $("#reqid").val(data["id"]);
-                    $("#reqmail").val(data["email"]);
-                    $("#reqdd").val(data["ddd"]);
-                    $("#reqdoc").val(data["documento"]);
-                    $("#reqtel").val(data["telefone"]);
+                    if (data["empty"] == false){
+                        $("#reqnome").val(data["nome"]);
+                        $("#reqid").val(data["id"]);
+                        $("#reqmail").val(data["email"]);
+                        $("#reqdd").val(data["ddd"]);
+                        $("#reqdoc").val(data["documento"]);
+                        $("#reqtel").val(data["telefone"]);
 
-                    $("select#reqcat option").filter(function() {
-                        return $(this).text() == data["tipo"];
-                    }).prop('selected', true);
+                        $("select#reqcat option").filter(function() {
+                            return $(this).text() == data["tipo"];
+                        }).prop('selected', true);
+                    } else {                
+                        jQuery(function validation(){
+                            swal({
+                                title: "Sem resultados!",
+                                text: "Nenhum requerente encontrado com os dados informados.",
+                                icon: "error",
+                                button: "Ok",
+                            });
+                        });
+                    
+                    }
+                    
 
                 },
                 error: function(data) {
-                    console.log('Error: ', data)
+                    console.log('Error: ', data);
+                    jQuery(function validation(){
+                            swal({
+                                title: "Sem resultados!",
+                                text: "Nenhum requerente encontrado com os dados informados.",
+                                icon: "error",
+                                button: "Ok",
+                            });
+                        });
                 }
             });
         } else {

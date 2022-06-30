@@ -6,15 +6,17 @@ include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 $control = new ControlKey();
 $controla = new ControlAddress();
 
-//echo '<script>console.log("teste1");</script>';
+// chamado pelo ajax para trazer os dados de uma chave selecionada a partir dos selects na tabela em borrowkey.php
 try{
     if (!isset($_POST['id']))
         throw new Exception('Post info not set');
          
         $keyid = $_POST['id'];    
-
-        $response = $control->GetKeyAssoc( $keyid );      
-        $address = $controla->GetAddressString($response['endereco_id']);       
+        // obtem array da chave
+        $response = $control->GetKeyAssoc( $keyid );   
+        //obtem string do endereco
+        $address = $controla->GetAddressString($response['endereco_id']);   
+        //adiciona string ao array
         $response += ['endereco_string' => $address];
 
         echo json_encode( $response );

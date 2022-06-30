@@ -1,27 +1,22 @@
 <?php 
-
+/**
+* Simula entidade borrowing do banco de dados, possuindo todos seus atributos.
+*
+* Comunicacao com getters e setters
+*/
 class ModelBorrowing{
     
     private $id;
-    private $data_checkin;
-    private $data_checkout;
-    private $requester_id;
-    private $user_id;
-    
-    /**
-    * @ManyToMany(targetEntity="keys", inversedBy="borrowing")
-    * @JoinTable(name = "keys_borrowing,
-    *           joinColumns={@JoinColumn(name="key_id, referencedColumnName="id")}, 
-                inversedJoinColumns={@JoinColumn(name="borrowing_id", referencedColumnName="id")}
-    *           )
-    */
-    private $chaves = array(); // ids das chaves
-    // relacionamento nxn
+    private $data_checkin; // data de devolucao chaves
+    private $data_checkout; // data de retirada chaves
+    private $requester_id; // id do requerente
+    private $user_id; // id do usuario do sistema
     
     private function __clone(){}
     
     public function __construct(){    }
     
+    //getters e setters
     public function setId($id){ 
         $this->id = $id; 
     }
