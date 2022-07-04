@@ -2,22 +2,18 @@
    
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
 
-    session_start();
+session_start();
 
-    if($_SESSION['user_email']==""){
-        header('location:index.php');           
-    }
+if($_SESSION['user_email']==""){
+    header('location:index.php');           
+}
 
 $control = new ControlKey();
 
 
 
-    include_once 'header.php';
+include_once 'header.php';
 
-if ( isset( $_GET['id'] ) ) {
-   
-
-}
 
 
 ?>
@@ -115,39 +111,39 @@ if ( isset( $_GET['id'] ) ) {
 <!-- ajax code for product delete button -->
 <script>
     $(document).ready(function() {
-        $('.btndelete').click(function() {
+        $('.btnretrieve').click(function() {
             var tdh = $(this);
             var id = $(this).attr("id");
-
             swal({
-                    title: "Voce deseja devolver a chave?",
-                    //text: "Once deleted, you can't recover this product!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: '../control/ajaxretrievekey.php',
-                            type: 'post',
-                            data: { 
-                                keyid: id,
-                                op: 'ret'
-                                  },
-                            success: function(data) {
-                                
-                                // mudar botao para empr
-                            }
-                        });
+                title: "Voce deseja devolver a chave?",
+                //text: "Once deleted, you can't recover this product!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: '../control/ajaxretrievekey.php',
+                        type: 'post',
+                        data: { 
+                            keyid: id,
+                            op: 'ret'
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            // update table or refresh page
+                            location.reload(true);
+                        }
+                    });
 
-                        swal("Chave devolvida com sucesso.", {
+                    swal("Chave devolvida com sucesso.", {
                             icon: "success",
-                        });
-                    } else {
-                        swal("A chave nao foi devolvida.");
-                    }
-                });
+                    });
+                } else {
+                    swal("A chave nao foi devolvida.");
+                }
+            });
         });
     });
 

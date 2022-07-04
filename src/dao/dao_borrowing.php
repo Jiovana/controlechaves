@@ -123,14 +123,14 @@ class DaoBorrowing {
     */
     public function SearchBorrowByKey($key){
         try{
-            $sql = "SELECT MAX(borrowing_id) FROM `keys_borrowing` WHERE keys_id = :keyid";
+            $sql = "SELECT MAX(borrowing_id) FROM `keys_borrowing` WHERE keys_id = :keyid ";
             
             $p_sql = Connection::getConnection()->prepare( $sql );
-            $p_sql->bindValue( ":keyid", $key );
+            $p_sql->bindValue( ":keyid", $key);
+            $p_sql->execute();
             
-            $p_sql->setFetchMode( PDO::FETCH_ASSOC);
-            $res = $p_sql->fetch();
-            return $res['borrowing_id'];
+            $p_sql->setFetchMode(PDO::FETCH_COLUMN, 0);
+            return $p_sql->fetch();
             
         } catch( PDOException  $e ) {
             echo  "Error while running SearchBorrowByKey method in DaoBorrowing: ".$e->getMessage();
@@ -139,4 +139,5 @@ class DaoBorrowing {
     }
 
 }
+
 ?>

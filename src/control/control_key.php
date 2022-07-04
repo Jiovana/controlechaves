@@ -79,7 +79,8 @@ class ControlKey {
             if ($key->getStatus() == 'Emprestado' || $key->getStatus() == 'Atrasado') {
                 echo '
                     <td>      
-                        <a href="mainlist.php" class="btn btn-success btn-block btnretrieve" role="button" id="'.$key->getId().'" data-toggle="tooltip" title="Devolver essa chave"><i class="fa fa-rotate-left"></i></a>                   
+                    
+                        <a href="#" class="btn btn-success btn-block btnretrieve" role="button" id="'.$key->getId().'" data-toggle="tooltip" title="Devolver essa chave"><i class="fa fa-rotate-left"></i></a>                   
                     </td>
                    '; 
             } else if ($key->getStatus() == 'Disponível'){
