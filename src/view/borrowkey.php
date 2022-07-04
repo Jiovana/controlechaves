@@ -1,6 +1,7 @@
 <?php
 
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_requester.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_borrowing.php';
@@ -9,11 +10,9 @@ session_start();
 
 if ( $_SESSION['user_email'] == "" ) {
     header( 'location:index.php' );
-
 }
 
 include_once 'header.php';
-
 
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -21,6 +20,7 @@ $controlk = new ControlKey();
 $controll = new ControlLog();
 $controlr = new ControlRequester();
 $controlb = new ControlBorrowing();
+$controla = new ControlAddress();
 
 $key = new ModelKey();
 $log = new ModelLog();
@@ -29,14 +29,14 @@ $borrowing = new ModelBorrowing();
 
 
 if ( isset( $_POST['btnsave'] ) ) {
-    
-    if (!empty($_POST['txtid']) && !empty($_POST['txtnome']) && !empty($_POST['select_category']) && !empty($_POST['checkoutdate']) && !empty($_POST['checkindate']) && !empty($_POST['keyid'])){
+      
+    if (!empty($_POST['txtnome']) && !empty($_POST['select_category']) && !empty($_POST['checkoutdate']) && !empty($_POST['checkindate']) && !empty($_POST['keyid'])){
+             
           
         // inserir primeiro informacoes do requerente
         //testa se requrente ja existe (opcao do botao de pesquisa)
     
-        if (empty($_POST['txtid'])){
-        
+        if (empty($_POST['txtid'])){       
             $requester->setNome($_POST['txtnome']);
             $requester->setEmail($_POST['txtemail']);
             $requester->setDocumento($_POST['txtdocument']);
@@ -44,7 +44,7 @@ if ( isset( $_POST['btnsave'] ) ) {
             $requester->setTelefone($_POST['txtphone']);
             $requester->setTipo($_POST['select_category']);
 
-            $req_id = $controlr->NewRequester( $requester );
+            $req_id = $controlr->NewRequester($requester);
             ///////////////////////////////////////////////
             // obter info de borrowing
             // borrowing has : data_checkin, data_checkout, requester_id, user_id
@@ -69,10 +69,27 @@ if ( isset( $_POST['btnsave'] ) ) {
 
         ////////////////////////////////////////////////
         // registrar relacionamento keys_borrowing
-         //keys_borrowing has: borrowing_id, keys_id
+        // keys_borrowing has: borrowing_id, keys_id
 
         //obter array com conteudo das chaves. 
-        $arr_keygancho = $_POST['keygancho'];
+        $arr_keygancho = array();
+        //testar antes se existe ...
+        if (isset($_POST['keyhook'])){
+            $arr_keygancho = $_POST['keyhook'];
+        }
+        
+        if (isset($_POST['listgancho'])){
+            array_push($arr_keygancho, $_POST['listgancho']);
+        }
+       
+        
+        //array_push($arr_keygancho, $_POST['bkeygancho']);
+        //$ble = json_encode($_POST['bkeygancho']);
+        //echo '<script>console.log("Gancho: '.$ble.'");</script>';
+        foreach ($arr_keygancho as $gan){
+            echo '<script>console.log("Gancho: '.$gan.'");</script>';
+        }
+        
         $arr_keyid = $_POST['keyid'];
         //$arr_keysicadi = $_POST['keysicadi'];
         //$arr_keyaddress = $_POST['keyaddress'];
@@ -80,23 +97,22 @@ if ( isset( $_POST['btnsave'] ) ) {
 
         if($borrowing->getRequester_id() != null){
             for($i=0; $i<count($arr_keyid); $i++){
-                $controlb->NewKeysBorrowing($arr_keyid[$i], $borrow_id);
+              $controlb->NewKeysBorrowing($arr_keyid[$i], $borrow_id);
                
-                //need to update the status of the selected key.
-                // labels array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível');
-                $controlk->UpdateStatus($arr_keyid[$i], 2);            
+              //need to update the status of the selected key.
+              // labels array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível');
+              $controlk->UpdateStatus($arr_keyid[$i], 2);            
+              //inserir o log de emprestar chave   
+              $log->setKeys_id($arr_keyid[$i]);
+              $log->setUser_id($_SESSION['user_id']);
+              //operation pode ser: 1 - criacao, 2 - alteracao,
+              // 3 - emprestimo, 4 - devolucao
+              $log->setOperation(3);
 
-                //inserir o log de emprestar chave   
-                $log->setKeys_id($arr_keyid[$i]);
-                $log->setUser_id($_SESSION['user_id']);
-                //operation pode ser: 1 - criacao, 2 - alteracao,
-                // 3 - emprestimo, 4 - devolucao
-                $log->setOperation(3);
+              $string = "Chave nº Gancho: ".$arr_keygancho[$i]." foi EMPRESTADA para ".$_POST['txtnome']." até ".$_POST['checkindate'].".";    
+              $log->setDescription($string);
 
-                $string = "Chave nº Gancho: ".$arr_keygancho[$i]." foi EMPRESTADA para ".$_POST['txtnome']." até ".$_POST['checkindate'].".";    
-                $log->setDescription($string);
-
-                $controll->CreateLog($log);
+              $controll->CreateLog($log);
            }
         }
 
@@ -110,10 +126,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                     });
                 });
             </script>';
-
-        echo '<script> window.setTimeout(function(){ 
-                window.location.href = "/controlechaves/src/view/mainlist.php";
-        }, 3000); </script>   '; 
+        
     } 
     else {
         echo '<script type="text/javascript">
@@ -282,7 +295,6 @@ if ( isset( $_POST['btnsave'] ) ) {
             format: 'd/m/Y H:i'
         });
     });
-
 </script>
 
 <script type="text/javascript">
@@ -292,6 +304,8 @@ if ( isset( $_POST['btnsave'] ) ) {
         html += '<tr>';
 
         html += '<td style="display:none;"><input type="hidden" class="form-control keyid" name="keyid[]" readonly></td>';
+
+        html += '<td style="display:none;"><input type="hidden" class="form-control keyhook" name="keyhook[]" readonly></td>';
 
         html += '<td style="padding:0px;"><select class="form-control keygancho" name="keygancho[]" ><option value="">Selecione</option><?php echo $controlk->Fill_Gancho();?></select></td>';
 
@@ -323,7 +337,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                 var keyid = this.value;
                 var tr = $(this).parent().parent();
                 $.ajax({
-                    url: 'ajaxgetkeyinfo.php',
+                    url: '../control/ajaxgetkeyinfo.php',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -335,6 +349,8 @@ if ( isset( $_POST['btnsave'] ) ) {
                         tr.find(".keysicadi option[value=" + data["id"] + "]").attr('selected', 'selected').change();
 
                         tr.find(".keyid").val(data["id"]);
+
+                        tr.find(".keyhook").val(data["gancho"]);
                         tr.find(".keyaddress").val(data["endereco_string"]);
                         tr.find(".keycategory").val(data["tipo"]);
 
@@ -366,6 +382,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                         changeSelect1();
                         tr.find(".keygancho option[value=" + data["id"] + "]").attr('selected', 'selected').change();
                         tr.find(".keyid").val(data["id"]);
+                        tr.find(".keyhook").val(data["gancho"]);
                         tr.find(".keyaddress").val(data["endereco_string"]);
                         tr.find(".keycategory").val(data["tipo"]);
 
@@ -407,7 +424,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                 },
                 success: function(data) {
                     console.log(data);
-                    if (data["empty"] == false){
+                    if (data["empty"] == false) {
                         $("#reqnome").val(data["nome"]);
                         $("#reqid").val(data["id"]);
                         $("#reqmail").val(data["email"]);
@@ -418,8 +435,8 @@ if ( isset( $_POST['btnsave'] ) ) {
                         $("select#reqcat option").filter(function() {
                             return $(this).text() == data["tipo"];
                         }).prop('selected', true);
-                    } else {                
-                        jQuery(function validation(){
+                    } else {
+                        jQuery(function validation() {
                             swal({
                                 title: "Sem resultados!",
                                 text: "Nenhum requerente encontrado com os dados informados.",
@@ -427,21 +444,21 @@ if ( isset( $_POST['btnsave'] ) ) {
                                 button: "Ok",
                             });
                         });
-                    
+
                     }
-                    
+
 
                 },
                 error: function(data) {
                     console.log('Error: ', data);
-                    jQuery(function validation(){
-                            swal({
-                                title: "Sem resultados!",
-                                text: "Nenhum requerente encontrado com os dados informados.",
-                                icon: "error",
-                                button: "Ok",
-                            });
+                    jQuery(function validation() {
+                        swal({
+                            title: "Sem resultados!",
+                            text: "Nenhum requerente encontrado com os dados informados.",
+                            icon: "error",
+                            button: "Ok",
                         });
+                    });
                 }
             });
         } else {
@@ -459,7 +476,44 @@ if ( isset( $_POST['btnsave'] ) ) {
     });
 
     $('[data-toggle="tooltip"]').tooltip();
+</script>
 
+<script>
+    // I need to add one row to the table with the data of the selected key
+    // we can add a row with js?
+
+    $(document).ready(function() {
+        var keyid = <?php echo (isset($_GET["id"])?$_GET["id"]:-1); ?>;
+
+        if (keyid != -1) {
+            <?php   
+            if (isset($_GET['id'])){
+                $bkey = $controlk->GetKeyModel($_GET['id']); 
+                $baddress = $controla->GetAddressString($bkey->getEnderecoId()); 
+        ?>
+
+            // $.post("borrowkey.php",)
+
+            var html = '';
+            html += '<tr>';
+
+            html += '<td style="display:none;"><input type="hidden" class="form-control keyid" name="keyid[]" value="<?php echo $bkey->getId(); ?>" readonly></td>';
+
+            html += '<td style="padding:0px;"><input type="text" class="form-control bkeygancho" name="listgancho" value="<?php echo $bkey->getGancho(); ?>" readonly></td>';
+
+            html += '<td style="padding:0px;"><input type="text" class="form-control bkeysicadi" name="listsicadi" value="<?php echo $bkey->getGancho(); ?>" readonly></td>';
+
+            html += '<td style="padding:0px;"><input type="text" class="form-control keyaddress" name="keyaddress[]" value="<?php echo $baddress; ?>" readonly></td>';
+
+            html += '<td style="padding:0px;"><input type="text" class="form-control keycategory" name="keycategory[]" value="<?php echo $bkey->getTipo(); ?>" readonly></td>';
+
+            html += '<td style="padding:0px;"><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove"><span class="glyphicon glyphicon-remove"></span></button></center></td>';
+
+            $('#tablekeys').append(html);
+
+            <?php } ?>
+        }
+    });
 </script>
 
 
