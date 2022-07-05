@@ -120,7 +120,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                 jQuery(function validation(){
                     swal({
                         title: "Sucesso!",
-                        text: "Operacao registrada",
+                        text: "Operação registrada",
                         icon: "success",
                         button: "Ok",
                     });
@@ -133,7 +133,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                 jQuery(function validation(){
                     swal({
                         title: "Erro!",
-                        text: "Informe no minimo: nome e categoria do requerente, uma chave da lista, e as datas de retirada e devolucao.",
+                        text: "Informe no mínimo: nome e categoria do requerente, uma chave da lista, e as datas de retirada e devolução.",
                         icon: "error",
                         button: "Ok",
                     });
