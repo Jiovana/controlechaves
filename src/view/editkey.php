@@ -97,8 +97,9 @@ if ( isset( $_POST['btnupdate'] ) ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
-            //atualiza a data de checkin
+            //atualiza a data de checkin e status
             $controlb->UpdateCheckin( $borrowid );
+            $controlb->DeactiveKeysBorrow($key->getId());
             //seta operacao log
             $log->setOperation( 4 );
             $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
@@ -112,8 +113,9 @@ if ( isset( $_POST['btnupdate'] ) ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
-            //atualiza a data de checkin
+            //atualiza a data de checkin e status
             $controlb->UpdateCheckin( $borrowid );
+            $controlb->DeactiveKeysBorrow($key->getId());
             //seta operacao log
             $log->setOperation( 4 );
             $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
@@ -125,8 +127,9 @@ if ( isset( $_POST['btnupdate'] ) ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId());
-            //atualiza a data de checkin
+            //atualiza a data de checkin e status
             $controlb->UpdateCheckin( $borrowid );
+            $controlb->DeactiveKeysBorrow($key->getId());
             //seta operacao log
             $log->setOperation( 4 );
             $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
@@ -142,8 +145,9 @@ if ( isset( $_POST['btnupdate'] ) ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
-            //atualiza a data de checkin
+            //atualiza a data de checkin e status
             $controlb->UpdateCheckin( $borrowid );
+            $controlb->DeactiveKeysBorrow($key->getId());
             //seta operacao log
             $log->setOperation( 4 );
             $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";

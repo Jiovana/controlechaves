@@ -24,8 +24,9 @@ try {
     //busca pelo ultimo borrowing id associado   
     $borrowid = $controlb->FetchBorrowIdByKey($_POST['keyid']);
     
-    //atualiza a data de checkin
+    //atualiza a data de checkin e status
     $controlb->UpdateCheckin( $borrowid );
+    $controlb->DeactiveKeysBorrow($key->getId());
     
     //gerar log
     $log = new ModelLog();

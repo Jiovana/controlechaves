@@ -81,6 +81,27 @@ class ControlBorrowing {
             echo "Error in method UpdateCheckin in ControlBorrowing: ".$e->getMessage()."</br>";
         }
     }
+    
+    public function DeactiveKeysBorrow($keyid){
+        $dao = new DaoBorrowing();
+        $dao->CloseKeysBorrowing($keyid);
+    }
+    
+    public function FindActiveKeysBorrowing(){
+        $dao = new DaoBorrowing();
+        return $dao->SearchActiveBorrowKey();
+    }
+    
+    public function FetchCheckin($borrow_id){
+        $dao = new DaoBorrowing();
+        $date = $dao->SelectCheckin($borrow_id);   
+        $dateup = date_create( $date);
+        return date_format( $dateup, 'd/m/Y H:i:s' );       
+    }
+    
 }
+$con = new ControlBorrowing();
+//echo $con->FetchCheckin(14);
+
 
 ?>

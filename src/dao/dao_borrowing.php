@@ -135,9 +135,62 @@ class DaoBorrowing {
         } catch( PDOException  $e ) {
             echo  "Error while running SearchBorrowByKey method in DaoBorrowing: ".$e->getMessage();
         }      
-        
+    }
+    
+    /**
+    * Inativa uma instancia de keys_borrowing 
+    * com base no id da chave
+    *
+    * @param int $id O id da chave
+    * @return bool o resultado do metodo execute()
+    */
+    public function CloseKeysBorrowing($keyid){
+        try{
+            $sql = "UPDATE `keys_borrowing` SET is_ativo = 0 WHERE keys_id = :id";
+            
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":id", $keyid );
+
+            return $p_sql->execute();           
+
+        } catch( PDOException  $e ) {
+            echo  "Error while running CloseKeysBorrowing method in DaoBorrowing: ".$e->getMessage();
+        }
+    }
+    
+    
+    public function SearchActiveBorrowKey(){
+        try {
+            $sql = "SELECT * FROM `keys_borrowing` WHERE is_ativo = 1";
+
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->execute();
+
+            return $p_sql->fetchAll(PDO::FETCH_ASSOC);
+        } catch( PDOException  $e ) {
+            echo  "Error while running SearchAllLimit1 method in DaoBorrowing: ".$e->getMessage();
+        }
+    }
+    
+    public function SelectCheckin($id){
+        try{
+            $sql = "SELECT data_checkin from borrowing WHERE id = :id";
+            
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":id", $id );
+            $p_sql->execute();
+            
+            $p_sql->setFetchMode(PDO::FETCH_COLUMN, 0);
+            return $p_sql->fetch();
+            
+        }catch(exception $e){
+            echo  "Error while running SelectBorrowInfo method in DaoBorrowing: ".$e->getMessage();
+        }
     }
 
 }
+
+$dao = new DaoBorrowing();
+//echo $dao->SelectCheckin(14);
 
 ?>
