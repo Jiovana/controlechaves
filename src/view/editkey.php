@@ -160,162 +160,166 @@ if ( isset( $_POST['btnupdate'] ) ) {
 ?>
 
 <!-- Content Wrapper. Contains page content -->
-<div class = "content-wrapper">
-<!-- Content Header ( Page header ) -->
-<section class = "content-header">
-<h1>Visualizar & Editar Chave</h1>
-</section>
+<div class="content-wrapper">
+    <!-- Content Header ( Page header ) -->
+    <section class="content-header">
+        <h1>Visualizar & Editar Chave</h1>
 
-<!-- Main content -->
-<section class = "content container-fluid">
-<form id = "newkeyform" role = "form" action = "" method = "post">
-<div class = "col-md-6">
-<div class = "box box-primary">
-<div class = "box-header with-border">
-<h3 class = "box-title">Informações da chave e imóvel</h3>
-</div>
-<!-- /.box-header -->
-<!-- form start -->
-<div class = "box-body">
-<div class = "col-md-6">
-<div class = "form-group">
-<label>Código no Sicadi:</label>
-<input type = "text" class = "form-control" name = "txtsicadi" placeholder = "Insira o código do imóvel no sistema SICADI" value = "<?php echo $key->getSicadi();?>" required>
-</div>
-<div class = "form-group">
-<label>Categoria:</label>
-<select class = "form-control" name = "select_category" required>
-<option value = "" disabled selected>Selecione a categoria</option>
-<?php
+        <button type="button" class="btn btn-info" style="margin-top:10px;" onclick="location.href='mainlist.php';">Voltar para lista</button>
+
+
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <form id="newkeyform" role="form" action="" method="post">
+            <div class="col-md-6">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Informações da chave e imóvel</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Código no Sicadi:</label>
+                                <input type="text" class="form-control" name="txtsicadi" placeholder="Insira o código do imóvel no sistema SICADI" value="<?php echo $key->getSicadi();?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Categoria:</label>
+                                <select class="form-control" name="select_category" required>
+                                    <option value="" disabled selected>Selecione a categoria</option>
+                                    <?php
 $tipo_array = array( 1 => 'Aluguel', 2 => 'Venda' );
 for ( $i = 1; $i <= 2; $i++ ) {
     ?>
-    <option <?php
+                                    <option <?php
     if ( $key->getTipo() == $tipo_array[$i] ) {
-        ?> selected = "selected" <?php
+        ?> selected="selected" <?php
     }
     ?>>
-    <?php
+                                        <?php
     echo $tipo_array[$i];
     ?>
-    </option>
-    <?php
+                                    </option>
+                                    <?php
 }
 ?>
-</select>
+                                </select>
 
-</div>
-</div>
-<div class = "col-md-6">
-<div class = "form-group">
-<label>Código do Gancho:</label>
-<input type = "text" class = "form-control" name = "txthook" placeholder = "Insira o código do gancho onde a chave se localiza no painel" value = "<?php echo $key->getGancho();?>" required>
-</div>
-<div class = "form-group">
-<label>Status:</label>
-<select class = "form-control" name = "select_status" required>
-<option value = "" disabled selected>Selecione o status</option>
-<?php
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Código do Gancho:</label>
+                                <input type="text" class="form-control" name="txthook" placeholder="Insira o código do gancho onde a chave se localiza no painel" value="<?php echo $key->getGancho();?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status:</label>
+                                <select class="form-control" name="select_status" required>
+                                    <option value="" disabled selected>Selecione o status</option>
+                                    <?php
 $status_array = array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível' );
 for ( $i = 1; $i <= 5; $i++ ) {
     ?>
-    <option <?php
+                                    <option <?php
     if ( $key->getStatus() == $status_array[$i] ) {
-        ?> selected = "selected" <?php
+        ?> selected="selected" <?php
     }
     if($status_array[$i] == 'Emprestado'){
         ?> disabled <?php
     }
     ?>>
-    <?php
+                                        <?php
     echo $status_array[$i];
     ?>
-    </option>
-    <?php
+                                    </option>
+                                    <?php
 }
 ?>
-</select>
-</div>
-</div>
-<div class = "col-md-12">
-<div class = "form-group">
-<label>Adicional</label>
-<textarea class = "form-control" rows = "3" name = "txtaddon" placeholder = "Alguma informação adicional sobre a chave ou imóvel" style = "text-align:left;"><?php echo $key->getAdicional();
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Adicional</label>
+                                <textarea class="form-control" rows="3" name="txtaddon" placeholder="Alguma informação adicional sobre a chave ou imóvel" style="text-align:left;"><?php echo $key->getAdicional();
 ?></textarea>
-</div>
-</div>
-<div class = "col-md-12">
-<hr>
-</div>
-<div class = "col-md-8">
-<div class = "form-group">
-<label>Rua</label>
-<input type = "text" class = "form-control" name = "txtstreet" placeholder = "Insira a rua do imóvel" value = "<?php echo $address->getRua();?>" required>
-</div>
-<div class = "form-group">
-<label>Bairro</label>
-<input type = "text" class = "form-control" name = "txtdistrict" placeholder = "Insira o bairro do imóvel" value = "<?php echo $address->getBairro();?>" required>
-</div>
-</div>
-<div class = "col-md-4">
-<div class = "form-group">
-<label>Número</label>
-<input type = "text" class = "form-control" name = "txtnum" placeholder = "Insira o número do imóvel" value = "<?php echo $address->getNumero();?>" required>
-</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Rua</label>
+                                <input type="text" class="form-control" name="txtstreet" placeholder="Insira a rua do imóvel" value="<?php echo $address->getRua();?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Bairro</label>
+                                <input type="text" class="form-control" name="txtdistrict" placeholder="Insira o bairro do imóvel" value="<?php echo $address->getBairro();?>" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Número</label>
+                                <input type="text" class="form-control" name="txtnum" placeholder="Insira o número do imóvel" value="<?php echo $address->getNumero();?>" required>
+                            </div>
 
-<div class = "form-group">
-<label>Cidade</label>
-<input type = "text" class = "form-control" name = "txtcity" placeholder = "Insira a cidade do imóvel" value = "<?php echo $address->getCidade();?>" required>
-</div>
-</div>
-<div class = "col-md-12">
-<div class = "form-group">
-<label>Complemento</label>
-<textarea class = "form-control" rows = "3" name = "txtaddon2" placeholder = "Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)" style = "text-align:left;">
+                            <div class="form-group">
+                                <label>Cidade</label>
+                                <input type="text" class="form-control" name="txtcity" placeholder="Insira a cidade do imóvel" value="<?php echo $address->getCidade();?>" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Complemento</label>
+                                <textarea class="form-control" rows="3" name="txtaddon2" placeholder="Insira alguma informação adicional do endereço (bloco de apartamento, ponto de referência, etc)" style="text-align:left;">
 <?php echo $address->getComplemento();
 ?>
 </textarea>
-</div>
-</div>
-<div class = "text-center">
-<button type = "submit" class = "btn btn-warning" name = "btnupdate">Atualizar</button>
-</div>
-</div>
-</div>
-</div>
-<div class = "col-md-6">
-<div class = "box box-primary">
-<div class = "box-header with-border">
-<h3 class = "box-title">Movimentações da chave</h3>
-</div>
-<div class = "box-body">
-<div class = "col-md-12" style = "overflow-x:auto;">
-<table id = "tablemov" class = "table table-striped table-bordered table-hover">
-<thead>
-<tr>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-warning" name="btnupdate">Atualizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Movimentações da chave</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="col-md-12" style="overflow-x:auto; height:600px;">
+                            <table id="tablemov" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
 
-<!--[date]  [operation] [description]  [nome] -->
-<th style = "width: 15%">Data</th>
-<th style = "width: 10%">Usuário</th>
-<th style = "width: 10%">Operação</th>
-<th style = "width: 65%">Descrição</th>
+                                        <!--[date]  [operation] [description]  [nome] -->
+                                        <th style="width: 15%">Data</th>
+                                        <th style="width: 10%">Usuário</th>
+                                        <th style="width: 10%">Operação</th>
+                                        <th style="width: 65%">Descrição</th>
 
-</tr>
-</thead>
-<tbody>
-<?php
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
 $controll->FillMovTable( $key_id );
 ?>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</form>
-<!-- /.content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- /.content -->
 
-</section>
+    </section>
 </div>
 
 <!-- /.content-wrapper -->
