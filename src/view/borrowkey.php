@@ -126,7 +126,11 @@ if ( isset( $_POST['btnsave'] ) ) {
                     });
                 });
             </script>';
-        
+        echo '<script> window.setTimeout(function(){
+        window.location.href = "/controlechaves/src/view/mainlist.php";
+
+    }, 2000);
+    </script>   ';
     } 
     else {
         echo '<script type="text/javascript">

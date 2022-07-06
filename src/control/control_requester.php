@@ -28,6 +28,11 @@ class ControlRequester {
             echo "Error in method NewRequester in ControlRequester: ".$e->getMessage()."</br>";
         }
     }
+    
+    public function FetchRequesterModel($id){
+        $dao = new DaoRequester();
+        return $dao->SearchById($id);
+    }
 
 
 }

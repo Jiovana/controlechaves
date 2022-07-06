@@ -92,16 +92,17 @@ class ControlBorrowing {
         return $dao->SearchActiveBorrowKey();
     }
     
-    public function FetchCheckin($borrow_id){
+    public function FetchCheckinRequester($borrow_id){
         $dao = new DaoBorrowing();
-        $date = $dao->SelectCheckin($borrow_id);   
-        $dateup = date_create( $date);
-        return date_format( $dateup, 'd/m/Y H:i:s' );       
+        $arr = $dao->SelectCheckinRequester($borrow_id);   
+        $arr["data_checkin"] = date_format( date_create( $arr["data_checkin"]), 'd/m/Y H:i:s' );
+        return $arr;       
     }
     
 }
 $con = new ControlBorrowing();
-//echo $con->FetchCheckin(14);
+
+//print_r($con->FetchCheckinRequester(14));
 
 
 ?>

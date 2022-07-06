@@ -172,15 +172,15 @@ class DaoBorrowing {
         }
     }
     
-    public function SelectCheckin($id){
+    public function SelectCheckinRequester($id){
         try{
-            $sql = "SELECT data_checkin from borrowing WHERE id = :id";
+            $sql = "SELECT data_checkin, requester_id from borrowing WHERE id = :id";
             
             $p_sql = Connection::getConnection()->prepare( $sql );
             $p_sql->bindValue( ":id", $id );
             $p_sql->execute();
             
-            $p_sql->setFetchMode(PDO::FETCH_COLUMN, 0);
+            $p_sql->setFetchMode(PDO::FETCH_ASSOC);
             return $p_sql->fetch();
             
         }catch(exception $e){
@@ -191,6 +191,6 @@ class DaoBorrowing {
 }
 
 $dao = new DaoBorrowing();
-//echo $dao->SelectCheckin(14);
+//echo $dao->SelectCheckinRequester(14)['requester_id'];
 
 ?>

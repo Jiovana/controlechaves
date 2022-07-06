@@ -262,7 +262,26 @@ class DaoKey {
             echo "Error while running UpdateStatus method in DaoKey: ".$e;
         }
     }
+    
+    public function SelectGancho($id){
+        try{
+            $sql = "SELECT gancho from `keys` WHERE id = :id";
+            
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":id", $id );
+            $p_sql->execute();
+            
+            $p_sql->setFetchMode(PDO::FETCH_COLUMN, 0);
+            return $p_sql->fetch();
+            
+        } catch (PDOException $e){
+            echo "Error while running SelectGancho method in DaoKey: ".$e;
+        }
+    }
 
 }
+
+$dao = new DaoKey();
+//echo $dao->SelectGancho(4);
 
 ?>

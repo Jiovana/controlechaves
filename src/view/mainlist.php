@@ -14,6 +14,25 @@ $control = new ControlKey();
 
 include_once 'header.php';
 
+if ($_SESSION["overdue_alert"] == true){
+     echo '<script>
+        swal({          
+            title: "Chave(s) em atraso!",
+            text: "';
+    foreach($_SESSION["message"] as $message){
+        echo $message;
+    }
+    echo '\n",
+            icon: "warning",
+            button: "Ok",
+        });
+    
+        </script>';
+    $_SESSION["message"] = array();
+    $_SESSION["overdue_alert"] = false;
+}
+    
+
 
 
 ?>
