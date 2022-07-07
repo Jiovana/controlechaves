@@ -228,10 +228,44 @@ class ControlKey {
         $dao = new DaoKey();
         return $dao->SelectGancho($keyid);
     }
-
+    
+    public function CheckOverdueMessages(){
+        try{
+            
+            if (($file = fopen('..\etc\overduemessages.txt','r')) != false){
+                
+                $contents = file_get_contents('..\etc\overduemessages.txt');
+                $lines = explode(';', $contents);
+                //print_r($lines);
+                //echo $lines[0];
+                if ($lines[0] == 'overdue_alert'){
+                   // echo "test";
+                   
+                    echo '<script>
+                            swal({          
+                            title: "Chave(s) em atraso!",
+                            text: "';
+                            for($i = 1; $i < count($lines); $i++){
+                                echo $lines[$i].'\n';
+                            }
+                            echo '\n",
+                                icon: "warning",
+                                button: "Ok",
+                            }); 
+                            </script>';
+                }
+                fclose($file);
+                $file = fopen('..\etc\overduemessages.txt','w');
+                fclose($file);
+            }
+        } catch (Exception $e){
+            echo "Problem with CheckOverdueMessages in ControlKey";
+        }
+    }
 
 }
 
-
+$control = new ControlKey();
+//$control->CheckOverdueMessages();
 
 ?>
