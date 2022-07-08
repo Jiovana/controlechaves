@@ -113,6 +113,8 @@ if ( isset( $_POST['btnsave'] ) ) {
               $log->setDescription($string);
 
               $controll->CreateLog($log);
+                
+              $controlb->SendEmailBorrowing($borrow_id, $arr_keyid[$i]);
            }
         }
 

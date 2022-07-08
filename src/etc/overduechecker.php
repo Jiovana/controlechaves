@@ -58,15 +58,23 @@ foreach($actives as $instance){
         
         
         //enviar email
-        
+         $controlb->SendEmailOnOverdue($instance["borrowing_id"], $instance["keys_id"]);
         //desativar flag para nao emitir mais alertas.
         //nao sei se eh melhor solucao
         $controlb->DeactiveKeysBorrow($instance["keys_id"]);
+        
+      // testar se faltam 30 minutos para devolver
+    } else if (strtotime($current_time) >=  (strtotime($checkin)+1800)){
+         $controlb->SendEmailBeforeOverdue($instance["borrowing_id"], $instance["keys_id"]);      
+        echo "30 minutos restando</br>";
+    } else {
+        echo "mais de 30 minutos.</br>";
     }
    
 }
  fclose($file);
 
+ 
 //print_r( $_POST["message"]);
 
 ?>
