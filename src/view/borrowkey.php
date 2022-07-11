@@ -114,7 +114,11 @@ if ( isset( $_POST['btnsave'] ) ) {
 
               $controll->CreateLog($log);
                 
-              $controlb->SendEmailBorrowing($borrow_id, $arr_keyid[$i]);
+                //so envia email se foi informado ne
+              if (!empty($_POST['txtemail'])) {
+                $controlb->SendEmailBorrowing($borrow_id, $arr_keyid[$i]);
+              }  
+             
            }
         }
 

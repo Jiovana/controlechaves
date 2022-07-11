@@ -126,7 +126,7 @@ class ControlBorrowing {
               $altbody = $altbody." Boa visitacao!";
           }
               
-         echo $body;
+        // echo $body;
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
          
      }
@@ -149,7 +149,7 @@ class ControlBorrowing {
          $body = "Olá, ".$requester->getNome().".<br>Lembramos que você pegou emprestada a chave ".$key->getGancho().", endereço <b>".$address."</b> na JW Imobiliária.<br>O horário de devolução especificado foi: <b>".$date."</b>. <br> A chave agora está <b>atrasada</b>.<br> Por favor, dirija-se à imobiliária para devolver a chave assim que possível.";
          $altbody = "Ola, ".$requester->getNome().". Lembramos que voce pegou emprestada a chave ".$key->getGancho().", endereço ".$address." na JW Imobiliaria. O horario de devolucao especificado foi: ".$date.". A chave agora esta ATRASADA. Por favor, dirija-se a imobiliaria para devolver a chave assim que possivel.";
               
-         echo $body;
+        // echo $body;
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
     }
     
@@ -171,8 +171,14 @@ class ControlBorrowing {
          $body = "Olá, ".$requester->getNome().".<br>Lembramos que você pegou emprestada a chave ".$key->getGancho().", endereço <b>".$address."</b> na JW Imobiliária.<br>O horário de devolução especificado foi: <b>".$date."</b>. <br> Por favor, dirija-se à imobiliária para devolver a chave até o horário previsto.";
          $altbody = "Ola, ".$requester->getNome().". Lembramos que voce pegou emprestada a chave ".$key->getGancho().", endereço ".$address." na JW Imobiliaria. O horario de devolucao especificado foi: ".$date.". Por favor, dirija-se a imobiliaria para devolver a chave ate o horario previsto.";
               
-         echo $body;
+        // echo $body;
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
+    }
+    
+    
+    public function ChangeRemindStatus($keys_borrow_id){
+        $dao = new DaoBorrowing();
+        $dao->ActivateReminder($keys_borrow_id);
     }
          
 

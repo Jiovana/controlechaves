@@ -41,21 +41,23 @@ class ControlRequester {
 // codigo fora da classe usado pela requisicao ajax  em borrowkey.php
 //  preenche os dados do requester no form
 if ( isset( $_POST['op'] ) ) {
-    try {
-        $requester = array();
-        $dao = new DaoRequester();
-        $requester = $dao->SearchByEmailOrName( $_POST['reqemail'], $_POST['reqnome'] );
-        
-        if ($requester == false) {
-            $requester += ['empty' => true];
-        } else {
-            $requester += ['empty' => false];
+    if ($_POST['op'] == "request"){
+        try {
+            $requester = array();
+            $dao = new DaoRequester();
+            $requester = $dao->SearchByEmailOrName( $_POST['reqemail'], $_POST['reqnome'] );
+
+            if ($requester == false) {
+                $requester += ['empty' => true];
+            } else {
+                $requester += ['empty' => false];
+            }
+
+            echo json_encode( $requester );
+        } catch ( Exception $e ) {
+            echo json_encode( $e->getMessage() );
+            exit();
         }
-            
-        echo json_encode( $requester );
-    } catch ( Exception $e ) {
-        echo json_encode( $e->getMessage() );
-        exit();
     }
 
 }

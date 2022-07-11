@@ -183,8 +183,21 @@ class DaoBorrowing {
             $p_sql->setFetchMode(PDO::FETCH_ASSOC);
             return $p_sql->fetch();
             
-        }catch(exception $e){
+        }catch(PDOException $e){
             echo  "Error while running SelectBorrowInfo method in DaoBorrowing: ".$e->getMessage();
+        }
+    }
+    
+    public function ActivateReminder($keys_borrowing_id){
+        try{
+            $sql = "UPDATE `keys_borrowing` SET is_reminder = true WHERE id = :id";
+            
+            $p_sql = Connection::getConnection()->prepare($sql);
+            $p_sql->bindValue(":id", $keys_borrowing_id);
+           
+            return $p_sql->execute();         
+        } catch (PDOException $e){
+            echo "Error while running ActivateReminder method in DaoBorrowing: ".$e->getMessage();
         }
     }
 

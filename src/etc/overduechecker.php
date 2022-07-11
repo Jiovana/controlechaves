@@ -23,6 +23,8 @@ foreach($actives as $instance){
     $borrow_info = $controlb->FetchCheckinRequester($instance["borrowing_id"]);
     $checkin = $borrow_info["data_checkin"];
     $req_id = $borrow_info["requester_id"];
+    $requester = $controlr->FetchRequesterModel($req_id);
+    
     $current_time = date_format(date_create(null),'d/m/Y H:i:s');   
     
     if($checkin <= $current_time){
@@ -32,7 +34,7 @@ foreach($actives as $instance){
         $controlk->UpdateStatus($instance["keys_id"],3);
         //gerar log
         $log = new ModelLog();
-        $requester = $controlr->FetchRequesterModel($req_id);
+       
         //inserir o log de emprestar chave   
         $log->setKeys_id($instance["keys_id"]);
         $log->setUser_id(20);
@@ -40,7 +42,7 @@ foreach($actives as $instance){
         // 3 - emprestimo, 4 - devolucao
         $log->setOperation(2);
         $gancho = $controlk->FetchGancho($instance["keys_id"]);
-        $string = "Chave nº Gancho: ".$gancho.", emprestada para ".$requester->getNome()." esta ATRASADA.";    
+        $string = "Chave nº Gancho: ".$gancho.", emprestada para ".$requester->getNome()." está ATRASADA.";    
         $log->setDescription($string);
 
         $controll->CreateLog($log);
@@ -55,24 +57,34 @@ foreach($actives as $instance){
         //$_POST["overdue_alert"] = true;
         
         //array_push($_POST["message"], $string);
-        
-        
+           
         //enviar email
-         $controlb->SendEmailOnOverdue($instance["borrowing_id"], $instance["keys_id"]);
+        if ($requester->getEmail() != ""){
+            $controlb->SendEmailOnOverdue($instance["borrowing_id"], $instance["keys_id"]);
+        }
+        
         //desativar flag para nao emitir mais alertas.
         //nao sei se eh melhor solucao
         $controlb->DeactiveKeysBorrow($instance["keys_id"]);
         
       // testar se faltam 30 minutos para devolver
-    } else if (strtotime($current_time) >=  (strtotime($checkin)+1800)){
-         $controlb->SendEmailBeforeOverdue($instance["borrowing_id"], $instance["keys_id"]);      
-        echo "30 minutos restando</br>";
+    } else if (strtotime($current_time) >=  (strtotime($checkin)-1800)){
+        if(!$instance['is_reminder'] && $requester->getEmail() != ""){
+           $controlb->SendEmailBeforeOverdue($instance["borrowing_id"], $instance["keys_id"]);   
+           $controlb->ChangeRemindStatus($instance["id"]);
+        echo "30 minutos restando</br>"; 
+        }
+         
     } else {
         echo "mais de 30 minutos.</br>";
     }
    
 }
  fclose($file);
+
+if (empty($actives)){
+    echo "No active borrowings </br>";
+}
 
  
 //print_r( $_POST["message"]);

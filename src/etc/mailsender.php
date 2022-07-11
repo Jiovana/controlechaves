@@ -17,7 +17,7 @@ function MailSender($recipient_mail, $recipient_name, $subject, $body, $altbody)
 
     try {
         // Server settings
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
         // for detailed debug output
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
@@ -45,7 +45,7 @@ function MailSender($recipient_mail, $recipient_name, $subject, $body, $altbody)
         $mail->AltBody = $altbody;
 
         $mail->send();
-        echo "Email message sent.";
+        //echo "Email message sent.";
     } catch ( Exception $e ) {
         echo "Error in sending email. Mailer Error: {$mail->ErrorInfo}";
     }
