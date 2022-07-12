@@ -50,6 +50,29 @@ class ControlLog {
         }
     }
     
+    
+    public function FillReportTable($date_begin, $date_end){
+        $dao = new DaoLog();
+        $fromdate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_begin)));
+        $todate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_end)));
+        
+        
+        $logs = $dao->SearchAllPeriod($fromdate, $todate);
+       // [date]  [user] [key] [operation] [description]
+        foreach ( $logs as $log ) {
+            $date = date_create( $log['date'] );
+            $date = date_format( $date, 'd/m/Y' );
+
+            echo '<tr>
+                    <td>'.$date.'</td>
+                    <td>'.$log['nome'].'</td>
+                    <td>'.$log['gancho'].'</td>
+                    <td>'.$log['operation'].'</td>
+                    <td>'.$log['description'].'</td>          
+                </tr> ';
+        }
+    }
+    
    
 
 }
