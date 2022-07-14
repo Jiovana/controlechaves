@@ -71,6 +71,8 @@ class ControlLog {
                     <td>'.$log['description'].'</td>          
                 </tr> ';
         }
+        
+        return array($date_begin, $date_end);
     }
     
    

@@ -186,7 +186,7 @@ class ControlBorrowing {
 }
 $con = new ControlBorrowing();
 
-//$con->SendMailBorrowing(25,18);
+//$con->SendEmailBeforeOverdue(25,18);
 
 
 ?>

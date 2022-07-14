@@ -16,8 +16,8 @@ function MailSender($recipient_mail, $recipient_name, $subject, $body, $altbody)
     $mail = new PHPMailer( true );
 
     try {
-        // Server settings
-        //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        // Server settings // _OFF _SERVER
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;
         // for detailed debug output
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
@@ -29,7 +29,7 @@ function MailSender($recipient_mail, $recipient_name, $subject, $body, $altbody)
 
         $mail->Username = 'jwimob.mailsender@gmail.com';
         // YOUR gmail email
-        $mail->Password = 'slbqchiptlfstmou';
+        $mail->Password = 'pctneanfggsgfynw';
         // YOUR gmail password
 
         // Sender and recipient settings

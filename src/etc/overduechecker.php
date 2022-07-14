@@ -27,6 +27,7 @@ foreach($actives as $instance){
     
     $current_time = date_format(date_create(null),'d/m/Y H:i:s');   
     
+    
     if($checkin <= $current_time){
         echo "overdue</br>";
         // se atrasado: 
@@ -68,16 +69,22 @@ foreach($actives as $instance){
         $controlb->DeactiveKeysBorrow($instance["keys_id"]);
         
       // testar se faltam 30 minutos para devolver
-    } else if (strtotime($current_time) >=  (strtotime($checkin)-1800)){
+    } else if ( strtotime(str_replace('/', '-', $current_time)) >=  (strtotime(str_replace('/', '-', $checkin))-1800)) {
         if(!$instance['is_reminder'] && $requester->getEmail() != ""){
            $controlb->SendEmailBeforeOverdue($instance["borrowing_id"], $instance["keys_id"]);   
            $controlb->ChangeRemindStatus($instance["id"]);
         echo "30 minutos restando</br>"; 
+        } else{
+            echo "ja enviado ou nao tem email</br>";
         }
          
     } else {
         echo "mais de 30 minutos.</br>";
     }
+   // echo $current_time."</br>";
+    //echo "str".strtotime($current_time)."</br>";
+   // echo $checkin."</br>";
+   // echo "str".(strtotime($checkin)-1800)."</br>";
    
 }
  fclose($file);
@@ -85,6 +92,7 @@ foreach($actives as $instance){
 if (empty($actives)){
     echo "No active borrowings </br>";
 }
+
 
  
 //print_r( $_POST["message"]);

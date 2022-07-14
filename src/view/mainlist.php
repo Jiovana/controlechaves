@@ -1,13 +1,4 @@
-<script>
 
-    window.addEventListener("load", () => {
-       var req = new XMLHttpRequest();
-        req.open("POST","../etc/overduechecker.php");
-        req.onload = function () { console.log(this.response); };    
-        req.send();
-    });
-
-</script>
   
 
   
@@ -34,7 +25,16 @@ $control->CheckOverdueMessages();
 
 
 ?>
+<script>
 
+    window.addEventListener("load", () => {
+       var req = new XMLHttpRequest();
+        req.open("POST","../etc/overduechecker.php");
+        req.onload = function () { console.log(this.response); };    
+        req.send();
+    });
+
+</script>
 
 
 
