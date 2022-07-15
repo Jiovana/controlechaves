@@ -20,15 +20,18 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
 
                      
 
-
+  $datesfromlog = array();
 
     if(isset($_POST['btnsearch'])){
         $dates = explode(' - ', $_POST['daterange']);
         echo '<script>console.log("teste: '.$_POST['daterange'].'");</script>';
         //send the date range via get 
         //parse_url
+        
+        $datesfromlog = $controll->RetrieveReportDates($dates[0],$dates[1]);
     }
 
+    
 
 ?>
 
@@ -74,24 +77,29 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
 
                     <div class="col-md-3" style="display:flex;justify-content:center;">
                         
-                  <!--      <a href="report.php?daterange=<?php
-                             //    if (isset($_POST['daterange']))
-                                 
-                                 
-                            //     echo $_POST['daterange']; ?>" name="btnsearch" class="btn btn-block btn-social  btn-info btnsearch" role="button" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip" title="Procurar movimentações do período" ><i class="fa fa-search"></i>Procurar </a>   
-                        -->
-                        
-                        <button type="submit" class="btn btn-block btn-social  btn-info btnsearch" name="btnsearch" id="btnsearch" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip" title="Procurar movimentações do período"><i class="fa fa-search"></i>Procurar</button>
-
-                       
+                        <button type="submit" class="btn btn-block btn-social  btn-info btnsearch" name="btnsearch" id="btnsearch" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip" title="Procurar movimentações do período"><i class="fa fa-search"></i>Procurar</button>                       
 
                     </div>
 
 
                     <div class="col-md-3" style="display:flex;justify-content:center;" >
-
-                        <button type="submit" class="btn btn-block btn-social  btn-default btnprint" name="btnprint" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip" title="Imprimir a seleção atual"><i class="fa fa-print"></i>Imprimir</button>
+                        <a name="btnprint" class="btn btn-block btn-social  btn-default btnprint" role="button" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip"  
+<?php if (!isset($_POST['btnsearch'])){
+     echo 'title="Clique em procurar primeiro!" disabled href="#"';
+} else{
+    echo ' title="Imprimir a seleção atual"';
+    echo 'href="../etc/pdfreport.php?daterange=';
+    if (!empty($datesfromlog)){
+        echo $datesfromlog[0].'-'.$datesfromlog[1];
+     }
+    echo '"';
+}
+                           ?>><i class="fa fa-print"></i>Imprimir</a>   
+                        
                     </div>
+                    
+                      
+                        
 
 
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -75,6 +75,18 @@ class ControlLog {
         return array($date_begin, $date_end);
     }
     
+    public function RetrieveReportDates($date_begin, $date_end){
+         return array($date_begin, $date_end);
+    }
+    
+    public function FetchReportData($date_begin, $date_end){
+        $dao = new DaoLog();
+        $fromdate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_begin)));
+        $todate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_end)));
+        $logs = $dao->SearchAllPeriod($fromdate, $todate);
+        return $logs;
+    }
+    
    
 
 }
