@@ -210,7 +210,7 @@ desired effect
                     </li>
                     <li class="nav-link">
                         <a href="report.php"><i class="fa fa-calendar-o"></i>
-                            <span>Relatório Mensal</span></a>
+                            <span>Relatórios</span></a>
                     </li>
 
                     <!--<li class="treeview">

@@ -38,23 +38,23 @@ $pdf->AddPage();
 //$pdf->SetFillColor(123,255,234);
 $pdf->SetFont('Arial','B',16); // I - italic U underline B bold
 //$pdf->Cell(80,10,'Hello world',1,0,'C',true,'www.google.com');
-$pdf->Cell(80,10,'JW Imobiliaria',0,0,'');
+$pdf->Cell(80,10,utf8_decode('JW Imobiliária'),0,0,'');
 
 $pdf->SetFont('Arial','B',13);
-$pdf->Cell(112,10,'Controle de Chaves de Imoveis',0,1,'C');
+$pdf->Cell(112,10,utf8_decode('Controle de Chaves de Imóveis'),0,1,'C');
 
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,'Endereco: Marcilio Dias 1101, Bage RS',0,0,'');
+$pdf->Cell(80,5,utf8_decode('Endereço: Marcílio Dias 1101, Bagé RS'),0,0,'');
 
 $pdf->SetFont('Arial','B',12);
-$pdf->Cell(112,5,'Relatorio de Movimentacoes',0,1,'C');
+$pdf->Cell(112,5,utf8_decode('Relatório de Movimentações'),0,1,'C');
 
 
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(80,5,'Telefone: 3242-1647',0,0,'');
 
 $pdf->SetFont('Arial','I',10);
-$pdf->Cell(112,10,'Periodo: '.$dates[0] .' a '. $dates[1],0,1,'C');
+$pdf->Cell(112,10,utf8_decode('Período: ').$dates[0] .' a '. $dates[1],0,1,'C');
 //$pdf->Cell(112,5,'Date: '.$row->order_date,0,1,'C');
 
 $pdf->SetFont('Arial','',8);
@@ -65,82 +65,37 @@ $pdf->SetFont('Arial','',8);
 $pdf->Line(5,38,205,38); // prints a line in the page
 $pdf->Line(5,39,205,39);
 
-$pdf->Ln(18); //break the line
+$pdf->Ln(14); //break the line
 
 
 $pdf->SetFont('Arial','B',12);
 $pdf->SetFillColor(208,208,208);
-$pdf->Cell(25,8,'Data',1,0,'C',true);// true to background color
-$pdf->Cell(25,8,'Usuario',1,0,'C',true);
-$pdf->Cell(25,8,'Chave',1,0,'C',true);
-$pdf->Cell(25,8,'Operacao',1,0,'C',true);
-$pdf->Cell(90,8,'Descricao',1,1,'C',true);
+$pdf->Cell(25,7,'Data',1,0,'C',true);// true to background color
+$pdf->Cell(25,7,utf8_decode('Usuário'),1,0,'C',true);
+$pdf->Cell(25,7,utf8_decode('Chave'),1,0,'C',true);
+$pdf->Cell(25,7,utf8_decode('Operação'),1,0,'C',true);
+$pdf->Cell(90,7,utf8_decode('Descrição'),1,1,'C',true);
 
 //////////////////////////////
 foreach($logs as $log){
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Arial','',9);
     $row_date = date_create( $log['date'] );
     $row_date = date_format( $row_date, 'd/m/Y' );
-    $pdf->Cell(25,8,$row_date,1,0,'C');
-    $pdf->Cell(25,8,$log['nome'],1,0,'C');
-    $pdf->Cell(25,8,$log['gancho'],1,0,'C');
-    $pdf->Cell(25,8,utf8_decode($log['operation']),1,0,'C');
-    $pdf->MultiCell(90,8,utf8_decode($log['description']),1,1,false);
-    //$pdf->Cell(90,8,utf8_decode($log['description']),1,1,'L');
+    $pdf->Cell(25,12,$row_date,1,0,'C');
+    $pdf->Cell(25,12,$log['nome'],1,0,'C');
+    $pdf->Cell(25,12,$log['gancho'],1,0,'C');
+    $pdf->Cell(25,12,utf8_decode($log['operation']),1,0,'C');
+    if ($log['operation']=='Devolução'){
+        $pdf->MultiCell(90,12,utf8_decode($log['description']),1,1,false); 
+    } else {
+         $pdf->MultiCell(90,6,utf8_decode($log['description']),1,1,false); 
+    }
+   
 }
 
 
-//$pdf->SetFont('Arial','B',12);
-//$pdf->Cell(90,8,'',0,0,'L');
-//$pdf->Cell(30,8,'',0,0,'C');
-//$pdf->Cell(30,8,'Subtotal',1,0,'C',true);
-//$pdf->Cell(40,8,$row->subtotal,1,1,'C');
 
 
-/*
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(90,8,'',0,0,'L');
-$pdf->Cell(30,8,'',0,0,'C');
-$pdf->Cell(30,8,'Tax',1,0,'C',true);
-//$pdf->Cell(40,8,$row->tax,1,1,'C');
-
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(90,8,'',0,0,'L');
-$pdf->Cell(30,8,'',0,0,'C');
-$pdf->Cell(30,8,'Discount',1,0,'C',true);
-//$pdf->Cell(40,8,$row->discount,1,1,'C');
-
-$pdf->SetFont('Arial','B',14);
-$pdf->Cell(90,8,'',0,0,'L');
-$pdf->Cell(30,8,'',0,0,'C');
-$pdf->Cell(30,8,'Total',1,0,'C',true);
-//$pdf->Cell(40,8,'$'.$row->total,1,1,'C');
-
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(90,8,'',0,0,'L');
-$pdf->Cell(30,8,'',0,0,'C');
-$pdf->Cell(30,8,'Paid',1,0,'C',true);
-//$pdf->Cell(40,8,$row->paid,1,1,'C');
-
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(90,8,'',0,0,'L');
-$pdf->Cell(30,8,'',0,0,'C');
-$pdf->Cell(30,8,'Due',1,0,'C',true);
-//$pdf->Cell(40,8,$row->due,1,1,'C');
-
-$pdf->SetFont('Arial','B',11);
-$pdf->Cell(90,8,'',0,0,'L');
-$pdf->Cell(30,8,'',0,0,'C');
-$pdf->Cell(30,8,'Payment Type',1,0,'C',true);
-//$pdf->Cell(40,8,$row->payment_type,1,1,'C');
-*/
-
-$pdf->Cell(50,10,'',0,1,'');
-
-$pdf->SetFont('Arial','B',10);
-$pdf->Cell(32,10,'Important Notice:',0,0,'',true);
-$pdf->SetFont('Arial','',8);
-$pdf->Cell(148,10,'No item will be replaced or refunded if you dont have the invoice with you. You can refund within 2 days of purchase.',0,0,'');
 
 //output the result
 $pdf->Output();
