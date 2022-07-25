@@ -224,14 +224,26 @@ class ControlKey {
         $dao->UpdateStatus($keyid, $status_labels[$status]);       
     } 
     
+    
+    /**
+    * Busca apenas o Gancho da chave com o id informado
+    *
+    * @param int $keyid o id da chave
+    * @return string o codigo do gancho
+    */
     public function FetchGancho($keyid){
         $dao = new DaoKey();
         return $dao->SelectGancho($keyid);
     }
     
+    /**
+    * Verifica se o arquivo overduemessages.txt possui algum conteudo.
+    * se positivo, gera o script de um alerta swal com o conteudo do arquivo.
+    * 
+    */
+    //// essa logica de alertas precisa ser revista
     public function CheckOverdueMessages(){
-        try{
-            
+        try{       
             if (($file = fopen('..\etc\overduemessages.txt','r')) != false){
                 
                 $contents = file_get_contents('..\etc\overduemessages.txt');

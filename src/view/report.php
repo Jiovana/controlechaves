@@ -94,7 +94,7 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
      }
     echo '"';
 }
-                           ?>><i class="fa fa-print"></i>Imprimir</a>   
+                           ?> target="_blank"><i class="fa fa-print"></i>Imprimir</a>   
                         
                     </div>
                     

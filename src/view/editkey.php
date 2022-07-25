@@ -93,7 +93,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
     //3.6 - comparar as tres flags entre si.
     if ( $mod_addr and $mod_key and $mod_sta ) {
         //verifica se devolucao
-        if ( $key_sta == "Emprestado" && $_POST['select_status'] == "Disponível" ) {
+        if ( ($key_sta == "Emprestado" || $key_sta == "Atrasado") && $_POST['select_status'] == "Disponível"  ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
@@ -109,7 +109,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
     } else if ( $mod_addr and $mod_key ) {
         $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço e dados da chave.";
     } else if ( $mod_addr and $mod_sta ) {
-        if ( $key_sta == "Emprestado" && $_POST['select_status'] == "Disponível" ) {
+        if ( ($key_sta == "Emprestado" || $key_sta == "Atrasado") && $_POST['select_status'] == "Disponível" ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
@@ -141,7 +141,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
     } else if ( $mod_key ) {
         $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização dos dados da chave.";
     } else if ( $mod_sta ) {
-        if ( $key_sta == "Emprestado" && $_POST['select_status'] == "Disponível" ) {
+        if ( ($key_sta == "Emprestado" || $key_sta == "Atrasado") && $_POST['select_status'] == "Disponível" ) {
             //update borrowing info.
             $controlb = new ControlBorrowing();
             $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );

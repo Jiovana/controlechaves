@@ -50,7 +50,15 @@ class ControlLog {
         }
     }
     
-    
+    /**
+    * Preenche as linhas da tabela de movimentacoes em report.php
+    *
+    * Busca todos os logs com datas entre o periodo delimitado por date_begin e date_end
+    *
+    * @param string $date_begin a data de inicio do periodo
+    * @param string $date_end a data de fim do periodo
+    * @return array retorna as próprias datas enviadas (como a pagina atualiza, esses dados se perdem, assim é uma forma de recuperar eles)
+    */
     public function FillReportTable($date_begin, $date_end){
         $dao = new DaoLog();
         $fromdate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_begin)));
@@ -75,10 +83,28 @@ class ControlLog {
         return array($date_begin, $date_end);
     }
     
+    
+    /**
+    * Retorna as próprias datas usadas como inputs.
+    *
+    *
+    * @param string $date_begin a data de inicio do periodo
+    * @param string $date_end a data de fim do periodo
+    * @return array retorna as próprias datas enviadas (como a pagina atualiza, esses dados se perdem, assim é uma forma de recuperar eles)
+    */
     public function RetrieveReportDates($date_begin, $date_end){
          return array($date_begin, $date_end);
     }
     
+    
+    /**
+    * Busca todos os dados do periodo. Usada para gerar o pdf
+    *
+    *
+    * @param string $date_begin a data de inicio do periodo
+    * @param string $date_end a data de fim do periodo
+    * @return array array associativo com todos dados
+    */
     public function FetchReportData($date_begin, $date_end){
         $dao = new DaoLog();
         $fromdate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_begin)));

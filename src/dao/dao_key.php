@@ -263,6 +263,13 @@ class DaoKey {
         }
     }
     
+    
+    /**
+    * Retorna o numero do gancho da chave com base no id
+    *
+    * @param int $id o id da key a ser buscada
+    * @return string o valor do gancho da chave, ou false. 
+    */
     public function SelectGancho($id){
         try{
             $sql = "SELECT gancho from `keys` WHERE id = :id";

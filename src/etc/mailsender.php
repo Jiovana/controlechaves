@@ -11,6 +11,9 @@ require_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 
 date_default_timezone_set('America/Sao_Paulo');
 
+/*
+* Envia emails usando o servidor SMTP do gmail (unsafe) e a library PHPMailer 
+*/
 function MailSender($recipient_mail, $recipient_name, $subject, $body, $altbody){
     // passing true in constructor enables exceptions in PHPMailer
     $mail = new PHPMailer( true );

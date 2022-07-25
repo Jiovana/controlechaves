@@ -81,7 +81,7 @@ class ControlUser {
                     jQuery(function validation(){
                         swal({
                             title: "Aviso!",
-                            text: "Email ja cadastrado no sistema.",
+                            text: "Email já cadastrado no sistema.",
                             icon: "warning",
                             button: "Ok",
                         });
@@ -94,7 +94,7 @@ class ControlUser {
                     jQuery(function validation(){
                         swal({
                             title: "Sucesso!",
-                            text: "Usuario cadastrado",
+                            text: "Usuário cadastrado.",
                             icon: "success",
                             button: "Ok",
                         });
@@ -105,7 +105,7 @@ class ControlUser {
                     jQuery(function validation(){
                         swal({
                             title: "Erro!",
-                            text: "Problema ao cadastrar usuario",
+                            text: "Problema ao cadastrar usuário.",
                             icon: "error",
                             button: "Ok",
                         });
@@ -124,7 +124,7 @@ class ControlUser {
 
     public function DeleteUser( $id ) {
         $dao = new DaoUser();
-        if ( $dao->Delete( $id ) ) {
+        if ( $dao->Delete( $id ) ) {   
             echo '<script type="text/javascript">
                     jQuery(function validation(){
                         swal({

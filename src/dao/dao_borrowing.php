@@ -158,7 +158,12 @@ class DaoBorrowing {
         }
     }
     
-    
+     /**
+    * Busca todas instâncias de keys_borrowing com a flag ativo ligada 
+    * 
+    *
+    * @return array[] array associativo com os resultados da busca
+    */
     public function SearchActiveBorrowKey(){
         try {
             $sql = "SELECT * FROM `keys_borrowing` WHERE is_ativo = 1";
@@ -172,6 +177,13 @@ class DaoBorrowing {
         }
     }
     
+    /**
+    * Busca os dados de check-in e id do requester de borrowing com base no id 
+    * 
+    *     
+    * @param int $id O id do borrowing
+    * @return array[] array associativo com os resultados da busca
+    */
     public function SelectCheckinRequester($id){
         try{
             $sql = "SELECT data_checkin, requester_id from borrowing WHERE id = :id";
@@ -188,6 +200,13 @@ class DaoBorrowing {
         }
     }
     
+     /**
+    * Ativa a flag is_reminder em uma instancia de keys_borrowing - ou seja, ja foi enviado aviso sobre essa instancia
+    * 
+    *     
+    * @param int $keys_borrowing_id O id de keys_borrowing
+    * @return boolean resultado de execute()
+    */
     public function ActivateReminder($keys_borrowing_id){
         try{
             $sql = "UPDATE `keys_borrowing` SET is_reminder = true WHERE id = :id";

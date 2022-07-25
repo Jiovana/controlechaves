@@ -238,7 +238,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                                                 <th style="width: 50% ; ">Endereço</th>
                                                 <th style="width: 20% ; ">Categoria</th>
                                                 <th style="width: 10% ; ">
-                                                    <center><button type="button" name="add" class="btn btn-success btn-sm btnadd"><span class="glyphicon glyphicon-plus"></span></button></center>
+                                                    <center><button type="button" name="add" class="btn btn-success btn-sm btnadd" data-toggle="tooltip" title="Inserir linha na tabela"><span class="glyphicon glyphicon-plus"></span></button></center>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -256,7 +256,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                             <div class="col-md-4">
                                 <!-- Date -->
                                 <div class="form-group">
-                                    <label>Date de Retirada</label>
+                                    <label>Data de Retirada</label>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -325,7 +325,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
         html += '<td style="padding:0px;"><input type="text" class="form-control keycategory" name="keycategory[]" readonly></td>';
 
-        html += '<td style="padding:0px;"><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove"><span class="glyphicon glyphicon-remove"></span></button></center></td>';
+        html += '<td style="padding:0px;"><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-toggle="tooltip" title="Apagar essa linha"><span class="glyphicon glyphicon-remove"></span></button></center></td>';
 
         $('#tablekeys').append(html);
 
@@ -517,13 +517,14 @@ if ( isset( $_POST['btnsave'] ) ) {
 
             html += '<td style="padding:0px;"><input type="text" class="form-control keycategory" name="keycategory[]" value="<?php echo $bkey->getTipo(); ?>" readonly></td>';
 
-            html += '<td style="padding:0px;"><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove"><span class="glyphicon glyphicon-remove"></span></button></center></td>';
+            html += '<td style="padding:0px;"><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-toggle="tooltip" title="Apagar essa linha"><span class="glyphicon glyphicon-remove"></span></button></center></td>';
 
             $('#tablekeys').append(html);
 
             <?php } ?>
         }
     });
+     $('[data-toggle="tooltip"]').tooltip();
 </script>
 
 

@@ -166,7 +166,14 @@ class DaoLog {
     }
     
     
-    
+     /**
+    * Procura todos os logs do banco de dados dentro de um período determinado
+    *
+    *
+    * @param string $date_begin A data de inicio do periodo
+    * @param string $date_end A data final do periodo
+    * @return array[] um array associativo com os resultados da consulta: data, operação, descrição, nome do usuário e gancho da chave. 
+    */
     public function SearchAllPeriod($date_begin, $date_end){
         try{
             $sql = "SELECT log.date, log.operation, log.description, user.nome, keys.gancho FROM log INNER JOIN user ON log.user_id = user.id 

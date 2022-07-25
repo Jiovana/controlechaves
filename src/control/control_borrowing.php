@@ -85,16 +85,38 @@ class ControlBorrowing {
         }
     }
     
+    
+     /**
+     * Inativa a instância de keys_borrowing, usando quando chave é devolvida
+     *
+     * 
+     * @param int $keyid id da chave associada ao borrowing
+     * 
+    */
     public function DeactiveKeysBorrow($keyid){
         $dao = new DaoBorrowing();
         $dao->CloseKeysBorrowing($keyid);
     }
     
+    /**
+     * Busca todas instâncias de keys_borrowing que estao ativas, i.e., chaves com status emprestado ou atrasado
+     *
+     * 
+     * @return array array com todos os dados
+     * 
+    */
     public function FindActiveKeysBorrowing(){
         $dao = new DaoBorrowing();
         return $dao->SearchActiveBorrowKey();
     }
     
+     /**
+     * Traz os dados de checkin e id do requester de um borrowing
+     *
+     * @param int $borrow_id o id do borrowing
+     * @return array array com todos os dados
+     * 
+    */
     public function FetchCheckinRequester($borrow_id){
         $dao = new DaoBorrowing();
         $arr = $dao->SelectCheckinRequester($borrow_id);   
@@ -102,6 +124,15 @@ class ControlBorrowing {
         return $arr;       
     }
     
+    
+    /**
+     * Envia email quando operação de empréstimo é realizada
+     *
+     * @param int $borrow_id o id do borrowing
+     * @param int $key_id o id da chave emprestada
+     * 
+     * chama a função MailSender em mailsender.php para enviar o email
+    */
     //this one sends emails when a key is borrowed.
      public function SendEmailBorrowing($borrow_id, $key_id){ 
          $arr = $this->FetchCheckinRequester($borrow_id);
@@ -131,6 +162,14 @@ class ControlBorrowing {
          
      }
     
+    /**
+     * Envia email quando está atrasada a data de entrega do empréstimo 
+     *
+     * @param int $borrow_id o id do borrowing
+     * @param int $key_id o id da chave emprestada
+     * 
+     * chama a função MailSender em mailsender.php para enviar o email
+    */
     //this one sends emails when a key is overdue.
     public function SendEmailOnOverdue($borrow_id, $key_id){       
          $arr = $this->FetchCheckinRequester($borrow_id);
@@ -153,6 +192,14 @@ class ControlBorrowing {
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
     }
     
+     /**
+     * Envia email 30 minutos antes da data de entrega do empréstimo ficar atrasada
+     *
+     * @param int $borrow_id o id do borrowing
+     * @param int $key_id o id da chave emprestada
+     * 
+     * chama a função MailSender em mailsender.php para enviar o email
+    */
     //this one sends emails 30 minutes before a key is overdue.
     public function SendEmailBeforeOverdue($borrow_id, $key_id){       
          $arr = $this->FetchCheckinRequester($borrow_id);
@@ -175,7 +222,12 @@ class ControlBorrowing {
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
     }
     
-    
+     /**
+     * Ativa a flag de reminder em uma instancia de keys_borrowing, indicando que ela ja foi notificada a um usuario
+     *
+     * @param int $keys_borrow_id o id do keys_borrowing
+     * 
+    */
     public function ChangeRemindStatus($keys_borrow_id){
         $dao = new DaoBorrowing();
         $dao->ActivateReminder($keys_borrow_id);

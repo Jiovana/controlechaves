@@ -198,7 +198,7 @@ desired effect
 
                     <!-- Optionally, you can add icons to the links -->
                     <li class="nav-link">
-                        <a href="mainlist.php"><i class="fa fa-th-list"></i> <span>Lista de chaves</span></a>
+                        <a href="mainlist.php"><i class="fa fa-th-list"></i> <span>Lista de Chaves</span></a>
                     </li>
                     <li class="nav-link">
                         <a href="newkey.php"><i class="fa fa-key"></i>
@@ -206,7 +206,7 @@ desired effect
                     </li>
                     <li class="nav-link">
                         <a href="borrowkey.php"><i class="fa fa-tags"></i>
-                            <span>Emprestar chave</span></a>
+                            <span>Emprestar Chave</span></a>
                     </li>
                     <li class="nav-link">
                         <a href="report.php"><i class="fa fa-calendar-o"></i>
@@ -230,7 +230,7 @@ desired effect
                             <span>Usuários</span></a>
                     </li>
                     <li class="nav-link">
-                        <a href=""><i class="fa fa-book"></i>
+                        <a href="https://drive.google.com/file/d/1V7VNurof4MhFvgbJ2rtr0liih4rQ92lb/view?usp=sharing" target="_blank"><i class="fa fa-book"></i>
                             <span>Manual</span></a>
                     </li>
                 </ul>

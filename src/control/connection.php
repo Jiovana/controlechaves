@@ -1,7 +1,19 @@
 <?php
 
+/**
+ * Reune operações para conexão do sistema ao banco de dados local cujos dados estão salvos no arquivo db.ini
+ * 
+*/
 class Connection {
-    // pega os dados de conexao do banco em um arquivo .ini
+    
+     /**
+     * Cria uma conexão com o banco de dados, pega os dados  do banco de um arquivo .ini
+     * Usada por todas classes DAO
+     * 
+     * @param string $cfg caminho para o arquivo .ini com os dados do banco de dados
+     * @return PDO um objeto PDO com a conexão
+    */
+    // 
     public static function getConnection($cfg = '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/etc/db.ini') {
         if ( !$settings = parse_ini_file( $cfg, TRUE ) ) {
             throw new Exception( 'Unable to open '.$file );

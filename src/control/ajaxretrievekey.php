@@ -12,11 +12,11 @@ $controlk = new ControlKey();
 $controlb = new ControlBorrowing();
 $controll = new ControlLog();
 
-// chamado pelo ajax para devolver uma chave
+// chamado pelo ajax em mainlist.php para devolver uma chave atraves do alerta swal
 try {
     if ( !isset( $_POST['op'] ) )
     throw new Exception( 'Post info not set' );
-    
+    // se a operacao eh ret "retrieve"
     if ($_POST['op'] == 'ret'){
         // atualiza status da chave
         $controlk->UpdateStatus( $_POST['keyid'], 1 );

@@ -7,6 +7,11 @@ include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 
 date_default_timezone_set('America/Sao_Paulo');
 
+/*
+* VERIFICA SE EXISTEM CHAVES EM ATRASO
+* executa a cada 30 minutos como tarefa no servidor
+*/
+
 $controlk = new ControlKey();
 $controlb = new ControlBorrowing();
 $controll = new ControlLog();
@@ -19,6 +24,8 @@ $actives = $controlb->FindActiveKeysBorrowing();
 $_POST["message"] = array();
 $flag = true;
 $file = fopen('overduemessages.txt','w');
+
+// percorre o array de keys_borrowing ativos e compara as datas e horarios de checkin com a data e hora atual
 foreach($actives as $instance){
     $borrow_info = $controlb->FetchCheckinRequester($instance["borrowing_id"]);
     $checkin = $borrow_info["data_checkin"];
@@ -27,10 +34,9 @@ foreach($actives as $instance){
     
     $current_time = date_format(date_create(null),'d/m/Y H:i:s');   
     
-    
+    // testa se esta atrasado
     if($checkin <= $current_time){
         echo "overdue</br>";
-        // se atrasado: 
         // trocar status, 
         $controlk->UpdateStatus($instance["keys_id"],3);
         //gerar log
@@ -49,6 +55,7 @@ foreach($actives as $instance){
         $controll->CreateLog($log);
         
         //emitir alerta
+        // logica precisa ser revista
         if ($flag == true){
             $flag = false;
             fwrite($file, 'overdue_alert;');
@@ -68,7 +75,7 @@ foreach($actives as $instance){
         //nao sei se eh melhor solucao
         $controlb->DeactiveKeysBorrow($instance["keys_id"]);
         
-      // testar se faltam 30 minutos para devolver
+    // caso nao atrasado, testar se faltam 30 minutos para devolver
     } else if ( strtotime(str_replace('/', '-', $current_time)) >=  (strtotime(str_replace('/', '-', $checkin))-1800)) {
         if(!$instance['is_reminder'] && $requester->getEmail() != ""){
            $controlb->SendEmailBeforeOverdue($instance["borrowing_id"], $instance["keys_id"]);   
