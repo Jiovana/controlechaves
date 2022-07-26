@@ -124,7 +124,8 @@ class ControlUser {
 
     public function DeleteUser( $id ) {
         $dao = new DaoUser();
-        if ( $dao->Delete( $id ) ) {   
+        if ( $dao->Delete( $id ) ) {
+
             echo '<script type="text/javascript">
                     jQuery(function validation(){
                         swal({
@@ -135,6 +136,12 @@ class ControlUser {
                         });
                     });
                     </script>';
+            echo '<script> 
+            window.setTimeout(function(){
+                window.location.href = "/controlechaves/src/view/users.php";
+            }, 1000);
+                </script>   ';
+
         } else {
             echo '<script type="text/javascript">
                     jQuery(function validation(){
@@ -146,6 +153,10 @@ class ControlUser {
                         });
                     });
                     </script>';
+            echo '<script> window.setTimeout(function(){
+                    window.location.href = "/controlechaves/src/view/users.php";
+                }, 1000);
+                </script>   ';
         }
     }
 
