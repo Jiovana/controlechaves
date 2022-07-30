@@ -69,8 +69,7 @@ $pdf->SetFont( 'Arial', '', 8 );
 //$pdf->Cell( 80, 5, 'Email Adress: jiovana@unipampa.edu.br', 0, 1, '' );
 //$pdf->Cell( 80, 5, 'Website: unipampa.edu.br', 0, 0, '' );
 
-//line( x1, y1, x2, y2 );
-coordinates
+//line( x1, y1, x2, y2 ); coordinates
 $pdf->Line( 5, 38, 205, 38 );
 // prints a line in the page
 $pdf->Line( 5, 39, 205, 39 );

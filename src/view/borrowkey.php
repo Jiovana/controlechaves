@@ -511,7 +511,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
             html += '<td style="padding:0px;"><input type="text" class="form-control bkeygancho" name="listgancho" value="<?php echo $bkey->getGancho(); ?>" readonly></td>';
 
-            html += '<td style="padding:0px;"><input type="text" class="form-control bkeysicadi" name="listsicadi" value="<?php echo $bkey->getGancho(); ?>" readonly></td>';
+            html += '<td style="padding:0px;"><input type="text" class="form-control bkeysicadi" name="listsicadi" value="<?php echo $bkey->getSicadi(); ?>" readonly></td>';
 
             html += '<td style="padding:0px;"><input type="text" class="form-control keyaddress" name="keyaddress[]" value="<?php echo $baddress; ?>" readonly></td>';
 
