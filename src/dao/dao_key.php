@@ -4,6 +4,7 @@ require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 
 require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/connection.php";
 
+
 /**
 * Metodos de comunicacao com o banco para o ModelKey
 *
@@ -32,7 +33,7 @@ class DaoKey {
 
     public function Insert( ModelKey $key ) {
         try {
-            $sql = "INSERT INTO `keys` (gancho, sicadi, tipo, status, adicional,endereco_id) VALUES (:gancho,:sicadi,:tipo,:status,:adicional,:endereco_id)";
+            $sql = "INSERT INTO `keys` (gancho, sicadi, tipo, status, adicional,endereco_id, gancho_id, gancho_manual) VALUES (:gancho,:sicadi,:tipo,:status,:adicional,:endereco_id, :gancho_id, :gancho_manual)";
 
             // print_r( $key );
             $p_sql = Connection::getConnection()->prepare( $sql );
@@ -42,6 +43,8 @@ class DaoKey {
             $p_sql->bindValue( ":status", $key->getStatus() );
             $p_sql->bindValue( ":adicional", $key->getAdicional() );
             $p_sql->bindValue( ":endereco_id", $key->getEnderecoId() );
+            $p_sql->bindValue( ":gancho_id", $key->getGanchoId() );
+            $p_sql->bindValue( ":gancho_manual", $key->getGanchoManual() );
 
             return $p_sql->execute();
 
@@ -283,6 +286,28 @@ class DaoKey {
             
         } catch (PDOException $e){
             echo "Error while running SelectGancho method in DaoKey: ".$e;
+        }
+    }
+    
+    /**
+    * Retorna o numero do gancho da chave com base no id
+    *
+    * @param int $id o id da key a ser buscada
+    * @return string o valor do gancho da chave, ou false. 
+    */
+    public function SelectHookCode($id){
+        try{
+            $sql = "SELECT hook.codigo FROM `keys` INNER JOIN hook ON hook.id = `keys`.`gancho_id` WHERE `keys`.id = :id; ";
+            
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":id", $id );
+            $p_sql->execute();
+            
+            $p_sql->setFetchMode(PDO::FETCH_COLUMN, 0);
+            return $p_sql->fetch();
+            
+        } catch (PDOException $e){
+            echo "Error while running SelectHookCode method in DaoKey: ".$e;
         }
     }
 

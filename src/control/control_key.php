@@ -236,6 +236,17 @@ class ControlKey {
         return $dao->SelectGancho($keyid);
     }
     
+     /**
+    * Busca apenas o Gancho da chave com o id informado
+    *
+    * @param int $keyid o id da chave
+    * @return string o codigo do gancho
+    */
+    public function FetchHookCode($keyid){
+        $dao = new DaoKey();
+        return $dao->SelectHookCode($keyid);
+    }
+    
     /**
     * Verifica se o arquivo overduemessages.txt possui algum conteudo.
     * se positivo, gera o script de um alerta swal com o conteudo do arquivo.
@@ -278,6 +289,6 @@ class ControlKey {
 }
 
 $control = new ControlKey();
-//$control->CheckOverdueMessages();
+//echo $control->FetchHookCode(230);
 
 ?>

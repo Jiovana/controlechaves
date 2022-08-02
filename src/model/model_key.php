@@ -39,7 +39,11 @@ class ModelKey{
     /**
     * @OneToMany (targetEntity="address", mappedBy="user")
     */
-    private $endereco_id; // id da tabela endereco da chave vetor
+    private $endereco_id; // id da tabela endereco da chave 
+    
+    private $gancho_id; // id da tabela gancho
+    
+    private $gancho_manual; // se o gancho eh automatico ou escolhido manualmente, 0 auto, 1 manual
     
     private function __clone(){}
     
@@ -70,6 +74,18 @@ class ModelKey{
         $this->endereco_id = $endereco; 
     }
     public function getEnderecoId(){ return $this->endereco_id; }
+    
+    ///////////////////////////////
+    public function setGanchoId($gancho){ 
+        $this->gancho_id = $gancho; 
+    }
+    public function getGanchoId(){ return $this->gancho_id; }
+    
+    ///////////////////////////////
+    public function setGanchoManual($gancho_manual){ 
+        $this->gancho_manual = $gancho_manual; 
+    }
+    public function getGanchoManual(){ return $this->gancho_manual; }
     
 }
 

@@ -3,6 +3,7 @@
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_hook.php';
 
 session_start();
 
@@ -16,6 +17,7 @@ include_once 'header.php';
 $controlk = new ControlKey();
 $controla = new ControlAddress();
 $controll = new ControlLog();
+$controlh = new ControlHook();
 
 $key = new ModelKey();
 $address = new ModelAddress();
@@ -36,11 +38,21 @@ if ( isset( $_POST['btnsave'] ) ) {
 
     //inserir dados da chave
     $key->setSicadi( $_POST['txtsicadi'] );
-    $key->setGancho( $_POST['txthook'] );
+    //$key->setGancho( $_POST['txthook'] );
     $key->setTipo( $_POST['select_category'] );
     $key->setStatus( $_POST['select_status'] );
     $key->setAdicional( $_POST['txtaddon'] );
     $key->setEnderecoId( $addr_id );
+    
+    if(isset($_POST['checkhook'])){
+        //1. verify if we have available hooks of the chosen type
+        //2. sort the key addresses alphabetically
+        //3. set the hook codes sequentially according to the sorted vector
+        $key->setGanchoManual(false);
+    }else{
+        $key->setGanchoId($_POST['select_hook']);
+        $key->setGanchoManual(true);
+    }
 
     $keyid = $controlk->NewKey( $key );
     
@@ -51,17 +63,19 @@ if ( isset( $_POST['btnsave'] ) ) {
     // 3 - emprestimo, 4 - devolucao
     $log->setOperation(1);
     
-    $string = "Chave nº Gancho: ".$key->getGancho()." foi adicionada no sistema com status: ".$key->getStatus().".";    
+    $ganchoval = $controlk->FetchHookCode($keyid);
+    
+    $string = "Chave nº Gancho: ".$ganchoval." foi adicionada no sistema com status: ".$key->getStatus().".";    
     $log->setDescription($string);
     
     $controll->CreateLog($log);
     
 
-    echo '<script> window.setTimeout(function(){
-        window.location.href = "/controlechaves/src/view/mainlist.php";
+  //  echo '<script> window.setTimeout(function(){
+  //      window.location.href = "/controlechaves/src/view/mainlist.php";
 
-    }, 3000);
-    </script>   '; 
+ //   }, 3000);
+ //   </script>   '; 
 }
 
 
@@ -92,9 +106,28 @@ if ( isset( $_POST['btnsave'] ) ) {
                                 <input type="text" class="form-control" name="txtsicadi" placeholder="Insira o código do imóvel no sistema SICADI" required>
                             </div>
 
-                            <div class="form-group">
-                                <label>Código do Gancho:</label>
-                                <input type="text" class="form-control" name="txthook" placeholder="Insira o código do gancho onde a chave se localiza no painel" required>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Código do Gancho:</label>
+                                    <label>
+                                        <input type="checkbox" class="minimal" name="checkhook" id="checkhook" 
+                            onclick="validate()" checked>
+                                        Obter código do gancho automático
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label> </label>
+                                    <select class="form-control" name="select_hook" id="select_hook"
+                                       disabled>
+                                        <option value="" disabled selected>Selecione o código</option>
+                                        <?php echo $controlh->Fill_Select();?>
+
+                                    </select>
+                                </div>
+
+
                             </div>
 
                             <div class="form-group">
@@ -171,6 +204,17 @@ if ( isset( $_POST['btnsave'] ) ) {
 
     </section>
 </div>
+
+<script>
+    function validate() {
+        if (document.getElementById('checkhook').checked) {
+            document.getElementById('select_hook').disabled = true;
+        } else {
+            document.getElementById('select_hook').disabled = false;
+        }
+    }
+
+</script>
 
 
 
