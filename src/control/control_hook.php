@@ -25,6 +25,11 @@ class ControlHook{
 
     }
     
+    public function SearchFreeHooks($type){
+        $dao = new DaoHook();
+        return $dao->VerifyFreeHooks($type);
+    }
+    
     
     
 }

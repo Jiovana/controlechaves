@@ -46,8 +46,13 @@ if ( isset( $_POST['btnsave'] ) ) {
     
     if(isset($_POST['checkhook'])){
         //1. verify if we have available hooks of the chosen type
-        //2. sort the key addresses alphabetically
-        //3. set the hook codes sequentially according to the sorted vector
+        $free = $controlh->SearchFreeHooks($_POST['select_category']);
+        if($free > 0){
+            echo '<script>console.log("hooks: '.$free.'");</script>';
+            
+        }
+        //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
+        $controlk->SortHooks($_POST['select_category']);
         $key->setGanchoManual(false);
     }else{
         $key->setGanchoId($_POST['select_hook']);

@@ -152,6 +152,28 @@ class DaoKey {
             echo "Error while running SearchAll method in DaoKey: ".$e;
         }
     }
+    
+    /**
+    * Busca todas as chaves do banco do tipo escolhido
+    *
+    *  @param string $type aluguel ou venda
+    * @return ModelKey[] array de keys
+    */
+
+    public function SearchAllByType($type) {
+        try {
+            $sql = "SELECT * FROM `keys` WHERE `keys`.`tipo` = :tipo ORDER BY id";
+
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue(":tipo", $type);
+            $p_sql->execute();
+
+            return $p_sql->fetchAll( PDO::FETCH_CLASS, "ModelKey" );
+        } catch( PDOException $e ) {
+
+            echo "Error while running SearchAll method in DaoKey: ".$e;
+        }
+    }
 
     /**
     * Busca o ultimo id inserido no banco
@@ -297,7 +319,7 @@ class DaoKey {
     */
     public function SelectHookCode($id){
         try{
-            $sql = "SELECT hook.codigo FROM `keys` INNER JOIN hook ON hook.id = `keys`.`gancho_id` WHERE `keys`.id = :id; ";
+            $sql = "SELECT hook.codigo FROM `keys` INNER JOIN hook ON hook.id = `keys`.`gancho_id` WHERE `keys`.id = :id ";
             
             $p_sql = Connection::getConnection()->prepare( $sql );
             $p_sql->bindValue( ":id", $id );
@@ -310,10 +332,48 @@ class DaoKey {
             echo "Error while running SelectHookCode method in DaoKey: ".$e;
         }
     }
+    
+    
+     /**
+    * Busca os ids das chaves do tipo informado, ordenado com base no endereco
+    *
+    * @param string $type o tipo da chave, aluguel ou venda
+    * @return array com ids.
+    */
+
+    public function SearchIdsByType($type) {
+        try {
+            $sql = "SELECT `keys`.id FROM `keys` 
+        JOIN address ON address.id = `keys`.`endereco_id`
+        WHERE `keys`.`tipo` = :tipo AND  `keys`.`gancho_manual` = false
+        ORDER BY address.rua, address.numero, address.bairro, address.cidade";
+
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue(":tipo", $type);
+            $p_sql->execute();
+
+            return $p_sql->fetchAll( PDO::FETCH_COLUMN, 0 );
+        } catch( PDOException $e ) {
+
+            echo "Error while running SearchAll method in DaoKey: ".$e;
+        }
+    }
+    
+    public function UpdateGanchoId($hook, $keyid){
+        try{
+            $sql = "UPDATE `keys` SET gancho_id = :gancho WHERE id = :keyid";
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue(":gancho", $hook);
+            $p_sql->bindValue(":keyid", $keyid);
+            $p_sql->execute();
+        }catch (PDOException $e){
+            echo "Error while running UpdateGancho_id in DaoKey: ".$e;
+        }
+    }
 
 }
 
 $dao = new DaoKey();
-//echo $dao->SelectGancho(4);
+//print_r ($dao->SearchIdsByType("Aluguel"));
 
 ?>

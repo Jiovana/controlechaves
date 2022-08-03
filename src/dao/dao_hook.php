@@ -146,12 +146,35 @@ class DaoHook {
             echo  "Error while running SearchAll method in DaoHook: ".$e->getMessage();
         }
     }
+    
+    public function VerifyFreeHooks($type){
+        try{
+            $sql = "SELECT COUNT(usado) FROM hook WHERE usado = 0";
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->execute();
+            return $p_sql->fetch(PDO::FETCH_COLUMN,0);
+        }catch (PDOException $e){
+            echo "Error while running VerifyFreeHooks in DaoHook: ".$e->getMessage();
+        }
+    }
+    
+    public function ActivateUsado($hook){
+        try{
+            $sql = "UPDATE hook SET usado = true WHERE id = :hookid";
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":hookid", $hook->getId());
+            $p_sql->execute();
+        }catch (PDOException $e){
+            echo "Error while running UpdateUsado in DaoHook: ".$e->getMessage();
+        }
+    }
 
      
 
 }
 
 $dao = new DaoHook();
+//echo $dao->VerifyFreeHooks("Aluguel");
 //print_r($dao->SearchAllByType("Aluguel"));
 
 ?>

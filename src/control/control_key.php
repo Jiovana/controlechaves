@@ -4,6 +4,8 @@ include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 
 include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_address.php";
 
+include_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_hook.php";
+
 /**
 * Reune metodos para interacao entre a view ( interface ) relacionado a chave e o model( modelos e daos ) - ModelKey e DaoKey
 *
@@ -60,18 +62,19 @@ class ControlKey {
     *
     */
 
-    public function FillTable() {
+    public function FillTable($tipo) {
         $dao = new DaoKey();
         $addr = new ControlAddress();
-        $keys = $dao->SearchAll();
+        $keys = $dao->SearchAllByType($tipo);
 
         // array( 'disponível' => '#9FF781', 'emprestado' => '#F7BE81', 'atrasado' => '#F78181', 'perdido' => '#819FF7', 'indisponível' => '#A4A4A4' );
 
         $status_labels =  array( 'Disponível' => 'label-success', 'Emprestado' => 'label-warning', 'Atrasado' => 'label-danger', 'Perdido' => 'label-primary', 'Indisponível' => 'label-default' );
 
         foreach ( $keys as $key ) {
+            $hook = $dao->SelectHookCode($key->getId());
             echo '<tr style="text-align: center; vertical-align: middle;">
-                    <td style="background-color:#D8D8D8;"><b>'.$key->getGancho().'</b></td>
+                    <td style="background-color:#D8D8D8;"><b>'.$hook.'</b></td>
                     <td style="text-align: left; vertical-align: middle;">'.$addr->GetAddressString( $key->getEnderecoId() ).'</td>
                     <td>'.$key->getTipo().'</td>
                     <td><h4><span class="label '.$status_labels[$key->getStatus()].'">'.$key->getStatus().'</span></h4></td>
@@ -285,10 +288,30 @@ class ControlKey {
             echo "Problem with CheckOverdueMessages in ControlKey";
         }
     }
+    
+    public function SortHooks($category){
+        $dao = new DaoKey();
+        //1. select all keys from the category, ordered  by the addresses
+        $key_ids = $dao->SearchIdsByType($category);
+
+        $daoh = new DaoHook();
+        //obtain an array of hooks of the type
+        $hooks = $daoh->SearchAllByType($category);
+        
+        //2. set the gancho_id field of each key sequentially according to the array order
+      
+        for($c = 0; $c < count($hooks); $c++){
+            //$key_ids[$c]->setGanchoId($hooks[$c]->getId());
+            //$hooks[$c]->setUsado(true);
+            $dao->UpdateGanchoId($hooks[$c]->getId(), $key_ids[$c]);
+            $daoh->ActivateUsado($hooks[$c]);
+            //if($c == 167) break;
+        }
+    }
 
 }
 
 $control = new ControlKey();
 //echo $control->FetchHookCode(230);
-
+$control->SortHooks("Aluguel");
 ?>

@@ -54,7 +54,7 @@ $control->CheckOverdueMessages();
         <div class="box box-success">
             <form action="" method="post" name="">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Lista de Chaves</h3>
+                    <h3 class="box-title">Lista de Chaves - Imoveis para locacao</h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
@@ -90,7 +90,7 @@ $control->CheckOverdueMessages();
                                 </thead>
                                 <tbody>
                                     <?php 
-                                    $control->FillTable();
+                                    $control->FillTable("Aluguel");
                                     
                                     ?>
                                 </tbody>
