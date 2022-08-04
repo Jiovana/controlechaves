@@ -55,7 +55,7 @@ class DaoKey {
     }
 
     /**
-    * Atualiza uma chave no banco de dados
+    * Atualiza uma chave no banco de dados, menos gancho_id
     *
     * @param ModelKey $key O objeto key a ser atualizado
     * @return bool o resultado do metodo execute()
@@ -63,7 +63,7 @@ class DaoKey {
 
     public function Update( ModelKey $key ) {
         try {
-            $sql = "UPDATE `keys` SET gancho = :gancho, sicadi = :sicadi, tipo = :tipo, status = :status, adicional = :adicional, endereco_id = :endereco_id WHERE id = :keyid";
+            $sql = "UPDATE `keys` SET gancho = :gancho, sicadi = :sicadi, tipo = :tipo, status = :status, adicional = :adicional, endereco_id = :endereco_id, gancho_manual = :gancho_manual WHERE id = :keyid";
 
             $p_sql = Connection::getConnection()->prepare( $sql );
             $p_sql->bindValue( ":gancho", $key->getGancho() );
@@ -72,6 +72,8 @@ class DaoKey {
             $p_sql->bindValue( ":status", $key->getStatus() );
             $p_sql->bindValue( ":adicional", $key->getAdicional() );
             $p_sql->bindValue( ":endereco_id", $key->getEnderecoId() );
+            
+             $p_sql->bindValue( ":gancho_manual", $key->getGanchoManual() );
             $p_sql->bindValue( ":keyid", $key->getId() );
 
             return $p_sql->execute();

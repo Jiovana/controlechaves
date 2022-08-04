@@ -30,6 +30,23 @@ class ControlHook{
         return $dao->VerifyFreeHooks($type);
     }
     
+    public function FetchAllByType($type){
+        $dao = new DaoHook();
+        return $dao->SearchAllByType($type);
+    }
+        
+
+    public function FetchHookByCode($code){
+        $dao = new DaoHook();
+        return $dao->SearchHookByCode($code);
+    }   
+    
+    public function TurnOnUsado($hook){
+        $dao = new DaoHook();
+        return $dao->ActivateUsado($hook);
+    }
+
+    
     
     
 }

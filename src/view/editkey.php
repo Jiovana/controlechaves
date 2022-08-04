@@ -5,6 +5,7 @@ include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_log.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_user.php';
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_borrowing.php';
+include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_hook.php';
 
 session_start();
 
@@ -17,6 +18,7 @@ include_once 'header.php';
 $controlk = new ControlKey();
 $controla = new ControlAddress();
 $controll = new ControlLog();
+$controlh = new ControlHook();
 
 $key_id = $_GET['id'];
 $key = $controlk->GetKeyModel( $key_id );
@@ -34,7 +36,7 @@ $addr_cid = $address->getCidade();
 $addr_com = $address->getComplemento();
 
 $key_sic = $key->getSicadi();
-$key_gan = $key->getGancho();
+$key_gan = $controlk->FetchHookCode( $key->getId() );
 $key_tip = $key->getTipo();
 $key_sta = $key->getStatus();
 $key_adi = $key->getAdicional();
@@ -56,109 +58,158 @@ if ( isset( $_POST['btnupdate'] ) ) {
 
     //2. atualizar a chave
     $key->setSicadi( $_POST['txtsicadi'] );
-    $key->setGancho( $_POST['txthook'] );
+    // $key->setGancho( $_POST['txthook'] );
     $key->setTipo( $_POST['select_category'] );
     $key->setStatus( $_POST['select_status'] );
     $key->setAdicional( $_POST['txtaddon'] );
     $key->setEnderecoId( $addr_id );
 
-    $controlk->UpdateKey( $key );
+    $free = 0; // counter of free hooks
+    $fail = false; // flag to see if hooks are available
+    $mod = false; // flag to see if the fields were modified by user
+    //se o codigo foi modificado ou se esta salvo como manual e foi alterado para ser automatico, precisa verificar tudo
 
-    //3. inserir o log de atualizacao da chave
-    $string = "";
-    //3.1 - verificar se campos de endereco mudaram
-    $mod_addr = false;
-    if ( $addr_num != $_POST['txtnum'] or $addr_bai != $_POST['txtdistrict'] or $addr_rua != $_POST['txtstreet'] or $addr_cid != $_POST['txtcity'] or $addr_com != $_POST['txtaddon2'] ) {
-        $mod_addr = true;
-    }
-    //3.2 - verificar se campos da chave mudaram, exceto status
-    $mod_key = false;
-    if ( $key_sic != $_POST['txtsicadi'] or $key_gan != $_POST['txthook'] or $key_tip != $_POST['select_category'] or $key_adi != $_POST['txtaddon'] ) {
-        $mod_key = true;
-    }
-    //3.3 - verificar se status mudou
-    $mod_sta = false;
-    if ( $key_sta != $_POST['select_status'] ) {
-        $mod_sta = true;
-    }
+    if ( (isset($_POST['select_hook']) && $key_gan != $_POST['select_hook'] ) || ( $key->getGanchoManual() == true &&  isset( $_POST['checkhook'] ) ) ){
+        $mod = true;
+        if ( isset( $_POST['checkhook'] ) ) {
+            //1. verify if we have available hooks of the chosen type
+            $free = $controlh->SearchFreeHooks( $_POST['select_category'] );
+            if ( $free > 0 ) {
+                echo '<script>console.log("hooks: '.$free.'");</script>';
 
-    //3.5 - preencher obj log e inserir no banco.
-    $log->setKeys_id( $key->getId() );
-    $log->setUser_id( $_SESSION['user_id'] );
+                //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
+                $controlk->SortHooks( $_POST['select_category'] );
+                $key->setGanchoManual( false );
+                $fail = false;
+            } else {
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Nenhum gancho disponível!",
+                            text: "Não foi possível atualizar a chave. Todos os ganchos estão ocupados, mas você pode escolher um código manualmente no seletor.",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+                $fail = true;
+            }
 
-    //operation pode ser: 1 - criacao, 2 - alteracao,
-    // 3 - emprestimo, 4 - devolucao
-    $log->setOperation( 2 );
-
-    //3.6 - comparar as tres flags entre si.
-    if ( $mod_addr and $mod_key and $mod_sta ) {
-        //verifica se devolucao
-        if ( ($key_sta == "Emprestado" || $key_sta == "Atrasado") && $_POST['select_status'] == "Disponível"  ) {
-            //update borrowing info.
-            $controlb = new ControlBorrowing();
-            $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
-            //atualiza a data de checkin e status
-            $controlb->UpdateCheckin( $borrowid );
-            $controlb->DeactiveKeysBorrow($key->getId());
-            //seta operacao log
-            $log->setOperation( 4 );
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
         } else {
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço, dados da chave e status: ".$key->getStatus();
-        }
-    } else if ( $mod_addr and $mod_key ) {
-        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço e dados da chave.";
-    } else if ( $mod_addr and $mod_sta ) {
-        if ( ($key_sta == "Emprestado" || $key_sta == "Atrasado") && $_POST['select_status'] == "Disponível" ) {
-            //update borrowing info.
-            $controlb = new ControlBorrowing();
-            $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
-            //atualiza a data de checkin e status
-            $controlb->UpdateCheckin( $borrowid );
-            $controlb->DeactiveKeysBorrow($key->getId());
-            //seta operacao log
-            $log->setOperation( 4 );
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
-        } else {
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço e status: ".$key->getStatus();
-        }
-    } else if ( $mod_key and $mod_sta ) {
-        if ( $key_sta == "Emprestado" && $_POST['select_status'] == "Disponível" ) {
-            //update borrowing info.
-            $controlb = new ControlBorrowing();
-            $borrowid = $controlb->FetchBorrowIdByKey( $key->getId());
-            //atualiza a data de checkin e status
-            $controlb->UpdateCheckin( $borrowid );
-            $controlb->DeactiveKeysBorrow($key->getId());
-            //seta operacao log
-            $log->setOperation( 4 );
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
-        } else {
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização dos dados da chave e status: ".$key->getStatus();
-        }
-    } else if ( $mod_addr ) {
-        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do endereço.";
-    } else if ( $mod_key ) {
-        $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização dos dados da chave.";
-    } else if ( $mod_sta ) {
-        if ( ($key_sta == "Emprestado" || $key_sta == "Atrasado") && $_POST['select_status'] == "Disponível" ) {
-            //update borrowing info.
-            $controlb = new ControlBorrowing();
-            $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
-            //atualiza a data de checkin e status
-            $controlb->UpdateCheckin( $borrowid );
-            $controlb->DeactiveKeysBorrow($key->getId());
-            //seta operacao log
-            $log->setOperation( 4 );
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." foi DEVOLVIDA.";
-        } else {
-            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key->getGancho()." teve atualização do status: ".$key->getStatus();
+            echo '<script>console.log("'.$_POST['select_hook'].'");</script>';
+            $hook_model = $controlh->FetchHookByCode($_POST['select_hook'] );
+            echo '<script>console.log("'.$hook_model->getId().'");</script>';
+            $key->setGanchoId($hook_model->getId());
+            $key->setGanchoManual( true );
+            $controlk->UpdateHookId($hook_model->getId(), $key->getId());
+            $controlh->TurnOnUsado($hook_model);
+           $key_gan = $hook_model->getCodigo();
+            $fail = false;
         }
     }
 
-    $log->setDescription( $string );
-    $controll->CreateLog( $log );
-    
+    if ( !$fail ) {
+         
+        echo '<script>console.log("'. $key->getGanchoId().'");</script>';
+        
+        $controlk->UpdateKey( $key );
+
+        //3. inserir o log de atualizacao da chave
+        $string = "";
+        //3.1 - verificar se campos de endereco mudaram
+        $mod_addr = false;
+        if ( $addr_num != $_POST['txtnum'] or $addr_bai != $_POST['txtdistrict'] or $addr_rua != $_POST['txtstreet'] or $addr_cid != $_POST['txtcity'] or $addr_com != $_POST['txtaddon2'] ) {
+            $mod_addr = true;
+        }
+        //3.2 - verificar se campos da chave mudaram, exceto status
+        $mod_key = false;
+        if ( $key_sic != $_POST['txtsicadi'] or $mod  or $key_tip != $_POST['select_category'] or $key_adi != $_POST['txtaddon'] ) {
+            $mod_key = true;
+        }
+        //3.3 - verificar se status mudou
+        $mod_sta = false;
+        if ( $key_sta != $_POST['select_status'] ) {
+            $mod_sta = true;
+        }
+
+        //3.5 - preencher obj log e inserir no banco.
+        $log->setKeys_id( $key->getId() );
+        $log->setUser_id( $_SESSION['user_id'] );
+
+        //operation pode ser: 1 - criacao, 2 - alteracao,
+        // 3 - emprestimo, 4 - devolucao
+        $log->setOperation( 2 );
+
+        //3.6 - comparar as tres flags entre si.
+        if ( $mod_addr and $mod_key and $mod_sta ) {
+            //verifica se devolucao
+            if ( ( $key_sta == "Emprestado" || $key_sta == "Atrasado" ) && $_POST['select_status'] == "Disponível" ) {
+                //update borrowing info.
+                $controlb = new ControlBorrowing();
+                $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
+                //atualiza a data de checkin e status
+                $controlb->UpdateCheckin( $borrowid );
+                $controlb->DeactiveKeysBorrow( $key->getId() );
+                //seta operacao log
+                $log->setOperation( 4 );
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." foi DEVOLVIDA.";
+            } else {
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização do endereço, dados da chave e status: ".$key->getStatus();
+            }
+        } else if ( $mod_addr and $mod_key ) {
+            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização do endereço e dados da chave.";
+        } else if ( $mod_addr and $mod_sta ) {
+            if ( ( $key_sta == "Emprestado" || $key_sta == "Atrasado" ) && $_POST['select_status'] == "Disponível" ) {
+                //update borrowing info.
+                $controlb = new ControlBorrowing();
+                $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
+                //atualiza a data de checkin e status
+                $controlb->UpdateCheckin( $borrowid );
+                $controlb->DeactiveKeysBorrow( $key->getId() );
+                //seta operacao log
+                $log->setOperation( 4 );
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." foi DEVOLVIDA.";
+            } else {
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização do endereço e status: ".$key->getStatus();
+            }
+        } else if ( $mod_key and $mod_sta ) {
+            if ( $key_sta == "Emprestado" && $_POST['select_status'] == "Disponível" ) {
+                //update borrowing info.
+                $controlb = new ControlBorrowing();
+                $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
+                //atualiza a data de checkin e status
+                $controlb->UpdateCheckin( $borrowid );
+                $controlb->DeactiveKeysBorrow( $key->getId() );
+                //seta operacao log
+                $log->setOperation( 4 );
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." foi DEVOLVIDA.";
+            } else {
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização dos dados da chave e status: ".$key->getStatus();
+            }
+        } else if ( $mod_addr ) {
+            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização do endereço.";
+        } else if ( $mod_key ) {
+            $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização dos dados da chave.";
+        } else if ( $mod_sta ) {
+            if ( ( $key_sta == "Emprestado" || $key_sta == "Atrasado" ) && $_POST['select_status'] == "Disponível" ) {
+                //update borrowing info.
+                $controlb = new ControlBorrowing();
+                $borrowid = $controlb->FetchBorrowIdByKey( $key->getId() );
+                //atualiza a data de checkin e status
+                $controlb->UpdateCheckin( $borrowid );
+                $controlb->DeactiveKeysBorrow( $key->getId() );
+                //seta operacao log
+                $log->setOperation( 4 );
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." foi DEVOLVIDA.";
+            } else {
+                $string = "Chave Nº: ".$key->getId().", Gancho: ".$key_gan." teve atualização do status: ".$key->getStatus();
+            }
+        }
+
+        $log->setDescription( $string );
+        $controll->CreateLog( $log );
+    }
+
 }
 
 ?>
@@ -170,7 +221,6 @@ if ( isset( $_POST['btnupdate'] ) ) {
         <h1>Visualizar & Editar Chave</h1>
 
         <button type="button" class="btn btn-info" style="margin-top:10px;" onclick="location.href='mainlist.php';">Voltar para lista</button>
-
 
     </section>
 
@@ -215,34 +265,83 @@ for ( $i = 1; $i <= 2; $i++ ) {
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group" style="margin-bottom:0px;">
                                 <label>Código do Gancho:</label>
-                                <input type="text" class="form-control" name="txthook" placeholder="Insira o código do gancho onde a chave se localiza no painel" value="<?php echo $key->getGancho();?>" required>
+                                <!--   <input type = "text" class = "form-control" name = "txthook" placeholder = "Insira o código do gancho onde a chave se localiza no painel" value = "<?php //echo $key->getGancho();?>" required>-->
                             </div>
-                            <div class="form-group">
-                                <label>Status:</label>
-                                <select class="form-control" name="select_status" required>
-                                    <option value="" disabled selected>Selecione o status</option>
-                                    <?php
+
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-bottom:0px;">
+                                    <label>
+                                        <input type="checkbox" class="minimal" name="checkhook" id="checkhook" onclick="validate()" <?php
+if ( $key->getGanchoManual() == false ) {
+    echo ' checked ';
+}
+?>>
+                                        Gancho automático
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+
+                                    <select class="form-control" name="select_hook" id="select_hook" 
+                                       <?php 
+                                            if($key->getGanchoManual() == false){
+                                                echo 'disabled';
+                                            }
+                                            ?>
+                                       
+                                       >
+                                        <option value="" disabled selected>Selecione o código</option>
+                                        <?php
+$hook_array = $controlh->FetchAllByType( $key->getTipo() );
+
+for ( $i = 0; $i < count( $hook_array );
+$i++ ) {
+    ?>
+                                        <option <?php
+    if ( $controlk->FetchHookCode( $key->getId() ) == $hook_array[$i]->getCodigo() ) {
+        ?> selected="selected" <?php
+    }
+    ?>>
+                                            <?php
+    echo $hook_array[$i]->getCodigo() ;
+    ?>
+                                        </option>
+                                        <?php
+}
+?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Status:</label>
+                                    <select class="form-control" name="select_status" required>
+                                        <option value="" disabled selected>Selecione o status</option>
+                                        <?php
 $status_array = array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível' );
 for ( $i = 1; $i <= 5; $i++ ) {
     ?>
-                                    <option <?php
+                                        <option <?php
     if ( $key->getStatus() == $status_array[$i] ) {
         ?> selected="selected" <?php
     }
-    if($status_array[$i] == 'Emprestado'){
+    if ( $status_array[$i] == 'Emprestado' ) {
         ?> disabled <?php
     }
     ?>>
-                                        <?php
+                                            <?php
     echo $status_array[$i];
     ?>
-                                    </option>
-                                    <?php
+                                        </option>
+                                        <?php
 }
 ?>
-                                </select>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -327,6 +426,17 @@ $controll->FillMovTable( $key_id );
 </div>
 
 <!-- /.content-wrapper -->
+
+<script>
+    function validate() {
+        if (document.getElementById('checkhook').checked) {
+            document.getElementById('select_hook').disabled = true;
+        } else {
+            document.getElementById('select_hook').disabled = false;
+        }
+    }
+
+</script>
 
 <?php
 include_once 'footer.php';

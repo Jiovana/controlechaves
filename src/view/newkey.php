@@ -44,22 +44,40 @@ if ( isset( $_POST['btnsave'] ) ) {
     $key->setAdicional( $_POST['txtaddon'] );
     $key->setEnderecoId( $addr_id );
     
+    $free = 0;
+    $fail = false;
     if(isset($_POST['checkhook'])){
         //1. verify if we have available hooks of the chosen type
         $free = $controlh->SearchFreeHooks($_POST['select_category']);
         if($free > 0){
             echo '<script>console.log("hooks: '.$free.'");</script>';
             
+            //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
+            $controlk->SortHooks($_POST['select_category']);
+            $key->setGanchoManual(false);
+            $fail = false;
+        }else{
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Nenhum gancho disponível!",
+                            text: "Não foi possível inserir a chave. Todos os ganchos estão ocupados, mas você pode escolher um código manualmente no seletor.",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            $fail = true;
         }
-        //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
-        $controlk->SortHooks($_POST['select_category']);
-        $key->setGanchoManual(false);
+        
     }else{
         $key->setGanchoId($_POST['select_hook']);
         $key->setGanchoManual(true);
+        $fail = false;
     }
-
-    $keyid = $controlk->NewKey( $key );
+    
+    if (!$fail){
+        $keyid = $controlk->NewKey( $key );
     
     //inserir o log de criacao da chave   
     $log->setKeys_id($keyid);
@@ -76,12 +94,14 @@ if ( isset( $_POST['btnsave'] ) ) {
     $controll->CreateLog($log);
     
 
-  //  echo '<script> window.setTimeout(function(){
-  //      window.location.href = "/controlechaves/src/view/mainlist.php";
+    echo '<script> window.setTimeout(function(){
+        window.location.href = "/controlechaves/src/view/mainlist.php";
 
- //   }, 3000);
- //   </script>   '; 
+    }, 3000);
+    </script>   '; 
 }
+    }
+    
 
 
 ?>

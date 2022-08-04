@@ -308,6 +308,11 @@ class ControlKey {
             //if($c == 167) break;
         }
     }
+    
+    public function UpdateHookId($hookid, $keyid){
+        $dao = new DaoKey();
+        return $dao->UpdateGanchoId($hookid, $keyid);
+    }
 
 }
 

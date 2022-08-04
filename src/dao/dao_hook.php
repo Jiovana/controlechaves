@@ -109,6 +109,30 @@ class DaoHook {
             echo  "Error while running SearchById method in DaoHook: ".$e->getMessage();
         }
     }
+    
+   
+     /**
+     * Procura um gancho pelo codigo
+     * 
+     * @param int $id O id do gancho a ser buscado
+     * @return ModelHook o objeto hook encontrado
+    */
+    public function SearchHookByCode($code){
+        try {
+            $sql = "SELECT * FROM hook WHERE codigo = :cod";
+
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":cod", $code );
+            $p_sql->execute();
+            
+             $p_sql->setFetchMode( PDO::FETCH_CLASS, 'ModelHook' );
+
+            return $p_sql->fetch();
+            
+        } catch( PDOException  $e ) {
+            echo  "Error while running SearchById method in DaoHook: ".$e->getMessage();
+        }
+    }
 
      /**
      * Busca todos ganchos do banco
