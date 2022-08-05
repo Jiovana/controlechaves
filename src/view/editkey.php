@@ -40,7 +40,7 @@ $key_gan = $controlk->FetchHookCode( $key->getId() );
 $key_tip = $key->getTipo();
 $key_sta = $key->getStatus();
 $key_adi = $key->getAdicional();
-
+ $mod = false; // flag to see if the fields were modified by user
 //ao pressionar o botao de atualizar
 if ( isset( $_POST['btnupdate'] ) ) {
     //1. atualizar o endereco
@@ -66,12 +66,14 @@ if ( isset( $_POST['btnupdate'] ) ) {
 
     $free = 0; // counter of free hooks
     $fail = false; // flag to see if hooks are available
-    $mod = false; // flag to see if the fields were modified by user
+   
     //se o codigo foi modificado ou se esta salvo como manual e foi alterado para ser automatico, precisa verificar tudo
 
     if ( (isset($_POST['select_hook']) && $key_gan != $_POST['select_hook'] ) || ( $key->getGanchoManual() == true &&  isset( $_POST['checkhook'] ) ) ){
+        echo '<script>console.log("inside first if");</script>';
         $mod = true;
         if ( isset( $_POST['checkhook'] ) ) {
+            echo '<script>console.log("inside second if");</script>';
             //1. verify if we have available hooks of the chosen type
             $free = $controlh->SearchFreeHooks( $_POST['select_category'] );
             if ( $free > 0 ) {
@@ -105,6 +107,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
             $controlh->TurnOnUsado($hook_model);
            $key_gan = $hook_model->getCodigo();
             $fail = false;
+            $controlk->SortHooks( $_POST['select_category'] );
         }
     }
 
@@ -122,6 +125,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
             $mod_addr = true;
         }
         //3.2 - verificar se campos da chave mudaram, exceto status
+        echo '<script>console.log("mod: '.$mod.'");</script>';
         $mod_key = false;
         if ( $key_sic != $_POST['txtsicadi'] or $mod  or $key_tip != $_POST['select_category'] or $key_adi != $_POST['txtaddon'] ) {
             $mod_key = true;
@@ -220,7 +224,13 @@ if ( isset( $_POST['btnupdate'] ) ) {
     <section class="content-header">
         <h1>Visualizar & Editar Chave</h1>
 
-        <button type="button" class="btn btn-info" style="margin-top:10px;" onclick="location.href='mainlist.php';">Voltar para lista</button>
+        <button type="button" class="btn btn-info" style="margin-top:10px;" onclick=
+        <?php if($key_tip == "Aluguel"){ ?>
+        "location.href='mainlist.php';"
+        <?php } else {
+    ?>"location.href='sellinglist.php';"
+<?php } ?>
+        >Voltar para lista</button>
 
     </section>
 
@@ -274,7 +284,7 @@ for ( $i = 1; $i <= 2; $i++ ) {
                                 <div class="form-group" style="margin-bottom:0px;">
                                     <label>
                                         <input type="checkbox" class="minimal" name="checkhook" id="checkhook" onclick="validate()" <?php
-if ( $key->getGanchoManual() == false ) {
+if ( $key->getGanchoManual() == 0 ) {
     echo ' checked ';
 }
 ?>>
@@ -296,12 +306,11 @@ if ( $key->getGanchoManual() == false ) {
                                         <option value="" disabled selected>Selecione o código</option>
                                         <?php
 $hook_array = $controlh->FetchAllByType( $key->getTipo() );
-
-for ( $i = 0; $i < count( $hook_array );
-$i++ ) {
+$code = $controlk->FetchHookCode( $key->getId() );
+for ( $i = 0; $i < count( $hook_array ); $i++ ) {
     ?>
                                         <option <?php
-    if ( $controlk->FetchHookCode( $key->getId() ) == $hook_array[$i]->getCodigo() ) {
+    if ( $code == $hook_array[$i]->getCodigo() ) {
         ?> selected="selected" <?php
     }
     ?>>

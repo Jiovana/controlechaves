@@ -13,12 +13,17 @@ try{
          
         $keyid = $_POST['id'];    
         // obtem array da chave
-        $response = $control->GetKeyAssoc( $keyid );   
+        $response = $control->GetKeyAssoc( $keyid ); 
+        $hook = $control->FetchHookCode($keyid);
+        $response["gancho"] = $hook;
         //obtem string do endereco
         $address = $controla->GetAddressString($response['endereco_id']);   
         //adiciona string ao array
         $response += ['endereco_string' => $address];
 
+    
+    
+    
         echo json_encode( $response );
         exit();
     

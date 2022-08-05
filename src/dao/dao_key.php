@@ -372,10 +372,31 @@ class DaoKey {
             echo "Error while running UpdateGancho_id in DaoKey: ".$e;
         }
     }
+    
+    
+     /**
+    * Retorna
+    *
+    * @return 
+    */
+    public function SelectAllKeyHook(){
+        try{
+            $sql = 'SELECT `keys`.`id` AS "keyid", hook.codigo AS "hookcode" FROM `keys` INNER JOIN hook ON hook.id = `keys`.`gancho_id` WHERE `keys`.status = "Disponível" ORDER BY hook.codigo ASC ';
+          
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->execute();
+            
+            $p_sql->setFetchMode(PDO::FETCH_ASSOC);
+            return $p_sql->fetchAll();
+            
+        } catch (PDOException $e){
+            echo "Error while running SelectAllKeyHook method in DaoKey: ".$e;
+        }
+    }
 
 }
 
 $dao = new DaoKey();
-//print_r ($dao->SearchIdsByType("Aluguel"));
+//print_r ($dao->SelectAllKeyHook());
 
 ?>

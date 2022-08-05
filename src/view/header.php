@@ -198,10 +198,10 @@ desired effect
 
                     <!-- Optionally, you can add icons to the links -->
                     <li class="nav-link">
-                        <a href="mainlist.php"><i class="fa fa-th-list"></i> <span>Lista de Chaves - Locacao</span></a>
+                        <a href="mainlist.php"><i class="fa fa-th-list"></i> <span>Lista de Chaves - Locação</span></a>
                     </li>
                     <li class="nav-link">
-                        <a href="selllist.php"><i class="fa fa-th-list"></i> <span>Lista de Chaves - Venda</span></a>
+                        <a href="sellinglist.php"><i class="fa fa-list"></i> <span>Lista de Chaves - Venda</span></a>
                     </li>
                     <li class="nav-link">
                         <a href="newkey.php"><i class="fa fa-key"></i>

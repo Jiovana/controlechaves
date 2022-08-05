@@ -21,7 +21,7 @@ try {
         // atualiza status da chave
         $controlk->UpdateStatus( $_POST['keyid'], 1 );
         $key = $controlk->GetKeyModel($_POST['keyid']);
-
+        $hook = $controlk->FetchHookCode($key->getId());
         //busca pelo ultimo borrowing id associado   
         $borrowid = $controlb->FetchBorrowIdByKey($_POST['keyid']);
 
@@ -38,7 +38,7 @@ try {
         // 3 - emprestimo, 4 - devolucao
         $log->setOperation(4);
 
-        $string = "Chave nº Gancho: ".$key->getGancho()." foi DEVOLVIDA.";    
+        $string = "Chave id: ".$key->getId().", nº Gancho: ".$hook." foi DEVOLVIDA.";    
         $log->setDescription($string);
 
         $controll->CreateLog($log);

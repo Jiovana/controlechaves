@@ -51,10 +51,10 @@ $control->CheckOverdueMessages();
         <!--------------------------
         | Your Page Content Here |
         -------------------------->
-        <div class="box box-success">
+        <div class="box box-info">
             <form action="" method="post" name="">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Lista de Chaves - Imóveis para locação</h3>
+                    <h3 class="box-title">Lista de Chaves - Imóveis para venda</h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
@@ -79,7 +79,7 @@ $control->CheckOverdueMessages();
                             <table id="tablekeys" class="table table-bordered table-hover">
                                
                                 <thead>
-                                    <tr style="background-color:#9FF781; ">
+                                    <tr style="background-color:#A9E2F3; ">
                                         <th style="width: 6% ; ">Gancho</th>
                                         <th style="width: 54%">Endereço</th>
                                         <th style="width: 10%">Tipo</th>
@@ -90,8 +90,7 @@ $control->CheckOverdueMessages();
                                 </thead>
                                 <tbody>
                                     <?php 
-                                    $control->FillTable("Aluguel");
-                                    
+                                    $control->FillTable("Venda");     
                                     ?>
                                 </tbody>
                             </table>
@@ -134,7 +133,7 @@ $control->CheckOverdueMessages();
             var tdh = $(this);
             var id = $(this).attr("id");
             swal({
-                title: "Voce deseja devolver a chave?",
+                title: "Você deseja devolver a chave?",
                 //text: "Once deleted, you can't recover this product!",
                 icon: "warning",
                 buttons: true,

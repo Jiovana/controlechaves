@@ -74,10 +74,11 @@ if ( isset( $_POST['btnsave'] ) ) {
         //obter array com conteudo das chaves. 
         $arr_keygancho = array();
         //testar antes se existe ...
+        //this array is from the first script, with + button
         if (isset($_POST['keyhook'])){
             $arr_keygancho = $_POST['keyhook'];
         }
-        
+        //this value is from the second script, the fixed value that came from mainlist
         if (isset($_POST['listgancho'])){
             array_push($arr_keygancho, $_POST['listgancho']);
         }
@@ -85,7 +86,7 @@ if ( isset( $_POST['btnsave'] ) ) {
         
         //array_push($arr_keygancho, $_POST['bkeygancho']);
         //$ble = json_encode($_POST['bkeygancho']);
-        //echo '<script>console.log("Gancho: '.$ble.'");</script>';
+       // echo '<script>console.log("Gancho: '.$ble.'");</script>';
         foreach ($arr_keygancho as $gan){
             echo '<script>console.log("Gancho: '.$gan.'");</script>';
         }
@@ -109,7 +110,7 @@ if ( isset( $_POST['btnsave'] ) ) {
               // 3 - emprestimo, 4 - devolucao
               $log->setOperation(3);
 
-              $string = "Chave nº Gancho: ".$arr_keygancho[$i]." foi EMPRESTADA para ".$_POST['txtnome']." até ".$_POST['checkindate'].".";    
+              $string = "Chave Nº ".$arr_keyid[$i].", Gancho: ".$arr_keygancho[$i]." foi EMPRESTADA para ".$_POST['txtnome']." até ".$_POST['checkindate'].".";    
               $log->setDescription($string);
 
               $controll->CreateLog($log);
@@ -317,7 +318,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
         html += '<td style="display:none;"><input type="hidden" class="form-control keyhook" name="keyhook[]" readonly></td>';
 
-        html += '<td style="padding:0px;"><select class="form-control keygancho" name="keygancho[]" ><option value="">Selecione</option><?php echo $controlk->Fill_Gancho();?></select></td>';
+        html += '<td style="padding:0px;"><select class="form-control keygancho" name="keygancho[]" ><option value="">Selecione</option><?php echo $controlk->Fill_HookCode();?></select></td>';
 
         html += '<td style="padding:0px;"><select class="form-control keysicadi" name="keysicadi[]" ><option value="">Selecione</option><?php echo $controlk->Fill_Sicadi();?></select></td>';
 
@@ -357,9 +358,7 @@ if ( isset( $_POST['btnsave'] ) ) {
                         console.log(data);
                         changeSelect2();
                         tr.find(".keysicadi option[value=" + data["id"] + "]").attr('selected', 'selected').change();
-
                         tr.find(".keyid").val(data["id"]);
-
                         tr.find(".keyhook").val(data["gancho"]);
                         tr.find(".keyaddress").val(data["endereco_string"]);
                         tr.find(".keycategory").val(data["tipo"]);
@@ -509,7 +508,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
             html += '<td style="display:none;"><input type="hidden" class="form-control keyid" name="keyid[]" value="<?php echo $bkey->getId(); ?>" readonly></td>';
 
-            html += '<td style="padding:0px;"><input type="text" class="form-control bkeygancho" name="listgancho" value="<?php echo $bkey->getGancho(); ?>" readonly></td>';
+            html += '<td style="padding:0px;"><input type="text" class="form-control bkeygancho" name="listgancho" value="<?php echo $controlk->FetchHookCode($bkey->getId()); ?>" readonly></td>';
 
             html += '<td style="padding:0px;"><input type="text" class="form-control bkeysicadi" name="listsicadi" value="<?php echo $bkey->getSicadi(); ?>" readonly></td>';
 

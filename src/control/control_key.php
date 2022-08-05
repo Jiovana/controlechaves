@@ -300,7 +300,7 @@ class ControlKey {
         
         //2. set the gancho_id field of each key sequentially according to the array order
       
-        for($c = 0; $c < count($hooks); $c++){
+        for($c = 0; $c < count($key_ids); $c++){
             //$key_ids[$c]->setGanchoId($hooks[$c]->getId());
             //$hooks[$c]->setUsado(true);
             $dao->UpdateGanchoId($hooks[$c]->getId(), $key_ids[$c]);
@@ -313,10 +313,33 @@ class ControlKey {
         $dao = new DaoKey();
         return $dao->UpdateGanchoId($hookid, $keyid);
     }
+    
+    
+    /**
+    * Chama a dao que procura chaves com base no gancho
+    *
+    * Usado em borrowkey.php
+    *
+    * @return string codigo html para preenchimento do select na tabela
+    */
+    public function Fill_HookCode() {
+
+        $output = '';
+
+        $dao = new DaoKey();
+        $result = $dao->SelectAllKeyHook();
+
+        foreach ( $result as $key ) {
+            $output .= '<option style="padding:0px;" value="'.$key['keyid'].'" >'.$key['hookcode'].'</option>';
+        }
+        return $output;
+
+    }
 
 }
 
 $control = new ControlKey();
-//echo $control->FetchHookCode(230);
-$control->SortHooks("Aluguel");
+//echo $control->Fill_HookCode();
+//$control->SortHooks("Aluguel");
+$control->SortHooks("Venda");
 ?>

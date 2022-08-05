@@ -74,6 +74,7 @@ if ( isset( $_POST['btnsave'] ) ) {
         $key->setGanchoId($_POST['select_hook']);
         $key->setGanchoManual(true);
         $fail = false;
+        $controlk->SortHooks( $_POST['select_category'] );
     }
     
     if (!$fail){
@@ -88,7 +89,7 @@ if ( isset( $_POST['btnsave'] ) ) {
     
     $ganchoval = $controlk->FetchHookCode($keyid);
     
-    $string = "Chave nº Gancho: ".$ganchoval." foi adicionada no sistema com status: ".$key->getStatus().".";    
+    $string = "Chave Nº ".$keyid.", Gancho: ".$ganchoval." foi adicionada no sistema com status: ".$key->getStatus().".";    
     $log->setDescription($string);
     
     $controll->CreateLog($log);

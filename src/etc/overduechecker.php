@@ -48,8 +48,9 @@ foreach($actives as $instance){
         //operation pode ser: 1 - criacao, 2 - alteracao,
         // 3 - emprestimo, 4 - devolucao
         $log->setOperation(2);
-        $gancho = $controlk->FetchGancho($instance["keys_id"]);
-        $string = "Chave nº Gancho: ".$gancho.", emprestada para ".$requester->getNome()." está ATRASADA.";    
+        //$gancho = $controlk->FetchGancho($instance["keys_id"]);
+        $gancho = $controlk->FetchHookCode($instance["keys_id"]);
+        $string = "Chave Nº: ".$instance["keys_id"].", Gancho: ".$gancho.", emprestada para ".$requester->getNome()." está ATRASADA.";    
         $log->setDescription($string);
 
         $controll->CreateLog($log);

@@ -145,11 +145,12 @@ class ControlBorrowing {
          $conk = new ControlKey();
          $cona = new ControlAddress();
          $key = $conk->GetKeyModel($key_id);
+         $hook = $conk->FetchHookCode($key_id);
          $address = $cona->GetAddressString($key->getEnderecoId());
          //create mail fields - $recipient_mail, $recipient_name, $subject, $body, $altbody
          $subject = "Notificação de Empréstimo de Chave";
-         $body = "Olá, ".$requester->getNome().".<br>Você pegou emprestada a chave ".$key->getGancho()." na JW Imobiliária.<br>O endereço do imóvel é <b>".$address."</b><br>Por favor, lembre-se de devolver até o horário especificado: <b>".$date."</b>.";
-         $altbody = "Ola, ".$requester->getNome().". Voce pegou emprestada a chave ".$key->getGancho()." na JW Imobiliaria. O endereço do imovel e ".$address." Por favor, lembre-se de devolver ate o horario especificado: ".$date.".";
+         $body = "Olá, ".$requester->getNome().".<br>Você pegou emprestada a chave ".$hook ." na JW Imobiliária.<br>O endereço do imóvel é <b>".$address."</b><br>Por favor, lembre-se de devolver até o horário especificado: <b>".$date."</b>.";
+         $altbody = "Ola, ".$requester->getNome().". Voce pegou emprestada a chave ".$hook ." na JW Imobiliaria. O endereço do imovel e ".$address." Por favor, lembre-se de devolver ate o horario especificado: ".$date.".";
         
          // if requester is client:
           if ($requester->getTipo() == "Cliente"){
@@ -182,11 +183,12 @@ class ControlBorrowing {
          $conk = new ControlKey();
          $cona = new ControlAddress();
          $key = $conk->GetKeyModel($key_id);
+         $hook = $conk->FetchHookCode($key_id);
          $address = $cona->GetAddressString($key->getEnderecoId());
          //create mail fields - $recipient_mail, $recipient_name, $subject, $body, $altbody
          $subject = "Notificação de Atraso na Devolução de Chave";
-         $body = "Olá, ".$requester->getNome().".<br>Lembramos que você pegou emprestada a chave ".$key->getGancho().", endereço <b>".$address."</b> na JW Imobiliária.<br>O horário de devolução especificado foi: <b>".$date."</b>. <br> A chave agora está <b>atrasada</b>.<br> Por favor, dirija-se à imobiliária para devolver a chave assim que possível.";
-         $altbody = "Ola, ".$requester->getNome().". Lembramos que voce pegou emprestada a chave ".$key->getGancho().", endereço ".$address." na JW Imobiliaria. O horario de devolucao especificado foi: ".$date.". A chave agora esta ATRASADA. Por favor, dirija-se a imobiliaria para devolver a chave assim que possivel.";
+         $body = "Olá, ".$requester->getNome().".<br>Lembramos que você pegou emprestada a chave ".$hook.", endereço <b>".$address."</b> na JW Imobiliária.<br>O horário de devolução especificado foi: <b>".$date."</b>. <br> A chave agora está <b>atrasada</b>.<br> Por favor, dirija-se à imobiliária para devolver a chave assim que possível.";
+         $altbody = "Ola, ".$requester->getNome().". Lembramos que voce pegou emprestada a chave ".$hook.", endereço ".$address." na JW Imobiliaria. O horario de devolucao especificado foi: ".$date.". A chave agora esta ATRASADA. Por favor, dirija-se a imobiliaria para devolver a chave assim que possivel.";
               
         // echo $body;
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
@@ -212,11 +214,12 @@ class ControlBorrowing {
          $conk = new ControlKey();
          $cona = new ControlAddress();
          $key = $conk->GetKeyModel($key_id);
+         $hook = $conk->FetchHookCode($key_id);
          $address = $cona->GetAddressString($key->getEnderecoId());
          //create mail fields - $recipient_mail, $recipient_name, $subject, $body, $altbody
          $subject = "Lembrete de Devolução de Chave";
-         $body = "Olá, ".$requester->getNome().".<br>Lembramos que você pegou emprestada a chave ".$key->getGancho().", endereço <b>".$address."</b> na JW Imobiliária.<br>O horário de devolução especificado foi: <b>".$date."</b>. <br> Por favor, dirija-se à imobiliária para devolver a chave até o horário previsto.";
-         $altbody = "Ola, ".$requester->getNome().". Lembramos que voce pegou emprestada a chave ".$key->getGancho().", endereço ".$address." na JW Imobiliaria. O horario de devolucao especificado foi: ".$date.". Por favor, dirija-se a imobiliaria para devolver a chave ate o horario previsto.";
+         $body = "Olá, ".$requester->getNome().".<br>Lembramos que você pegou emprestada a chave ". $hook.", endereço <b>".$address."</b> na JW Imobiliária.<br>O horário de devolução especificado foi: <b>".$date."</b>. <br> Por favor, dirija-se à imobiliária para devolver a chave até o horário previsto.";
+         $altbody = "Ola, ".$requester->getNome().". Lembramos que voce pegou emprestada a chave ". $hook.", endereço ".$address." na JW Imobiliaria. O horario de devolucao especificado foi: ".$date.". Por favor, dirija-se a imobiliaria para devolver a chave ate o horario previsto.";
               
         // echo $body;
          MailSender($requester->getEmail(), $requester->getNome(), $subject, $body, $altbody);
