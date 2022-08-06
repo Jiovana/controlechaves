@@ -93,7 +93,7 @@ foreach ( $logs as $log ) {
     $row_date = date_format( $row_date, 'd/m/Y' );
     $pdf->Cell( 25, 12, $row_date, 1, 0, 'C' );
     $pdf->Cell( 25, 12, $log['nome'], 1, 0, 'C' );
-    $pdf->Cell( 25, 12, $log['gancho'], 1, 0, 'C' );
+    $pdf->Cell( 25, 12, $log['codigo'], 1, 0, 'C' );
     $pdf->Cell( 25, 12, utf8_decode( $log['operation'] ), 1, 0, 'C' );
     if ( $log['operation'] == 'Devolução' ) {
         $pdf->MultiCell( 90, 12, utf8_decode( $log['description'] ), 1, 1, false );

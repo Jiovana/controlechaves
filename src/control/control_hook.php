@@ -50,7 +50,8 @@ class ControlHook{
     
     
 }
-
+$control = new ControlHook();
+//echo $control->SearchFreeHooks( "Aluguel" );
 
 
 ?>

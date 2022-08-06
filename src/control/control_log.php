@@ -45,7 +45,9 @@ class ControlLog {
                     <td>'.$date.'</td>
                     <td>'.$log['nome'].'</td>
                     <td>'.$log['operation'].'</td>
-                    <td>'.$log['description'].'</td>                  
+                    <td>'.$log['description'].'</td> 
+                    <td>
+<a href="editkey.php?id='.$id.'&logid='.$log['id'].'" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-trash"  title="Apagar"></span></a></td>
                 </tr> ';
         }
     }
@@ -74,7 +76,7 @@ class ControlLog {
             echo '<tr>
                     <td>'.$date.'</td>
                     <td>'.$log['nome'].'</td>
-                    <td>'.$log['gancho'].'</td>
+                    <td>'.$log['codigo'].'</td>
                     <td>'.$log['operation'].'</td>
                     <td>'.$log['description'].'</td>          
                 </tr> ';
@@ -113,6 +115,43 @@ class ControlLog {
         return $logs;
     }
     
+    /**
+    * Apaga um log, chamda de editkey.php ao clicar no botao delete da tabela
+    *
+    * @param int $id id do log a ser apagado
+    *
+    */
+
+    public function DeleteLog( $id ) {
+        $dao = new DaoLog();
+        if ( $dao->Delete( $id ) ) {
+
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Sucesso!",
+                            text: "Log removido do sistema",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+          
+
+        } else {
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal({
+                            title: "Erro!",
+                            text: "O Log não pode ser removido. ",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    });
+                    </script>';
+            
+        }
+    }
    
 
 }

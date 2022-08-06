@@ -75,6 +75,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
         if ( isset( $_POST['checkhook'] ) ) {
             echo '<script>console.log("inside second if");</script>';
             //1. verify if we have available hooks of the chosen type
+             echo '<script>console.log("category: '.$_POST['select_category'].'");</script>';
             $free = $controlh->SearchFreeHooks( $_POST['select_category'] );
             if ( $free > 0 ) {
                 echo '<script>console.log("hooks: '.$free.'");</script>';
@@ -215,6 +216,14 @@ if ( isset( $_POST['btnupdate'] ) ) {
     }
 
 }
+
+
+//ao pressionar botao delete, id eh enviado via post
+if ( isset( $_GET['logid'] ) ) {
+    $controll->DeleteLog( $_GET['logid'] );
+
+}
+
 
 ?>
 
@@ -414,8 +423,8 @@ for ( $i = 1; $i <= 5; $i++ ) {
                                         <th style="width: 15%">Data</th>
                                         <th style="width: 10%">Usuário</th>
                                         <th style="width: 10%">Operação</th>
-                                        <th style="width: 65%">Descrição</th>
-
+                                        <th style="width: 60%">Descrição</th>
+                                        <th style="width: 5%">Apagar</th>
                                     </tr>
                                 </thead>
                                 <tbody>

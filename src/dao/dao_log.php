@@ -129,7 +129,7 @@ class DaoLog {
 
     public function SearchAllByKey( $id ) {
         try {
-            $sql = "SELECT log.date, log.operation, log.description, user.nome FROM log INNER JOIN user ON log.user_id = user.id WHERE keys_id = :keyid ORDER BY log.id DESC";
+            $sql = "SELECT log.id, log.date, log.operation, log.description, user.nome FROM log INNER JOIN user ON log.user_id = user.id WHERE keys_id = :keyid ORDER BY log.id DESC";
 
             $p_sql = Connection::getConnection()->prepare( $sql );
 
@@ -176,8 +176,12 @@ class DaoLog {
     */
     public function SearchAllPeriod($date_begin, $date_end){
         try{
-            $sql = "SELECT log.date, log.operation, log.description, user.nome, keys.gancho FROM log INNER JOIN user ON log.user_id = user.id 
-            INNER JOIN `keys` ON log.keys_id = keys.id WHERE log.date BETWEEN :fromdate AND :todate ORDER BY log.date DESC";
+            $sql = "SELECT log.date, log.operation, log.description, user.nome, hook.codigo 
+            FROM log 
+            INNER JOIN user ON log.user_id = user.id 
+            INNER JOIN `keys` ON log.keys_id = `keys`.id
+            INNER JOIN hook ON `keys`.gancho_id = hook.id 
+            WHERE log.date BETWEEN :fromdate AND :todate ORDER BY log.date DESC";
         
             
             $p_sql = Connection::getConnection()->prepare($sql);

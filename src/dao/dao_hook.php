@@ -173,8 +173,9 @@ class DaoHook {
     
     public function VerifyFreeHooks($type){
         try{
-            $sql = "SELECT COUNT(usado) FROM hook WHERE usado = 0";
+            $sql = "SELECT COUNT(usado) FROM hook WHERE usado = 0 AND tipo = :tipo";
             $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue( ":tipo", $type);
             $p_sql->execute();
             return $p_sql->fetch(PDO::FETCH_COLUMN,0);
         }catch (PDOException $e){

@@ -299,8 +299,9 @@ class ControlKey {
         $hooks = $daoh->SearchAllByType($category);
         
         //2. set the gancho_id field of each key sequentially according to the array order
+        $limit = (count($hooks) < count($key_ids))? count($hooks):count($key_ids);
       
-        for($c = 0; $c < count($key_ids); $c++){
+        for($c = 0; $c < $limit; $c++){
             //$key_ids[$c]->setGanchoId($hooks[$c]->getId());
             //$hooks[$c]->setUsado(true);
             $dao->UpdateGanchoId($hooks[$c]->getId(), $key_ids[$c]);
@@ -341,5 +342,6 @@ class ControlKey {
 $control = new ControlKey();
 //echo $control->Fill_HookCode();
 //$control->SortHooks("Aluguel");
-$control->SortHooks("Venda");
+//$control->SortHooks("Venda");
+
 ?>
