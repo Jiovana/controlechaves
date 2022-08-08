@@ -41,10 +41,12 @@ class ControlHook{
         return $dao->SearchHookByCode($code);
     }   
     
-    public function TurnOnUsado($hook){
+    public function ModifyUsado($hookid, $value){
         $dao = new DaoHook();
-        return $dao->ActivateUsado($hook);
+        return $dao->UpdateUsado($hookid, $value);
     }
+
+
 
     
     

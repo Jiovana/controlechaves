@@ -46,14 +46,14 @@ if ( isset( $_POST['btnsave'] ) ) {
     
     $free = 0;
     $fail = false;
-    if(isset($_POST['checkhook'])){
+    if(isset($_POST['checkhook']) || $_POST['checkhook']){
+        echo '<script>console.log("inside if");</script>';
         //1. verify if we have available hooks of the chosen type
         $free = $controlh->SearchFreeHooks($_POST['select_category']);
         if($free > 0){
             echo '<script>console.log("hooks: '.$free.'");</script>';
             
-            //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
-            $controlk->SortHooks($_POST['select_category']);
+            
             $key->setGanchoManual(false);
             $fail = false;
         }else{
@@ -74,17 +74,19 @@ if ( isset( $_POST['btnsave'] ) ) {
         $key->setGanchoId($_POST['select_hook']);
         $key->setGanchoManual(true);
         $fail = false;
-        $controlk->SortHooks( $_POST['select_category'] );
     }
     
     if (!$fail){
         $keyid = $controlk->NewKey( $key );
+        
+        //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
+        $controlk->SortHooks($_POST['select_category']);
     
     //inserir o log de criacao da chave   
     $log->setKeys_id($keyid);
     $log->setUser_id($_SESSION['user_id']);
     //operation pode ser: 1 - criacao, 2 - alteracao,
-    // 3 - emprestimo, 4 - devolucao
+    // 3 - emprestimo, 4 - devolucao, 5 - exclusao
     $log->setOperation(1);
     
     $ganchoval = $controlk->FetchHookCode($keyid);
@@ -94,12 +96,20 @@ if ( isset( $_POST['btnsave'] ) ) {
     
     $controll->CreateLog($log);
     
-
-    echo '<script> window.setTimeout(function(){
+  /*  if ($_POST['select_category'] == "Aluguel"){
+        echo '<script> window.setTimeout(function(){
         window.location.href = "/controlechaves/src/view/mainlist.php";
 
     }, 3000);
     </script>   '; 
+    } else {
+        echo '<script> window.setTimeout(function(){
+        window.location.href = "/controlechaves/src/view/sellinglist.php";
+
+    }, 3000);
+    </script>   '; 
+    }*/
+    
 }
     }
     

@@ -105,7 +105,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
             $key->setGanchoId($hook_model->getId());
             $key->setGanchoManual( true );
             $controlk->UpdateHookId($hook_model->getId(), $key->getId());
-            $controlh->TurnOnUsado($hook_model);
+            $controlh->UpdateUsado($hook_model->getId(),true);
            $key_gan = $hook_model->getCodigo();
             $fail = false;
             $controlk->SortHooks( $_POST['select_category'] );
@@ -125,6 +125,15 @@ if ( isset( $_POST['btnupdate'] ) ) {
         if ( $addr_num != $_POST['txtnum'] or $addr_bai != $_POST['txtdistrict'] or $addr_rua != $_POST['txtstreet'] or $addr_cid != $_POST['txtcity'] or $addr_com != $_POST['txtaddon2'] ) {
             $mod_addr = true;
         }
+        // teste para reordenar ganchos caso endereco mude
+        if($mod_addr && 
+           !$key->getGanchoManual()){
+        echo '<script>console.log("inside if addr: '.$mod_addr.'");</script>';
+        $controlk->SortHooks( $_POST['select_category'] );
+        }
+                
+        
+        
         //3.2 - verificar se campos da chave mudaram, exceto status
         echo '<script>console.log("mod: '.$mod.'");</script>';
         $mod_key = false;
@@ -142,7 +151,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
         $log->setUser_id( $_SESSION['user_id'] );
 
         //operation pode ser: 1 - criacao, 2 - alteracao,
-        // 3 - emprestimo, 4 - devolucao
+        // 3 - emprestimo, 4 - devolucao, 5 - exclusao
         $log->setOperation( 2 );
 
         //3.6 - comparar as tres flags entre si.
@@ -437,10 +446,16 @@ $controll->FillMovTable( $key_id );
                     </div>
                 </div>
             </div>
+            <div  style="text-align:right;" >
+             <button type="button" class="btn btn-danger btndelete" name="btndelete" id="<?php echo $key_id;?>'">Remover Chave</button>
+             </div>
         </form>
         <!-- /.content -->
 
     </section>
+    
+    
+   
 </div>
 
 <!-- /.content-wrapper -->
@@ -453,6 +468,52 @@ $controll->FillMovTable( $key_id );
             document.getElementById('select_hook').disabled = false;
         }
     }
+
+</script>
+
+
+<!-- ajax code for delete button -->
+<script>
+    $(document).ready(function() {
+        $('.btndelete').click(function() {
+            var tdh = $(this);
+            var id = $(this).attr("id");
+            swal({
+                title: "Você deseja excluir a chave?",
+                text: "Uma vez apagada, você não terá mais acesso a essa chave!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: '../control/ajaxremovekey.php',
+                        type: 'post',
+                        data: { 
+                            keyid: id,
+                            op: 'rem'
+                        },
+                        success: function(data) {
+                            console.log(data);
+                           /* // go back to list
+                            <?php// if($key_tip == "Aluguel"){ ?>
+                            location.href='mainlist.php';
+                            <?php// } else { ?>
+                            location.href='sellinglist.php';
+                            <?php// } ?>    */                    
+                        }
+                    });
+
+                    swal("Chave removida com sucesso.", {
+                            icon: "success",
+                    });
+                } else {
+                    swal("A chave não foi removida.");
+                }
+            });
+        });
+    });
 
 </script>
 

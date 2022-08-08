@@ -164,7 +164,7 @@ class DaoKey {
 
     public function SearchAllByType($type) {
         try {
-            $sql = "SELECT * FROM `keys` WHERE `keys`.`tipo` = :tipo ORDER BY id";
+            $sql = "SELECT * FROM `keys` WHERE `keys`.`tipo` = :tipo AND `keys`.`status` <> 'Indisponível' ORDER BY id";
 
             $p_sql = Connection::getConnection()->prepare( $sql );
             $p_sql->bindValue(":tipo", $type);
@@ -347,7 +347,7 @@ class DaoKey {
         try {
             $sql = "SELECT `keys`.id FROM `keys` 
         JOIN address ON address.id = `keys`.`endereco_id`
-        WHERE `keys`.`tipo` = :tipo AND  `keys`.`gancho_manual` = false
+        WHERE `keys`.`tipo` = :tipo AND  `keys`.`gancho_manual` = false AND `keys`.`status` <> 'Indisponível'
         ORDER BY address.rua, address.numero, address.bairro, address.cidade";
 
             $p_sql = Connection::getConnection()->prepare( $sql );
@@ -391,6 +391,17 @@ class DaoKey {
             
         } catch (PDOException $e){
             echo "Error while running SelectAllKeyHook method in DaoKey: ".$e;
+        }
+    }
+    
+    public function DeleteHook ($keyid){
+        try{
+            $sql = "UPDATE `keys` SET gancho_id = NULL WHERE id = :keyid";
+            $p_sql = Connection::getConnection()->prepare( $sql );
+            $p_sql->bindValue(":keyid", $keyid);
+            $p_sql->execute();
+        }catch (PDOException $e){
+            echo "Error while running DeleteHook in DaoKey: ".$e;
         }
     }
 

@@ -46,7 +46,7 @@ foreach($actives as $instance){
         $log->setKeys_id($instance["keys_id"]);
         $log->setUser_id(20);
         //operation pode ser: 1 - criacao, 2 - alteracao,
-        // 3 - emprestimo, 4 - devolucao
+        // 3 - emprestimo, 4 - devolucao, 5 - exclusao
         $log->setOperation(2);
         //$gancho = $controlk->FetchGancho($instance["keys_id"]);
         $gancho = $controlk->FetchHookCode($instance["keys_id"]);

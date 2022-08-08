@@ -95,7 +95,7 @@ class ControlKey {
             } else {
                 echo '
                     <td>      
-                        <a href="#" class="btn btn-warning btn-block" role="button" data-toggle="tooltip" title="Nao e possivel emprestar essa chave" disabled><i class="glyphicon glyphicon-tags"></i></a>                    
+                        <a href="#" class="btn btn-warning btn-block" role="button" data-toggle="tooltip" title="Não é possível emprestar essa chave" disabled><i class="glyphicon glyphicon-tags"></i></a>                    
                     </td>
                    '; 
             }
@@ -305,7 +305,7 @@ class ControlKey {
             //$key_ids[$c]->setGanchoId($hooks[$c]->getId());
             //$hooks[$c]->setUsado(true);
             $dao->UpdateGanchoId($hooks[$c]->getId(), $key_ids[$c]);
-            $daoh->ActivateUsado($hooks[$c]);
+            $daoh->UpdateUsado($hooks[$c]->getId(),true);
             //if($c == 167) break;
         }
     }
@@ -336,6 +336,12 @@ class ControlKey {
         return $output;
 
     }
+    
+   public function RemoveHook($keyid){
+       
+       $dao = new DaoKey();
+       return $dao->DeleteHook($keyid);
+   }
 
 }
 

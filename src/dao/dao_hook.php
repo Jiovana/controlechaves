@@ -183,17 +183,17 @@ class DaoHook {
         }
     }
     
-    public function ActivateUsado($hook){
+    public function UpdateUsado($hookid, $value){
         try{
-            $sql = "UPDATE hook SET usado = true WHERE id = :hookid";
+            $sql = "UPDATE hook SET usado = :value WHERE id = :hookid";
             $p_sql = Connection::getConnection()->prepare( $sql );
-            $p_sql->bindValue( ":hookid", $hook->getId());
+            $p_sql->bindValue( ":value", $value);
+            $p_sql->bindValue( ":hookid", $hookid);
             $p_sql->execute();
         }catch (PDOException $e){
             echo "Error while running UpdateUsado in DaoHook: ".$e->getMessage();
         }
     }
-
      
 
 }

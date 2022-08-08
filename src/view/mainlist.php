@@ -127,14 +127,14 @@ $control->CheckOverdueMessages();
 </script>
 
 
-<!-- ajax code for product delete button -->
+<!-- ajax code for retrieve button -->
 <script>
     $(document).ready(function() {
         $('.btnretrieve').click(function() {
             var tdh = $(this);
             var id = $(this).attr("id");
             swal({
-                title: "Voce deseja devolver a chave?",
+                title: "Você deseja devolver a chave?",
                 //text: "Once deleted, you can't recover this product!",
                 icon: "warning",
                 buttons: true,

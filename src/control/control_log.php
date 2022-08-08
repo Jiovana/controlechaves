@@ -68,6 +68,15 @@ class ControlLog {
         
         
         $logs = $dao->SearchAllPeriod($fromdate, $todate);
+        $logs2 = $dao->SearchDeletedPeriod($fromdate, $todate);
+
+        foreach($logs2 as $item){
+            $item += array('codigo' => "--");
+           
+            array_push($logs, $item);
+        }
+        
+        
        // [date]  [user] [key] [operation] [description]
         foreach ( $logs as $log ) {
             $date = date_create( $log['date'] );
@@ -112,6 +121,16 @@ class ControlLog {
         $fromdate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_begin)));
         $todate =date('Y-m-d', strtotime (str_replace ('/', '-', $date_end)));
         $logs = $dao->SearchAllPeriod($fromdate, $todate);
+        
+        $logs2 = $dao->SearchDeletedPeriod($fromdate, $todate);
+
+        foreach($logs2 as $item){
+            $item += array('codigo' => "--");
+           
+            array_push($logs, $item);
+        }
+        
+        
         return $logs;
     }
     
@@ -155,5 +174,7 @@ class ControlLog {
    
 
 }
+$c = new ControlLog;
+//$c->FillReportTable("08/08/2022", "08/08/2022");
 
 ?>

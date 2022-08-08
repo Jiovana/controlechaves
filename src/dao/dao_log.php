@@ -195,6 +195,37 @@ class DaoLog {
             echo "Error while running SearchAllPeriod method in DaoLog: ".$e->getMessage();
         }
     }
+    
+    
+      /**
+    * Procura todos os logs do banco de dados dentro de um período determinado
+    *
+    *
+    * @param string $date_begin A data de inicio do periodo
+    * @param string $date_end A data final do periodo
+    * @return array[] um array associativo com os resultados da consulta: data, operação, descrição, nome do usuário e gancho da chave. 
+    */
+    public function SearchDeletedPeriod($date_begin, $date_end){
+        try{
+            $sql = "SELECT log.date, log.operation, log.description, user.nome
+            FROM log 
+            INNER JOIN user ON log.user_id = user.id 
+            INNER JOIN `keys` ON log.keys_id = `keys`.id
+            WHERE log.date BETWEEN :fromdate AND :todate AND log.operation = 5
+            ORDER BY log.date DESC";
+        
+            
+            $p_sql = Connection::getConnection()->prepare($sql);
+            $p_sql->bindValue(":fromdate", $date_begin);
+            $p_sql->bindValue(":todate", $date_end);
+            $p_sql->execute();
+            
+            return $p_sql->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e){
+            echo "Error while running SearchAllPeriod method in DaoLog: ".$e->getMessage();
+        }
+    }
 }
 
 ?>
