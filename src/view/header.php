@@ -233,7 +233,7 @@ desired effect
                             <span>Usuários</span></a>
                     </li>
                     <li class="nav-link">
-                        <a href="https://drive.google.com/file/d/1V7VNurof4MhFvgbJ2rtr0liih4rQ92lb/view?usp=sharing" target="_blank"><i class="fa fa-book"></i>
+                        <a href="https://drive.google.com/file/d/1TpCQM2HBMZYrqsZuxe1rZIbx9648ubH0/view?usp=sharing" target="_blank"><i class="fa fa-book"></i>
                             <span>Manual</span></a>
                     </li>
                 </ul>

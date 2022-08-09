@@ -71,12 +71,16 @@ if ( isset( $_POST['btnsave'] ) ) {
         }
         
     }else{
-        $key->setGanchoId($_POST['select_hook']);
-        $key->setGanchoManual(true);
-        $fail = false;
+        
+             $key->setGanchoId($_POST['select_hook']);
+            $key->setGanchoManual(true);
+            $fail = false;
+         
+        
     }
     
     if (!$fail){
+       
         $keyid = $controlk->NewKey( $key );
         
         //2. sort the key addresses alphabetically and set the hook codes sequentially according to the sorted vector
@@ -96,7 +100,7 @@ if ( isset( $_POST['btnsave'] ) ) {
     
     $controll->CreateLog($log);
     
-  /*  if ($_POST['select_category'] == "Aluguel"){
+    if ($_POST['select_category'] == "Aluguel"){
         echo '<script> window.setTimeout(function(){
         window.location.href = "/controlechaves/src/view/mainlist.php";
 
@@ -108,7 +112,7 @@ if ( isset( $_POST['btnsave'] ) ) {
 
     }, 3000);
     </script>   '; 
-    }*/
+    }
     
 }
     }
@@ -184,7 +188,6 @@ if ( isset( $_POST['btnsave'] ) ) {
                                     <option>Emprestado</option>
                                     <option>Atrasado</option>
                                     <option>Perdido</option>
-                                    <option>Indisponível</option>
                                 </select>
                             </div>
 

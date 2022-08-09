@@ -1,7 +1,3 @@
-
-  
-
-  
 <?php
    
 include_once '//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/control_key.php';
@@ -22,15 +18,26 @@ include_once 'header.php';
     
 $control->CheckOverdueMessages();
 
+if ( isset($_POST['btnorder']) ){
+    echo '<script>console.log("button pressed");</script>';
+    $control->SortHooks("Aluguel");
+    echo '<script> window.setTimeout(function(){
+        window.location.href = "/controlechaves/src/view/mainlist.php";
+
+    }, 500);
+    </script>   ';
+}
+
 
 
 ?>
 <script>
-
     window.addEventListener("load", () => {
-       var req = new XMLHttpRequest();
-        req.open("POST","../etc/overduechecker.php");
-        req.onload = function () { console.log(this.response); };    
+        var req = new XMLHttpRequest();
+        req.open("POST", "../etc/overduechecker.php");
+        req.onload = function() {
+            console.log(this.response);
+        };
         req.send();
     });
 
@@ -54,7 +61,13 @@ $control->CheckOverdueMessages();
         <div class="box box-success">
             <form action="" method="post" name="">
                 <div class="box-header with-border">
+                   <div class="col-md-6">
                     <h3 class="box-title">Lista de Chaves - Imóveis para locação</h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+                        <button type="submit" class="btn btn-success" name="btnorder">Ordenar Ganchos</button>
+                    </div>
+
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
@@ -77,7 +90,7 @@ $control->CheckOverdueMessages();
 
                         <div class="col-md-12" style="overflow-x:auto;">
                             <table id="tablekeys" class="table table-bordered table-hover">
-                               
+
                                 <thead>
                                     <tr style="background-color:#9FF781; ">
                                         <th style="width: 6% ; ">Gancho</th>
@@ -134,35 +147,35 @@ $control->CheckOverdueMessages();
             var tdh = $(this);
             var id = $(this).attr("id");
             swal({
-                title: "Você deseja devolver a chave?",
-                //text: "Once deleted, you can't recover this product!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url: '../control/ajaxretrievekey.php',
-                        type: 'post',
-                        data: { 
-                            keyid: id,
-                            op: 'ret'
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            // update table or refresh page
-                            location.reload(true);
-                        }
-                    });
+                    title: "Você deseja devolver a chave?",
+                    //text: "Once deleted, you can't recover this product!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '../control/ajaxretrievekey.php',
+                            type: 'post',
+                            data: {
+                                keyid: id,
+                                op: 'ret'
+                            },
+                            success: function(data) {
+                                console.log(data);
+                                // update table or refresh page
+                                location.reload(true);
+                            }
+                        });
 
-                    swal("Chave devolvida com sucesso.", {
+                        swal("Chave devolvida com sucesso.", {
                             icon: "success",
-                    });
-                } else {
-                    swal("A chave não foi devolvida.");
-                }
-            });
+                        });
+                    } else {
+                        swal("A chave não foi devolvida.");
+                    }
+                });
         });
     });
 

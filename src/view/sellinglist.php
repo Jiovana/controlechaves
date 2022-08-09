@@ -22,6 +22,16 @@ include_once 'header.php';
     
 $control->CheckOverdueMessages();
 
+if ( isset($_POST['btnorder']) ){
+    echo '<script>console.log("button pressed");</script>';
+    $control->SortHooks("Venda");
+    echo '<script> window.setTimeout(function(){
+        window.location.href = "/controlechaves/src/view/sellinglist.php";
+
+    }, 500);
+    </script>   ';
+}
+
 
 
 ?>
@@ -53,8 +63,15 @@ $control->CheckOverdueMessages();
         -------------------------->
         <div class="box box-info">
             <form action="" method="post" name="">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Lista de Chaves - Imóveis para venda</h3>
+                <div class="box-header with-border">                                   
+                    <div class="col-md-6">
+                     <h3 class="box-title">Lista de Chaves - Imóveis para venda</h3>
+                    </div>
+                    <div class="col-md-6" style="text-align:right;">
+                        <button type="submit" class="btn btn-primary" name="btnorder">Ordenar Ganchos</button>
+                    </div>
+
+                    
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->

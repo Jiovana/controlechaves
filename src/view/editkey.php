@@ -349,8 +349,8 @@ for ( $i = 0; $i < count( $hook_array ); $i++ ) {
                                     <select class="form-control" name="select_status" required>
                                         <option value="" disabled selected>Selecione o status</option>
                                         <?php
-$status_array = array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido', 5 => 'Indisponível' );
-for ( $i = 1; $i <= 5; $i++ ) {
+$status_array = array( 1 => 'Disponível', 2 => 'Emprestado', 3 => 'Atrasado', 4 => 'Perdido' );
+for ( $i = 1; $i <= 4; $i++ ) {
     ?>
                                         <option <?php
     if ( $key->getStatus() == $status_array[$i] ) {
@@ -496,12 +496,12 @@ $controll->FillMovTable( $key_id );
                         },
                         success: function(data) {
                             console.log(data);
-                           /* // go back to list
-                            <?php// if($key_tip == "Aluguel"){ ?>
+                            // go back to list
+                            <?php if($key_tip == "Aluguel"){ ?>
                             location.href='mainlist.php';
-                            <?php// } else { ?>
+                            <?php } else { ?>
                             location.href='sellinglist.php';
-                            <?php// } ?>    */                    
+                            <?php } ?>                       
                         }
                     });
 
