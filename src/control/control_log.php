@@ -135,7 +135,7 @@ class ControlLog {
     }
     
     /**
-    * Apaga um log, chamda de editkey.php ao clicar no botao delete da tabela
+    * Apaga um log, chamda de editkey.php ao clicar no botao delete da tabela, exibe alertas swal
     *
     * @param int $id id do log a ser apagado
     *

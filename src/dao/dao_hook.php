@@ -5,7 +5,7 @@ require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/contr
 require_once "//SERVIDOR/BKP-Novo/Financeiro-5/ControleChaves/XAMPP/htdocs/controlechaves/src/control/connection.php";
 
 /**
- * Metodos de comunicacao com o banco para o ModelAddress
+ * Metodos de comunicacao com o banco para o ModelHook
  * 
 */
 class DaoHook {
@@ -112,9 +112,9 @@ class DaoHook {
     
    
      /**
-     * Procura um gancho pelo codigo
+     * Procura um gancho pelo codigo fisico
      * 
-     * @param int $id O id do gancho a ser buscado
+     * @param int $code O codigo do gancho a ser buscado
      * @return ModelHook o objeto hook encontrado
     */
     public function SearchHookByCode($code){
@@ -155,6 +155,7 @@ class DaoHook {
     /**
      * Busca todos ganchos do banco do tipo informado
      * 
+     * @param string $type O tipo do gancho a ser buscado, aluguel ou venda
      * @return ModelHook[] array de objs hook
     */
     public function SearchAllByType($type) {
@@ -171,6 +172,12 @@ class DaoHook {
         }
     }
     
+     /**
+     * Verifica se existem ganchos livres do tipo informado
+     * 
+     * @param string $type O tipo do gancho a ser buscado
+     * @return int quantidade de ganchos livres
+    */
     public function VerifyFreeHooks($type){
         try{
             $sql = "SELECT COUNT(usado) FROM hook WHERE usado = 0 AND tipo = :tipo";
@@ -183,13 +190,22 @@ class DaoHook {
         }
     }
     
+    /**
+     * Atualiza o campo usado de um gancho
+     * 
+     * @param int $hookid O id do gancho a ser alterado
+     * @param int $value O valor a ser definido, booleano
+     * usado = 1 significa que ha chaves com esse gancho
+     * usado = 0 significa que nao tem nenhuma chave nele
+     * @return boolean resultado de execute()
+    */
     public function UpdateUsado($hookid, $value){
         try{
             $sql = "UPDATE hook SET usado = :value WHERE id = :hookid";
             $p_sql = Connection::getConnection()->prepare( $sql );
             $p_sql->bindValue( ":value", $value);
             $p_sql->bindValue( ":hookid", $hookid);
-            $p_sql->execute();
+            return $p_sql->execute();
         }catch (PDOException $e){
             echo "Error while running UpdateUsado in DaoHook: ".$e->getMessage();
         }

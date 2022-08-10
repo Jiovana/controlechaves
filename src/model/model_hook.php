@@ -1,10 +1,16 @@
 <?php 
 
+
+/**
+* 
+* Representa a entidade hook (gancho) do banco de dados, possuindo todos seus atributos
+*
+*/
 class ModelHook{
     private $id;
-    private $codigo;
-    private $tipo;
-    private $usado;
+    private $codigo; // o codigo fisico do gancho no painel
+    private $tipo; // se eh aluguel ou venda
+    private $usado; // usado = 1 significa que tem uma ou mais chaves associadas a esse gancho
     
     private function __clone(){}
     

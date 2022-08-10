@@ -361,6 +361,14 @@ class DaoKey {
         }
     }
     
+    
+    /**
+    * Atualiza o atributo gancho_id de uma chave
+    *
+    * @param int $hook o id do hook a ser atribuido
+    * @param int $keyid o id da chave a ser alterada
+    * @return resultado do execute
+    */
     public function UpdateGanchoId($hook, $keyid){
         try{
             $sql = "UPDATE `keys` SET gancho_id = :gancho WHERE id = :keyid";
@@ -374,10 +382,10 @@ class DaoKey {
     }
     
     
-     /**
-    * Retorna
-    *
-    * @return 
+    /**
+    * Retorna um array com os ids das chaves e os respectivos codigos do gancho, de chaves cujo status seja disponivel, ordenados pelos ganchos.
+    * Usado na tabela em borrowkey.
+    * @return array associativo com os resultados
     */
     public function SelectAllKeyHook(){
         try{
@@ -394,6 +402,12 @@ class DaoKey {
         }
     }
     
+    /**
+    * Atualiza o campo gancho_id de uma chave para NULL, removendo a relacao entre hook e keys
+    * 
+    * @param $keyid o id da chave
+    * @return o resultado do execute()
+    */
     public function DeleteHook ($keyid){
         try{
             $sql = "UPDATE `keys` SET gancho_id = NULL WHERE id = :keyid";

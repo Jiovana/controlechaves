@@ -40,7 +40,7 @@ $key_gan = $controlk->FetchHookCode( $key->getId() );
 $key_tip = $key->getTipo();
 $key_sta = $key->getStatus();
 $key_adi = $key->getAdicional();
- $mod = false; // flag to see if the fields were modified by user
+$mod = false; // flag to see if the fields were modified by user
 //ao pressionar o botao de atualizar
 if ( isset( $_POST['btnupdate'] ) ) {
     //1. atualizar o endereco
@@ -73,6 +73,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
         echo '<script>console.log("inside first if");</script>';
         $mod = true;
         if ( isset( $_POST['checkhook'] ) ) {
+            // opcao automatica
             echo '<script>console.log("inside second if");</script>';
             //1. verify if we have available hooks of the chosen type
              echo '<script>console.log("category: '.$_POST['select_category'].'");</script>';
@@ -99,6 +100,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
             }
 
         } else {
+            // opcao manual
             echo '<script>console.log("'.$_POST['select_hook'].'");</script>';
             $hook_model = $controlh->FetchHookByCode($_POST['select_hook'] );
             echo '<script>console.log("'.$hook_model->getId().'");</script>';
@@ -227,7 +229,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
 }
 
 
-//ao pressionar botao delete, id eh enviado via post
+//ao pressionar botao delete na tabela de logs, id eh enviado via post
 if ( isset( $_GET['logid'] ) ) {
     $controll->DeleteLog( $_GET['logid'] );
 
@@ -461,6 +463,7 @@ $controll->FillMovTable( $key_id );
 <!-- /.content-wrapper -->
 
 <script>
+    // ativa/desativa select com base no checkbox
     function validate() {
         if (document.getElementById('checkhook').checked) {
             document.getElementById('select_hook').disabled = true;

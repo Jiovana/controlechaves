@@ -41,7 +41,7 @@ try {
         
         //gerar log
         $log = new ModelLog();
-        //inserir o log de emprestar chave   
+        //inserir o log de remover chave   
         $log->setKeys_id($_POST['keyid']);
         $log->setUser_id($_SESSION['user_id']);
         //operation pode ser: 1 - criacao, 2 - alteracao,

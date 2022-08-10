@@ -14,10 +14,10 @@ $control = new ControlKey();
 
 include_once 'header.php';
 
-
-    
+// verifica mensagens de atraso
 $control->CheckOverdueMessages();
 
+// reordena ganchos e recarrega a pagina
 if ( isset($_POST['btnorder']) ){
     echo '<script>console.log("button pressed");</script>';
     $control->SortHooks("Aluguel");
@@ -32,6 +32,7 @@ if ( isset($_POST['btnorder']) ){
 
 ?>
 <script>
+    //checa por atrasos quando carrega a pagina
     window.addEventListener("load", () => {
         var req = new XMLHttpRequest();
         req.open("POST", "../etc/overduechecker.php");
@@ -73,24 +74,8 @@ if ( isset($_POST['btnorder']) ){
                 <!-- form start -->
                 <div class="box-body">
                     <form id="keylistform" role="form" action="" method="post">
-                        <!--<div class="col-md-12">
-                            <div class="form-group">
-                                <div class="input-group margin">
-                                    <input type="text" class="form-control" name="txtsearch" placeholder="Insira o código do SICADI, do gancho ou endereco do imovel">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-success btn-flat" name="btnsearch">Procurar</button>
-                                    </span>
-                                </div>
-                                <label>
-                                    <input type="checkbox" name="check" class="minimal">
-                                    Mostrar chaves inativas
-                                </label>
-                            </div>
-                        </div>-->
-
                         <div class="col-md-12" style="overflow-x:auto;">
                             <table id="tablekeys" class="table table-bordered table-hover">
-
                                 <thead>
                                     <tr style="background-color:#9FF781; ">
                                         <th style="width: 6% ; ">Gancho</th>
@@ -103,8 +88,7 @@ if ( isset($_POST['btnorder']) ){
                                 </thead>
                                 <tbody>
                                     <?php 
-                                    $control->FillTable("Aluguel");
-                                    
+                                    $control->FillTable("Aluguel");   
                                     ?>
                                 </tbody>
                             </table>

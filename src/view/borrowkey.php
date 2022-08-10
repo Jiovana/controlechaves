@@ -78,7 +78,7 @@ if ( isset( $_POST['btnsave'] ) ) {
         if (isset($_POST['keyhook'])){
             $arr_keygancho = $_POST['keyhook'];
         }
-        //this value is from the second script, the fixed value that came from mainlist
+        //this value is from the second script, the fixed value that came by the buttom from the keys list
         if (isset($_POST['listgancho'])){
             array_push($arr_keygancho, $_POST['listgancho']);
         }

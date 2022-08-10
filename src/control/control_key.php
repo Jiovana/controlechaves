@@ -240,7 +240,7 @@ class ControlKey {
     }
     
      /**
-    * Busca apenas o Gancho da chave com o id informado
+    * Busca apenas o Gancho (tabela HOOK) da chave com o id informado
     *
     * @param int $keyid o id da chave
     * @return string o codigo do gancho
@@ -289,6 +289,11 @@ class ControlKey {
         }
     }
     
+     /**
+    * Reordena os codigos dos ganchos alfabeticamente pelo endereco das chaves
+    *
+    * @param string $category a categoria das chaves, aluguel ou venda
+    */
     public function SortHooks($category){
         $dao = new DaoKey();
         //1. select all keys from the category, ordered  by the addresses
@@ -310,6 +315,13 @@ class ControlKey {
         }
     }
     
+     /**
+    * Atualiza o campo gancho_id de uma chave
+    *
+    * @param int $keyid o id da chave
+    * @param int $hookid o id do gancho (tabela hook)
+    * @return resultado do execute()
+    */
     public function UpdateHookId($hookid, $keyid){
         $dao = new DaoKey();
         return $dao->UpdateGanchoId($hookid, $keyid);
@@ -317,14 +329,13 @@ class ControlKey {
     
     
     /**
-    * Chama a dao que procura chaves com base no gancho
+    * Procura chaves com base no codigo do gancho
     *
     * Usado em borrowkey.php
     *
     * @return string codigo html para preenchimento do select na tabela
     */
     public function Fill_HookCode() {
-
         $output = '';
 
         $dao = new DaoKey();
@@ -337,8 +348,13 @@ class ControlKey {
 
     }
     
-   public function RemoveHook($keyid){
-       
+    
+    /**
+    * Torna NULL o campo gancho_id de uma chave
+    *
+    * @return resultado do execute()
+    */
+   public function RemoveHook($keyid){   
        $dao = new DaoKey();
        return $dao->DeleteHook($keyid);
    }

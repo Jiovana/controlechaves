@@ -44,8 +44,8 @@ if ( isset( $_POST['btnsave'] ) ) {
     $key->setAdicional( $_POST['txtaddon'] );
     $key->setEnderecoId( $addr_id );
     
-    $free = 0;
-    $fail = false;
+    $free = 0; // var para free hooks
+    $fail = false; // flag para verificar se deu para inserir o gancho ou nao
     if(isset($_POST['checkhook']) || $_POST['checkhook']){
         echo '<script>console.log("inside if");</script>';
         //1. verify if we have available hooks of the chosen type
@@ -53,7 +53,7 @@ if ( isset( $_POST['btnsave'] ) ) {
         if($free > 0){
             echo '<script>console.log("hooks: '.$free.'");</script>';
             
-            
+            // opcao autmatica
             $key->setGanchoManual(false);
             $fail = false;
         }else{
@@ -71,7 +71,7 @@ if ( isset( $_POST['btnsave'] ) ) {
         }
         
     }else{
-        
+        // opcao manual
              $key->setGanchoId($_POST['select_hook']);
             $key->setGanchoManual(true);
             $fail = false;
@@ -100,6 +100,7 @@ if ( isset( $_POST['btnsave'] ) ) {
     
     $controll->CreateLog($log);
     
+        // redireciona para listas apos insercao
     if ($_POST['select_category'] == "Aluguel"){
         echo '<script> window.setTimeout(function(){
         window.location.href = "/controlechaves/src/view/mainlist.php";

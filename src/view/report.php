@@ -26,7 +26,7 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
         $dates = explode(' - ', $_POST['daterange']);
         echo '<script>console.log("teste: '.$_POST['daterange'].'");</script>';
         //send the date range via get 
-        //parse_url
+        //obtem as datas de volta 
         
         $datesfromlog = $controll->RetrieveReportDates($dates[0],$dates[1]);
     }
@@ -51,7 +51,6 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
         -------------------------->
         <form id="reportform" action="" method="post" role="form">
             <div class="box box-primary">
-
                 <div class="box-header with-border">
                     <h3 class="box-title" id="title">Tabela de Movimentações  </h3>
                 </div>
@@ -71,16 +70,13 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
                             </div>
                             <!-- /.input group -->
                         </div>
-
                     </div>
                    
 
                     <div class="col-md-3" style="display:flex;justify-content:center;">
                         
                         <button type="submit" class="btn btn-block btn-social  btn-info btnsearch" name="btnsearch" id="btnsearch" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip" title="Procurar movimentações do período"><i class="fa fa-search"></i>Procurar</button>                       
-
                     </div>
-
 
                     <div class="col-md-3" style="display:flex;justify-content:center;" >
                         <a name="btnprint" class="btn btn-block btn-social  btn-default btnprint" role="button" style="width:150px;margin-bottom:10px;margin-top:25px;" data-toggle="tooltip"  
@@ -97,10 +93,6 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
                            ?> target="_blank"><i class="fa fa-print"></i>Imprimir</a>   
                         
                     </div>
-                    
-                      
-                        
-
 
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <hr>
@@ -108,9 +100,9 @@ echo '<script>console.log("teste: '.$month_date.'");</script>';
 
                     <div class="col-md-12" style="overflow-x:auto;">
                         <?php
+                        // so mostra a tabela apos clicar no botao de busca
                             if (isset($_POST['btnsearch'])){
-                                
-                                
+                                              
                                 echo '
                                 <table id="tablemov" class="table table-striped table-bordered table-hover">
                             <thead>
@@ -146,8 +138,7 @@ echo '<script>console.log("fromlog: '.$datesfromlog[0].'");</script>';
                                 var heading = document.getElementById("title");
                                 heading.innerHTML = "<h4>Tabela de Movimentações  de '.$datesfromlog[0].' a '.$datesfromlog[1].'</h4>";
                                 
-                                
-                                
+                                                               
                                 </script>';
                                
                             } else {
@@ -158,11 +149,8 @@ echo '<script>console.log("fromlog: '.$datesfromlog[0].'");</script>';
                                 
                                 ';
                                 
-                            }
-                        
-                        
+                            }                        
                         ?>
-
 
                     </div>
 
@@ -176,7 +164,7 @@ echo '<script>console.log("fromlog: '.$datesfromlog[0].'");</script>';
 <!-- /.content-wrapper -->
 
 <script>
-    //need to see a way of keeping the previous selected date when the table loads and no this default data
+    // datepicker em pt-br
     var start = moment().subtract(30, 'days');
     var end = moment();
     $('#reservation').daterangepicker({
@@ -222,7 +210,9 @@ echo '<script>console.log("fromlog: '.$datesfromlog[0].'");</script>';
     
 
 </script>
+
 <?php 
+// para mostrar as datas selecionadas no datepicker
 if (isset($_POST['btnsearch'])){
     echo '
     <script>
@@ -239,7 +229,7 @@ if (isset($_POST['btnsearch'])){
 <script>
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
-
+        // adiciona os selects no footer da tabela
         $('#tablemov').DataTable({
             "language": {
                 "url": "../../bower_components/datatables.net/pt-BR.json"
@@ -267,10 +257,6 @@ if (isset($_POST['btnsearch'])){
                     });
             },
         })
-        
-   // $(document).on('click', '.btnsearch', function() {
-   //      $('#reservation').value(<?php //echo $_POST['daterange']; ?>)
-   // });
         
     });
 
