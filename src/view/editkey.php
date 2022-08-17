@@ -107,7 +107,7 @@ if ( isset( $_POST['btnupdate'] ) ) {
             $key->setGanchoId($hook_model->getId());
             $key->setGanchoManual( true );
             $controlk->UpdateHookId($hook_model->getId(), $key->getId());
-            $controlh->UpdateUsado($hook_model->getId(),true);
+            $controlh->ModifyUsado($hook_model->getId(),true);
            $key_gan = $hook_model->getCodigo();
             $fail = false;
             $controlk->SortHooks( $_POST['select_category'] );
